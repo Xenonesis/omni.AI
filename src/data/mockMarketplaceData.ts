@@ -64,14 +64,14 @@ export const mockSellers: Record<string, Seller> = {
   },
 };
 
-// Mock Products - Electronics
+// Mock Products - Electronics (Updated with Indian marketplace data)
 const electronicsProducts: Product[] = [
   {
     id: 'product_1',
     name: 'Apple iPhone 14 Pro Max',
     category: 'electronics',
     brand: 'Apple',
-    description: 'Fast, premium and super smooth. The ultimate iPhone experience with Pro camera system.',
+    description: 'Fast, premium and super smooth.',
     specifications: {
       'Storage': '128GB, 256GB, 512GB, 1TB',
       'Display': '6.7-inch Super Retina XDR',

@@ -176,7 +176,7 @@ const MarketplacePage: React.FC = () => {
           )}
           {savings > 0 && (
             <span className="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs font-medium">
-              Save ${savings}
+              Save Rs.{savings}
             </span>
           )}
         </div>
@@ -200,17 +200,17 @@ const MarketplacePage: React.FC = () => {
               {bestOffer ? (
                 <div className="flex items-center gap-2">
                   <span className="text-2xl font-bold text-primary-600">
-                    ${bestOffer.price}
+                    Rs.{bestOffer.price.toLocaleString()}
                   </span>
                   {savings > 0 && (
                     <span className="text-sm text-neutral-500 line-through">
-                      ${product.basePrice}
+                      Rs.{product.basePrice.toLocaleString()}
                     </span>
                   )}
                 </div>
               ) : (
                 <span className="text-2xl font-bold text-neutral-900">
-                  ${product.basePrice}
+                  Rs.{product.basePrice.toLocaleString()}
                 </span>
               )}
             </div>

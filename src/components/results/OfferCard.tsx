@@ -19,14 +19,14 @@ interface OfferCardProps {
   };
 }
 
-const OfferCard: React.FC<OfferCardProps> = ({ 
-  offer, 
-  rank, 
+const OfferCard: React.FC<OfferCardProps> = ({
+  offer,
+  rank,
   showDetailedScores = false,
-  scores 
+  scores
 }) => {
   const { dispatch } = useAppContext();
-  
+
   const handleSaveDeal = () => {
     if (scores) {
       dispatch({
@@ -42,10 +42,10 @@ const OfferCard: React.FC<OfferCardProps> = ({
       });
     }
   };
-  
+
   return (
-    <Card 
-      variant="default" 
+    <Card
+      variant="default"
       className={`relative ${rank === 1 ? 'border-2 border-primary-500' : ''}`}
     >
       {rank && rank <= 3 && (
@@ -56,14 +56,14 @@ const OfferCard: React.FC<OfferCardProps> = ({
           {rank}
         </div>
       )}
-      
+
       <div className="p-4">
         <div className="flex justify-between items-start mb-3">
           <div className="flex items-center">
             {offer.sellerLogo ? (
-              <img 
-                src={offer.sellerLogo} 
-                alt={offer.sellerName} 
+              <img
+                src={offer.sellerLogo}
+                alt={offer.sellerName}
                 className="w-8 h-8 rounded-full mr-2 object-cover"
               />
             ) : (
@@ -81,27 +81,27 @@ const OfferCard: React.FC<OfferCardProps> = ({
               </div>
             </div>
           </div>
-          
+
           <div className="text-right">
             <span className="text-lg font-bold text-neutral-900">
-              ${offer.price.toLocaleString()}
+              Rs.{offer.price.toLocaleString()}
             </span>
             <div className="text-xs text-neutral-500">
-              {offer.stock > 5 
-                ? 'In Stock' 
-                : offer.stock > 0 
-                  ? `Only ${offer.stock} left` 
+              {offer.stock > 5
+                ? 'In Stock'
+                : offer.stock > 0
+                  ? `Only ${offer.stock} left`
                   : 'Out of Stock'}
             </div>
           </div>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-2 mb-4">
           <div className="flex items-center">
             <Clock className="w-4 h-4 text-neutral-400 mr-2" />
             <span className="text-sm text-neutral-700">
-              {offer.estimatedDeliveryDays === 1 
-                ? '1 day delivery' 
+              {offer.estimatedDeliveryDays === 1
+                ? '1 day delivery'
                 : `${offer.estimatedDeliveryDays} days delivery`}
             </span>
           </div>
@@ -112,7 +112,7 @@ const OfferCard: React.FC<OfferCardProps> = ({
             </span>
           </div>
         </div>
-        
+
         {showDetailedScores && scores && (
           <div className="bg-neutral-50 p-3 rounded-md mb-4">
             <h4 className="text-sm font-medium text-neutral-700 mb-2">Score Breakdown</h4>
@@ -126,7 +126,7 @@ const OfferCard: React.FC<OfferCardProps> = ({
                   <div className="bg-success-500 h-1.5 rounded-full" style={{ width: `${(scores.priceScore / 40) * 100}%` }}></div>
                 </div>
               </div>
-              
+
               <div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-neutral-500">Delivery</span>
@@ -136,7 +136,7 @@ const OfferCard: React.FC<OfferCardProps> = ({
                   <div className="bg-primary-500 h-1.5 rounded-full" style={{ width: `${(scores.deliveryScore / 25) * 100}%` }}></div>
                 </div>
               </div>
-              
+
               <div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-neutral-500">Reputation</span>
@@ -146,7 +146,7 @@ const OfferCard: React.FC<OfferCardProps> = ({
                   <div className="bg-accent-500 h-1.5 rounded-full" style={{ width: `${(scores.reputationScore / 20) * 100}%` }}></div>
                 </div>
               </div>
-              
+
               <div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-neutral-500">Return Policy</span>
@@ -157,7 +157,7 @@ const OfferCard: React.FC<OfferCardProps> = ({
                 </div>
               </div>
             </div>
-            
+
             <div className="mt-3 pt-2 border-t border-neutral-200">
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium text-neutral-700">Total Score</span>
@@ -166,20 +166,20 @@ const OfferCard: React.FC<OfferCardProps> = ({
             </div>
           </div>
         )}
-        
+
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             icon={<BookmarkPlus size={16} />}
             className="flex-1"
             onClick={handleSaveDeal}
           >
             Save
           </Button>
-          <Button 
-            variant="primary" 
-            size="sm" 
+          <Button
+            variant="primary"
+            size="sm"
             icon={<ArrowUpRight size={16} />}
             className="flex-1"
           >

@@ -142,9 +142,9 @@ export const MarketplaceProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   const initializeData = async () => {
     try {
-      // Try to fetch all products from API
+      // Try to fetch all products from API using search endpoint
       console.log('🔄 Initializing marketplace data...');
-      const response = await fetch('http://localhost:3001/api/products');
+      const response = await fetch('http://localhost:3001/api/search?q=');
 
       if (response.ok) {
         const apiData = await response.json();
@@ -158,13 +158,14 @@ export const MarketplaceProvider: React.FC<{ children: ReactNode }> = ({ childre
         const apiSellers: Record<string, Seller> = {};
         const apiOffers: Record<string, SellerOffer[]> = {};
 
-        transformedProducts.forEach(product => {
-          // Create a seller for each product
+        transformedProducts.forEach((product, index) => {
+          // Create a seller for each product using the actual seller name from API
+          const apiProduct = apiData.products[index];
           const sellerId = `seller_${product.id}`;
           apiSellers[sellerId] = {
             id: sellerId,
-            name: 'Indian Marketplace',
-            logo: 'https://via.placeholder.com/100x100?text=IM',
+            name: apiProduct.seller || 'Indian Marketplace',
+            logo: 'https://via.placeholder.com/100x100?text=' + (apiProduct.seller ? apiProduct.seller.substring(0, 2) : 'IM'),
             rating: 4.5 + Math.random() * 0.5,
             totalSales: Math.floor(Math.random() * 10000) + 1000,
             location: 'India',

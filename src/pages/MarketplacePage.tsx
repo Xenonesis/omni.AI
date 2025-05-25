@@ -80,6 +80,26 @@ const MarketplacePage: React.FC = () => {
     }
   };
 
+  // Clean transcript function to remove unwanted punctuation
+  const cleanTranscript = (text: string): string => {
+    if (!text) return '';
+
+    return text
+      // Remove trailing periods, commas, and other punctuation
+      .replace(/[.,!?;:]+$/g, '')
+      // Remove multiple spaces
+      .replace(/\s+/g, ' ')
+      // Remove leading/trailing whitespace
+      .trim()
+      // Convert to lowercase for consistency
+      .toLowerCase()
+      // Remove any remaining unwanted characters but keep essential ones
+      .replace(/[^\w\s\-']/g, '')
+      // Clean up any double spaces that might have been created
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
   const handleVoiceSearch = async () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       alert('Voice search is not supported in your browser');
@@ -94,22 +114,25 @@ const MarketplacePage: React.FC = () => {
 
     recognition.continuous = false;
     recognition.interimResults = true;
-    recognition.lang = 'en-US';
+    recognition.lang = 'en-IN'; // Changed to Indian English for better accuracy
 
     recognition.onresult = async (event: any) => {
       const transcript = event.results[0][0].transcript;
       const isFinal = event.results[0].isFinal;
 
-      setVoiceTranscript(transcript);
+      // Clean the transcript for display and processing
+      const cleanedTranscript = cleanTranscript(transcript);
+      setVoiceTranscript(cleanedTranscript);
 
       if (isFinal) {
-        setSearchQuery(transcript);
+        setSearchQuery(cleanedTranscript);
         setShowVoiceResults(true);
 
         try {
-          console.log('🎤 Voice search query:', transcript);
+          console.log('🎤 Voice search query (original):', transcript);
+          console.log('🧹 Voice search query (cleaned):', cleanedTranscript);
           // Search products and stay on marketplace page
-          await searchProducts(transcript, {
+          await searchProducts(cleanedTranscript, {
             category: selectedCategory !== 'all' ? selectedCategory : undefined
           });
 

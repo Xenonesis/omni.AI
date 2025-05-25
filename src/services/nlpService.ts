@@ -85,12 +85,15 @@ class NLPService {
   };
 
   private entityPatterns = {
-    price: /\$?(\d+(?:,\d{3})*(?:\.\d{2})?)/g,
-    priceRange: /(?:under|below|less than)\s*\$?(\d+)|(?:between)\s*\$?(\d+)\s*(?:and|to)\s*\$?(\d+)|(?:above|over|more than)\s*\$?(\d+)/gi,
-    size: /size\s*(\d+(?:\.\d)?)|(\d+(?:\.\d)?)\s*(?:size|sz)/gi,
-    color: /\b(black|white|red|blue|green|yellow|orange|purple|pink|brown|gray|grey|silver|gold|navy|maroon|teal|cyan|magenta|lime|olive|aqua|fuchsia)\b/gi,
-    brand: /\b(nike|adidas|jordan|puma|reebok|new balance|converse|vans|under armour|asics|skechers|fila|champion|timberland|dr martens|clarks|ugg|crocs|birkenstock|allbirds|on running|hoka|brooks|saucony|mizuno|diadora|kappa|umbro|lotto|joma|hummel|kelme|munich|lonsdale|everlast|venum|tapout|affliction|bad boy|hayabusa|century|title|ringside|twins special|fairtex|top king|raja|windy|yokkao|boon|thaismai|muay thai|boxing|mma|ufc|bellator|one championship|pride|strikeforce|wec|invicta|cage warriors|bamma|titan fc|legacy fc|resurrection fighting alliance|king of the cage|pancrase|deep|rizin|road fc|ace|shooto|vale tudo|ifc|wfc|tfc|cfc|efc|kfc|pfc|afc|ofc|sfc|rfc|mfc|lfc|gfc|hfc|jfc|qfc|ufc|vfc|wfc|xfc|yfc|zfc)\b/gi,
-    category: /\b(sneakers?|shoes?|boots?|sandals?|slippers?|heels?|flats?|loafers?|oxfords?|dress shoes?|running shoes?|basketball shoes?|tennis shoes?|golf shoes?|hiking boots?|work boots?|rain boots?|snow boots?|ankle boots?|knee boots?|thigh boots?|over the knee boots?|combat boots?|chelsea boots?|chukka boots?|desert boots?|wellington boots?|cowboy boots?|motorcycle boots?|steel toe boots?|safety boots?|tactical boots?|military boots?|police boots?|firefighter boots?|emt boots?|paramedic boots?|nurse shoes?|chef shoes?|restaurant shoes?|kitchen shoes?|slip resistant shoes?|non slip shoes?|oil resistant shoes?|chemical resistant shoes?|electrical hazard shoes?|composite toe shoes?|metatarsal shoes?|puncture resistant shoes?|waterproof shoes?|insulated shoes?|breathable shoes?|lightweight shoes?|heavy duty shoes?|durable shoes?|comfortable shoes?|supportive shoes?|cushioned shoes?|arch support shoes?|orthopedic shoes?|diabetic shoes?|wide shoes?|narrow shoes?|extra wide shoes?|extra narrow shoes?|big shoes?|small shoes?|large shoes?|tiny shoes?|huge shoes?|giant shoes?|mini shoes?|micro shoes?|nano shoes?|pico shoes?|femto shoes?|atto shoes?|zepto shoes?|yocto shoes?)\b/gi,
+    // Enhanced price patterns for Indian currency (₹, Rs., rupees)
+    price: /(?:₹|rs\.?|rupees?)\s*(\d+(?:,\d{2,3})*(?:\.\d{2})?)|(\d+(?:,\d{2,3})*(?:\.\d{2})?)\s*(?:₹|rs\.?|rupees?)|(?:\$|usd)\s*(\d+(?:,\d{3})*(?:\.\d{2})?)|(\d+(?:,\d{3})*(?:\.\d{2})?)\s*(?:\$|usd)/gi,
+    priceRange: /(?:under|below|less than|cheaper than)\s*(?:₹|rs\.?|rupees?)?\s*(\d+(?:,\d{2,3})*)|(?:between)\s*(?:₹|rs\.?|rupees?)?\s*(\d+(?:,\d{2,3})*)\s*(?:and|to)\s*(?:₹|rs\.?|rupees?)?\s*(\d+(?:,\d{2,3})*)|(?:above|over|more than|expensive than)\s*(?:₹|rs\.?|rupees?)?\s*(\d+(?:,\d{2,3})*)/gi,
+    size: /size\s*(\d+(?:\.\d)?)|(\d+(?:\.\d)?)\s*(?:size|sz)|(?:small|medium|large|xl|xxl|s|m|l)\b/gi,
+    color: /\b(black|white|red|blue|green|yellow|orange|purple|pink|brown|gray|grey|silver|gold|navy|maroon|teal|cyan|magenta|lime|olive|aqua|fuchsia|rose|cream|beige|tan|khaki|burgundy|violet|indigo|turquoise|coral|salmon|peach|mint|lavender)\b/gi,
+    // Enhanced brand patterns including Indian and international brands
+    brand: /\b(apple|samsung|oneplus|xiaomi|realme|oppo|vivo|huawei|honor|motorola|nokia|sony|lg|htc|google|pixel|iphone|galaxy|redmi|poco|mi|iqoo|nothing|fairphone|asus|lenovo|acer|hp|dell|microsoft|surface|macbook|ipad|airpods|beats|bose|jbl|harman kardon|marshall|skullcandy|sennheiser|audio technica|sony|philips|panasonic|lg|tcl|hisense|mi tv|oneplus tv|realme tv|nike|adidas|puma|reebok|new balance|converse|vans|under armour|asics|skechers|fila|champion|timberland|dr martens|clarks|ugg|crocs|birkenstock|woodland|bata|liberty|red chief|hush puppies|lee cooper|red tape|provogue|arrow|van heusen|peter england|allen solly|louis philippe|park avenue|blackberrys|raymond|zodiac|colorplus|john players|wrangler|levis|lee|pepe jeans|flying machine|spykar|killer|being human|roadster|hrx|puma|adidas|nike|reebok|fila|skechers|woodland|bata|liberty|red chief|hush puppies|lee cooper|red tape|loreal|olay|nivea|ponds|lakme|maybelline|revlon|mac|nykaa|sugar|colorbar|faces|lotus|himalaya|patanjali|dabur|bajaj|emami|mamaearth|wow|plum|the ordinary|cerave|neutrogena|garnier|head shoulders|pantene|tresemme|matrix|schwarzkopf|wella|streax|godrej|parachute|coconut oil|almond oil|argan oil|jojoba oil|tea tree oil)\b/gi,
+    // Enhanced category patterns for Indian marketplace
+    category: /\b(electronics?|mobile?|phone?|smartphone?|tablet?|laptop?|computer?|tv|television|headphone?|earphone?|speaker?|camera?|watch|smartwatch|fitness tracker|gaming|console|accessories?|fashion|clothing|clothes|shirt?|t-?shirt?|pant?|trouser?|jean?|dress|skirt|top|blouse|jacket|coat|sweater|hoodie|kurta|saree|lehenga|salwar|kameez|ethnic wear|western wear|footwear|shoe?|sneaker?|boot?|sandal?|slipper?|heel?|flat?|loafer?|oxford?|running shoe?|sports shoe?|casual shoe?|formal shoe?|beauty|cosmetic?|makeup|skincare|haircare|fragrance|perfume|deodorant|shampoo|conditioner|face wash|moisturizer|sunscreen|serum|foundation|lipstick|mascara|eyeliner|nail polish|home|kitchen|appliance?|furniture|decor|bedding|bath|towel|curtain|carpet|rug|lighting|fan|ac|air conditioner|refrigerator|washing machine|microwave|oven|mixer|grinder|pressure cooker|induction|gas stove|water purifier|books?|novel?|textbook?|magazine?|stationery|pen|pencil|notebook|diary|bag|backpack|handbag|wallet|luggage|suitcase|travel|sports|fitness|gym|yoga|cricket|football|badminton|tennis|basketball|swimming|cycling|running|toys?|games?|kids|baby|infant|toddler|children|grocery|food|snack?|beverage?|drink?|tea|coffee|juice|water|oil|spice?|rice|wheat|dal|pulse?|vegetable?|fruit?|meat|fish|chicken|mutton|egg|milk|cheese|butter|ghee|sugar|salt|medicine?|health|vitamin?|supplement?|protein|pharmacy|medical|first aid|thermometer|bp monitor|glucometer|inhaler|mask|sanitizer|soap|detergent|cleaning|household|personal care|oral care|toothbrush|toothpaste|mouthwash|razor|shaving|cream|lotion|oil|powder|diaper|sanitary pad|condom|pregnancy test|contraceptive)\b/gi,
   };
 
   private conversationContext: ConversationContext = {
@@ -107,26 +110,49 @@ class NLPService {
   };
 
   /**
+   * Clean query by removing unwanted punctuation and characters
+   */
+  private cleanQuery(query: string): string {
+    if (!query) return '';
+
+    return query
+      // Remove trailing periods, commas, and other punctuation
+      .replace(/[.,!?;:]+$/g, '')
+      // Remove multiple spaces
+      .replace(/\s+/g, ' ')
+      // Remove leading/trailing whitespace
+      .trim()
+      // Keep the original case for proper noun recognition
+      // Remove any unwanted characters but keep essential ones
+      .replace(/[^\w\s\-']/g, '')
+      // Clean up any double spaces that might have been created
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  /**
    * Parse natural language query into structured data
    */
   public parseQuery(query: string, previousQuery?: string): ParsedQuery {
-    const normalizedQuery = query.toLowerCase().trim();
-    
+    // Clean the query first - remove any unwanted punctuation or characters
+    const cleanedQuery = this.cleanQuery(query);
+    const normalizedQuery = cleanedQuery.toLowerCase().trim();
+
     // Detect intent
     const intent = this.detectIntent(normalizedQuery);
-    
+
     // Extract entities
     const entities = this.extractEntities(normalizedQuery);
-    
+
     // Extract filters
     const filters = this.extractFilters(normalizedQuery);
-    
+
     // Determine if this is a follow-up query
     const isFollowUp = this.isFollowUpQuery(normalizedQuery, previousQuery);
-    
+
     // Calculate confidence score
     const confidence = this.calculateConfidence(intent, entities, normalizedQuery);
-    
+
     return {
       intent,
       entities,
@@ -137,7 +163,7 @@ class NLPService {
         conversationTurn: this.conversationContext.history.length + 1,
       },
       confidence,
-      originalQuery: query,
+      originalQuery: cleanedQuery, // Use cleaned query instead of raw input
     };
   }
 
@@ -284,17 +310,98 @@ class NLPService {
    */
   private normalizeCategoryName(category: string): string {
     const categoryMap: Record<string, string> = {
-      'sneakers': 'sneakers',
-      'shoes': 'sneakers',
-      'boots': 'sneakers',
-      'sandals': 'sneakers',
+      // Electronics
+      'electronics': 'electronics',
+      'electronic': 'electronics',
+      'mobile': 'electronics',
+      'phone': 'electronics',
+      'smartphone': 'electronics',
+      'tablet': 'electronics',
+      'laptop': 'electronics',
+      'computer': 'electronics',
+      'tv': 'electronics',
+      'television': 'electronics',
+      'headphone': 'electronics',
+      'earphone': 'electronics',
+      'speaker': 'electronics',
+      'camera': 'electronics',
+      'watch': 'electronics',
+      'smartwatch': 'electronics',
+      'fitness tracker': 'electronics',
+      'gaming': 'electronics',
+      'console': 'electronics',
+      'accessories': 'electronics',
+
+      // Fashion
+      'fashion': 'fashion',
+      'clothing': 'fashion',
+      'clothes': 'fashion',
+      'shirt': 'fashion',
+      'tshirt': 'fashion',
+      't-shirt': 'fashion',
+      'pant': 'fashion',
+      'trouser': 'fashion',
+      'jean': 'fashion',
+      'dress': 'fashion',
+      'skirt': 'fashion',
+      'top': 'fashion',
+      'blouse': 'fashion',
+      'jacket': 'fashion',
+      'coat': 'fashion',
+      'sweater': 'fashion',
+      'hoodie': 'fashion',
+      'kurta': 'fashion',
+      'saree': 'fashion',
+      'lehenga': 'fashion',
+      'salwar': 'fashion',
+      'kameez': 'fashion',
+      'ethnic wear': 'fashion',
+      'western wear': 'fashion',
+      'footwear': 'fashion',
+      'shoe': 'fashion',
+      'shoes': 'fashion',
+      'sneaker': 'fashion',
+      'sneakers': 'fashion',
+      'boot': 'fashion',
+      'boots': 'fashion',
+      'sandal': 'fashion',
+      'sandals': 'fashion',
+      'slipper': 'fashion',
+      'heel': 'fashion',
+      'flat': 'fashion',
+      'loafer': 'fashion',
+      'oxford': 'fashion',
+
+      // Beauty
+      'beauty': 'beauty',
+      'cosmetic': 'beauty',
+      'cosmetics': 'beauty',
+      'makeup': 'beauty',
+      'skincare': 'beauty',
+      'haircare': 'beauty',
+      'fragrance': 'beauty',
+      'perfume': 'beauty',
+      'deodorant': 'beauty',
+      'shampoo': 'beauty',
+      'conditioner': 'beauty',
+      'face wash': 'beauty',
+      'moisturizer': 'beauty',
+      'sunscreen': 'beauty',
+      'serum': 'beauty',
+      'foundation': 'beauty',
+      'lipstick': 'beauty',
+      'mascara': 'beauty',
+      'eyeliner': 'beauty',
+      'nail polish': 'beauty',
+
+      // Legacy mappings for backward compatibility
       'concert tickets': 'concert-tickets',
       'tickets': 'concert-tickets',
       'sports tickets': 'sports-tickets',
       'game tickets': 'sports-tickets',
     };
 
-    const normalized = category.toLowerCase();
+    const normalized = category.toLowerCase().trim();
     return categoryMap[normalized] || normalized;
   }
 

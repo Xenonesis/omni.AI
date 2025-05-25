@@ -17,6 +17,7 @@ import { nlpService, ParsedQuery } from '../../services/nlpService';
 import { conversationEngine, AIResponse } from '../../services/conversationEngine';
 import { useMarketplace } from '../../context/MarketplaceContext';
 import Button from '../ui/Button';
+import MicrophoneTestModal from '../debug/MicrophoneTestModal';
 
 interface EnhancedVoiceSearchProps {
   onSearchResults?: (results: any) => void;
@@ -46,7 +47,9 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
   const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
   const [confidence, setConfidence] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [errorSuggestions, setErrorSuggestions] = useState<string[]>([]);
   const [isSupported, setIsSupported] = useState(true);
+  const [showMicTest, setShowMicTest] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<Array<{
     type: 'user' | 'ai';
@@ -56,6 +59,26 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
 
   const processingTimeoutRef = useRef<NodeJS.Timeout>();
   const sessionIdRef = useRef<string>('');
+
+  // Clean transcript function to remove unwanted punctuation
+  const cleanTranscript = useCallback((text: string): string => {
+    if (!text) return '';
+
+    return text
+      // Remove trailing periods, commas, and other punctuation
+      .replace(/[.,!?;:]+$/g, '')
+      // Remove multiple spaces
+      .replace(/\s+/g, ' ')
+      // Remove leading/trailing whitespace
+      .trim()
+      // Convert to lowercase for consistency
+      .toLowerCase()
+      // Remove any remaining unwanted characters but keep essential ones
+      .replace(/[^\w\s\-']/g, '')
+      // Clean up any double spaces that might have been created
+      .replace(/\s+/g, ' ')
+      .trim();
+  }, []);
 
   useEffect(() => {
     setIsSupported(voiceService.isSupported());
@@ -83,8 +106,11 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
   }, []);
 
   const handleVoiceResult = useCallback(async (text: string, isFinal: boolean, confidenceScore: number) => {
+    // Clean the text to remove unwanted punctuation and characters
+    const cleanedText = cleanTranscript(text);
+
     if (isFinal) {
-      setTranscript(text);
+      setTranscript(cleanedText);
       setInterimTranscript('');
       setIsListening(false);
       setIsProcessing(true);
@@ -93,13 +119,13 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
       // Add user message to conversation history
       setConversationHistory(prev => [...prev, {
         type: 'user',
-        text,
+        text: cleanedText,
         timestamp: Date.now(),
       }]);
 
       try {
         // Parse the query using NLP
-        const parsedQuery: ParsedQuery = nlpService.parseQuery(text);
+        const parsedQuery: ParsedQuery = nlpService.parseQuery(cleanedText);
 
         // Handle the query based on intent
         let searchResults = null;
@@ -150,14 +176,21 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
         setIsProcessing(false);
       }
     } else {
-      setInterimTranscript(text);
+      setInterimTranscript(cleanedText);
     }
   }, [autoSpeak, onSearchResults, onNavigate, searchProducts]);
 
-  const handleVoiceError = useCallback((errorMessage: string) => {
-    setError(`Voice recognition error: ${errorMessage}`);
+  const handleVoiceError = useCallback((errorMessage: string, suggestions?: string[]) => {
+    setError(errorMessage);
+    setErrorSuggestions(suggestions || []);
     setIsListening(false);
     setIsProcessing(false);
+
+    // Auto-clear error after 10 seconds
+    setTimeout(() => {
+      setError(null);
+      setErrorSuggestions([]);
+    }, 10000);
   }, []);
 
   const handleVoiceEnd = useCallback(() => {
@@ -205,7 +238,7 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
   const buildSearchParams = (parsedQuery: ParsedQuery) => {
     const { entities } = parsedQuery;
     return {
-      query: entities.product || transcript,
+      query: entities.product || parsedQuery.originalQuery || transcript,
       category: entities.category,
       brand: entities.brand,
       priceRange: entities.priceRange,
@@ -391,14 +424,41 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
             exit={{ opacity: 0, y: -20 }}
             className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4"
           >
-            <div className="flex items-center space-x-3">
-              <AlertCircle className="text-red-500" size={20} />
+            <div className="flex items-start space-x-3">
+              <AlertCircle className="text-red-500 mt-1" size={20} />
               <div className="flex-1">
-                <p className="text-red-800">{error}</p>
+                <p className="text-red-800 font-medium mb-2">{error}</p>
+
+                {/* Error Suggestions */}
+                {errorSuggestions.length > 0 && (
+                  <div className="text-sm text-red-700">
+                    <p className="font-medium mb-1">Try these solutions:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      {errorSuggestions.map((suggestion, index) => (
+                        <li key={index}>{suggestion}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Microphone Test Button */}
+                {error.includes('no-speech') || error.includes('microphone') || error.includes('audio') ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowMicTest(true)}
+                    className="mt-3 px-3 py-1 bg-red-100 text-red-700 rounded text-sm hover:bg-red-200 transition-colors"
+                  >
+                    Test Microphone
+                  </button>
+                ) : null}
               </div>
               <button
-                onClick={() => setError(null)}
-                className="text-red-500 hover:text-red-700"
+                type="button"
+                onClick={() => {
+                  setError(null);
+                  setErrorSuggestions([]);
+                }}
+                className="text-red-500 hover:text-red-700 text-xl leading-none"
               >
                 ×
               </button>
@@ -473,6 +533,12 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Microphone Test Modal */}
+      <MicrophoneTestModal
+        isOpen={showMicTest}
+        onClose={() => setShowMicTest(false)}
+      />
     </div>
   );
 };

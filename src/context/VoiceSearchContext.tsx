@@ -176,6 +176,26 @@ const VoiceSearchContext = createContext<VoiceSearchContextType | undefined>(und
 export const VoiceSearchProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(voiceSearchReducer, initialState);
 
+  // Clean transcript function to remove unwanted punctuation
+  const cleanTranscript = (text: string): string => {
+    if (!text) return '';
+
+    return text
+      // Remove trailing periods, commas, and other punctuation
+      .replace(/[.,!?;:]+$/g, '')
+      // Remove multiple spaces
+      .replace(/\s+/g, ' ')
+      // Remove leading/trailing whitespace
+      .trim()
+      // Convert to lowercase for consistency
+      .toLowerCase()
+      // Remove any remaining unwanted characters but keep essential ones
+      .replace(/[^\w\s\-']/g, '')
+      // Clean up any double spaces that might have been created
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
   useEffect(() => {
     // Initialize voice service and check support
     const isSupported = voiceService.isSupported();
@@ -209,14 +229,17 @@ export const VoiceSearchProvider: React.FC<{ children: ReactNode }> = ({ childre
           dispatch({ type: 'SET_TRANSCRIPT', payload: { transcript: '', interim: '', confidence: 0 } });
         },
         onResult: async (transcript: string, isFinal: boolean, confidence: number) => {
+          // Clean the transcript to remove unwanted punctuation
+          const cleanedTranscript = cleanTranscript(transcript);
+
           if (isFinal) {
-            dispatch({ type: 'SET_TRANSCRIPT', payload: { transcript, interim: '', confidence } });
+            dispatch({ type: 'SET_TRANSCRIPT', payload: { transcript: cleanedTranscript, interim: '', confidence } });
             dispatch({ type: 'SET_LISTENING', payload: false });
-            await processVoiceQuery(transcript);
+            await processVoiceQuery(cleanedTranscript);
           } else {
             dispatch({ type: 'SET_TRANSCRIPT', payload: {
               transcript: state.currentTranscript,
-              interim: transcript,
+              interim: cleanedTranscript,
               confidence
             } });
           }

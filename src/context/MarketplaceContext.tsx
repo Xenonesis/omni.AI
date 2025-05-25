@@ -11,6 +11,7 @@ import {
   SearchFilters
 } from '../types/marketplace';
 import { mockProducts, mockSellers, mockOffers } from '../data/mockMarketplaceData';
+import { FuzzySearchEngine, correctSpelling } from '../utils/fuzzySearch';
 
 type MarketplaceAction =
   | { type: 'SET_LOADING'; payload: boolean }
@@ -250,21 +251,41 @@ export const MarketplaceProvider: React.FC<{ children: ReactNode }> = ({ childre
         return result;
       }
 
-      // Fallback to mock data if API is not available
-      console.log('API not available, using mock data');
+      // Fallback to enhanced fuzzy search with mock data
+      console.log('API not available, using enhanced fuzzy search with mock data');
 
-      // Simple search implementation with mock data
-      const filteredProducts = state.products.filter(product => {
-        const matchesQuery = product.name.toLowerCase().includes(query.toLowerCase()) ||
-                           product.brand.toLowerCase().includes(query.toLowerCase()) ||
-                           product.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
+      // Apply spell correction to the query
+      const correctedQuery = correctSpelling(query);
+      console.log('🔤 Original query:', query, '→ Corrected:', correctedQuery);
 
+      // Initialize fuzzy search engine
+      const fuzzySearch = new FuzzySearchEngine({
+        threshold: 0.2, // Lower threshold for more inclusive results
+        keys: ['name', 'brand', 'description', 'tags'],
+        shouldSort: true,
+        includeScore: true,
+      });
+
+      // Apply category and price filters first
+      let candidateProducts = state.products.filter(product => {
         const matchesCategory = !filters.category || product.category === filters.category;
         const matchesPrice = !filters.priceRange ||
                            (product.basePrice >= filters.priceRange[0] && product.basePrice <= filters.priceRange[1]);
+        const matchesBrand = !filters.brand || product.brand.toLowerCase() === filters.brand.toLowerCase();
 
-        return matchesQuery && matchesCategory && matchesPrice;
+        return matchesCategory && matchesPrice && matchesBrand;
       });
+
+      // Use fuzzy search for text matching
+      let filteredProducts: Product[] = [];
+      if (correctedQuery.trim()) {
+        const fuzzyResults = fuzzySearch.search(correctedQuery, candidateProducts);
+        filteredProducts = fuzzyResults.map(result => result.item);
+        console.log('🔍 Fuzzy search results:', fuzzyResults.length, 'matches');
+      } else {
+        // If no query, return all filtered products
+        filteredProducts = candidateProducts;
+      }
 
       // Generate recommendations from mock data
       const recommendations: ProductRecommendation[] = filteredProducts.slice(0, 3).map(product => {
@@ -303,8 +324,12 @@ export const MarketplaceProvider: React.FC<{ children: ReactNode }> = ({ childre
   // API helper functions
   const fetchFromSearchAPI = async (query: string, filters: SearchFilters = {}): Promise<any> => {
     try {
+      // Apply spell correction to improve search accuracy
+      const correctedQuery = correctSpelling(query);
+      console.log('🔤 API Search - Original:', query, '→ Corrected:', correctedQuery);
+
       const searchParams = new URLSearchParams({
-        q: query,
+        q: correctedQuery,
         ...(filters.category && { category: filters.category }),
         ...(filters.brand && { brand: filters.brand }),
         ...(filters.priceRange && filters.priceRange[0] && { min_price: filters.priceRange[0].toString() }),

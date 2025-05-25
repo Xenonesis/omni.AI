@@ -11,6 +11,26 @@ const VoiceSearchInput: React.FC = () => {
   const [autoMode, setAutoMode] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState('');
 
+  // Clean transcript function to remove unwanted punctuation
+  const cleanTranscript = (text: string): string => {
+    if (!text) return '';
+
+    return text
+      // Remove trailing periods, commas, and other punctuation
+      .replace(/[.,!?;:]+$/g, '')
+      // Remove multiple spaces
+      .replace(/\s+/g, ' ')
+      // Remove leading/trailing whitespace
+      .trim()
+      // Convert to lowercase for consistency
+      .toLowerCase()
+      // Remove any remaining unwanted characters but keep essential ones
+      .replace(/[^\w\s\-']/g, '')
+      // Clean up any double spaces that might have been created
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
   useEffect(() => {
     if ('webkitSpeechRecognition' in window) {
       const recognition = new webkitSpeechRecognition();
@@ -35,14 +55,15 @@ const VoiceSearchInput: React.FC = () => {
           }
         }
 
-        setInterimTranscript(interim);
+        setInterimTranscript(cleanTranscript(interim));
 
         if (final) {
-          dispatch({ type: 'SET_QUERY', payload: final });
+          const cleanedFinal = cleanTranscript(final);
+          dispatch({ type: 'SET_QUERY', payload: cleanedFinal });
           if (!autoMode) {
             recognition.stop();
             dispatch({ type: 'START_PROCESSING' });
-            
+
             // Mock product identification
             const mockProduct = {
               id: '1234',
@@ -51,9 +72,9 @@ const VoiceSearchInput: React.FC = () => {
               category: 'Footwear',
               specifications: [final.split(',')[1] || 'Default Size'],
             };
-            
+
             dispatch({ type: 'SET_PRODUCT', payload: mockProduct });
-            
+
             // Mock offers retrieval
             setTimeout(() => {
               const mockOffers = Array.from({ length: 7 }, (_, i) => ({
@@ -69,21 +90,21 @@ const VoiceSearchInput: React.FC = () => {
                 reputationScore: Math.round((Math.random() * 5) * 10) / 10,
                 returnPolicy: i % 3 === 0 ? 'No Returns' : i % 3 === 1 ? '14-day returns' : '30-day returns',
               }));
-              
+
               dispatch({ type: 'SET_OFFERS', payload: mockOffers });
-              
+
               const recommendations = mockOffers.map(offer => {
                 const priceScore = 40 * (1 - (offer.price - 300) / 700);
                 const deliveryScore = 25 * (1 - (offer.estimatedDeliveryDays - 1) / 14);
                 const reputationScore = 20 * (offer.reputationScore / 5);
-                const returnPolicyScore = offer.returnPolicy === 'No Returns' 
-                  ? 0 
-                  : offer.returnPolicy === '14-day returns' 
-                    ? 7.5 
+                const returnPolicyScore = offer.returnPolicy === 'No Returns'
+                  ? 0
+                  : offer.returnPolicy === '14-day returns'
+                    ? 7.5
                     : 15;
-                
+
                 const totalScore = priceScore + deliveryScore + reputationScore + returnPolicyScore;
-                
+
                 return {
                   offer,
                   totalScore,
@@ -93,7 +114,7 @@ const VoiceSearchInput: React.FC = () => {
                   returnPolicyScore
                 };
               }).sort((a, b) => b.totalScore - a.totalScore);
-              
+
               dispatch({ type: 'SET_RECOMMENDATIONS', payload: recommendations });
             }, 1500);
           }
@@ -130,9 +151,9 @@ const VoiceSearchInput: React.FC = () => {
         recognition.stop();
       };
     } else {
-      dispatch({ 
-        type: 'SET_ERROR', 
-        payload: 'Speech recognition is not supported in your browser. Please use Chrome.' 
+      dispatch({
+        type: 'SET_ERROR',
+        payload: 'Speech recognition is not supported in your browser. Please use Chrome.'
       });
     }
   }, [dispatch, autoMode]);
@@ -216,26 +237,26 @@ const VoiceSearchInput: React.FC = () => {
           <Mic className="w-12 h-12 text-neutral-400" />
         )}
       </motion.div>
-      
+
       <div className="text-center mb-8">
         <h2 className="text-xl font-medium text-neutral-800 mb-2">
-          {isListening 
-            ? "I'm listening..." 
+          {isListening
+            ? "I'm listening..."
             : autoMode
               ? "Auto mode active - I'm always listening"
               : "Click the microphone to start"}
         </h2>
         <p className="text-neutral-500 text-sm">
-          {isListening 
-            ? "Speak clearly and include details like brand, model, size, color" 
+          {isListening
+            ? "Speak clearly and include details like brand, model, size, color"
             : autoMode
               ? "Just start speaking whenever you're ready"
               : "Click to start voice recognition"}
         </p>
-        
+
         {(interimTranscript || state.query) && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-4 p-4 bg-white border border-neutral-200 rounded-lg shadow-sm"
           >
@@ -248,10 +269,10 @@ const VoiceSearchInput: React.FC = () => {
             )}
           </motion.div>
         )}
-        
+
         {state.error && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-4 p-3 bg-error-100 rounded-lg flex items-center"
           >
@@ -260,7 +281,7 @@ const VoiceSearchInput: React.FC = () => {
           </motion.div>
         )}
       </div>
-      
+
       {!autoMode && (
         <div className="flex gap-4">
           {isListening ? (

@@ -36,7 +36,7 @@ export interface VoiceCallbacks {
   onStart?: () => void;
   onResult?: (transcript: string, isFinal: boolean, confidence: number) => void;
   onEnd?: () => void;
-  onError?: (error: string) => void;
+  onError?: (error: string, suggestions?: string[]) => void;
   onSpeechStart?: () => void;
   onSpeechEnd?: () => void;
 }
@@ -55,10 +55,10 @@ class VoiceService {
 
   constructor() {
     this.config = {
-      language: 'en-US',
+      language: 'en-IN', // Changed to Indian English for better accent recognition
       continuous: true,
       interimResults: true,
-      maxAlternatives: 3,
+      maxAlternatives: 5, // Increased for better accuracy
       noiseReduction: true,
       echoCancellation: true,
       autoGainControl: true,
@@ -154,8 +154,37 @@ class VoiceService {
       }
 
       this.state.confidence = maxConfidence;
+
+      // Clean the transcript - remove unwanted punctuation and extra characters
+      let cleanTranscript = finalTranscript || interimTranscript;
+      if (cleanTranscript) {
+        cleanTranscript = this.cleanTranscript(cleanTranscript);
+      }
+
+      // Enhanced confidence checking for better accuracy
+      if (finalTranscript && maxConfidence < 0.3) {
+        console.warn('⚠️ Low confidence speech recognition:', {
+          transcript: cleanTranscript,
+          confidence: maxConfidence.toFixed(2),
+          language: this.config.language
+        });
+        this.callbacks.onError?.('Low confidence in speech recognition. Please speak clearly and try again.');
+        return;
+      }
+
+      // Log successful recognition for debugging
+      if (finalTranscript) {
+        console.log('🎤 Speech recognized:', {
+          original: finalTranscript,
+          cleaned: cleanTranscript,
+          confidence: maxConfidence.toFixed(2),
+          language: this.config.language,
+          alternatives: this.config.maxAlternatives
+        });
+      }
+
       this.callbacks.onResult?.(
-        finalTranscript || interimTranscript,
+        cleanTranscript,
         !!finalTranscript,
         maxConfidence
       );
@@ -164,7 +193,77 @@ class VoiceService {
     this.recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       this.state.error = event.error;
       this.state.isListening = false;
-      this.callbacks.onError?.(event.error);
+
+      // Enhanced error handling with specific solutions
+      let errorMessage = '';
+      let suggestions: string[] = [];
+
+      switch (event.error) {
+        case 'no-speech':
+          errorMessage = 'No speech detected. Please try speaking again.';
+          suggestions = [
+            'Make sure your microphone is working',
+            'Speak clearly and loudly',
+            'Check if microphone permissions are granted',
+            'Try moving closer to the microphone',
+            'Reduce background noise'
+          ];
+          break;
+
+        case 'audio-capture':
+          errorMessage = 'Microphone access denied or not available.';
+          suggestions = [
+            'Grant microphone permissions in browser settings',
+            'Check if another app is using the microphone',
+            'Try refreshing the page',
+            'Ensure microphone is connected properly'
+          ];
+          break;
+
+        case 'not-allowed':
+          errorMessage = 'Microphone permission denied.';
+          suggestions = [
+            'Click the microphone icon in address bar',
+            'Allow microphone access for this site',
+            'Check browser privacy settings',
+            'Try using HTTPS instead of HTTP'
+          ];
+          break;
+
+        case 'network':
+          errorMessage = 'Network error occurred during speech recognition.';
+          suggestions = [
+            'Check your internet connection',
+            'Try again in a few moments',
+            'Switch to a more stable network'
+          ];
+          break;
+
+        case 'aborted':
+          errorMessage = 'Speech recognition was aborted.';
+          suggestions = [
+            'Try starting voice recognition again',
+            'Ensure you\'re not switching tabs during recognition'
+          ];
+          break;
+
+        default:
+          errorMessage = `Speech recognition error: ${event.error}`;
+          suggestions = [
+            'Try refreshing the page',
+            'Check microphone permissions',
+            'Ensure you\'re using a supported browser'
+          ];
+      }
+
+      console.error('🎤 Voice Recognition Error:', {
+        error: event.error,
+        message: errorMessage,
+        suggestions,
+        timestamp: new Date().toISOString()
+      });
+
+      this.callbacks.onError?.(errorMessage, suggestions);
     };
 
     this.recognition.onend = () => {
@@ -196,10 +295,10 @@ class VoiceService {
     if (!this.synthesis) return;
 
     const voices = this.synthesis.getVoices();
-    
+
     // Prefer neural/premium voices
-    let bestVoice = voices.find(voice => 
-      voice.lang.startsWith(this.speechConfig.lang) && 
+    let bestVoice = voices.find(voice =>
+      voice.lang.startsWith(this.speechConfig.lang) &&
       (voice.name.includes('Neural') || voice.name.includes('Premium'))
     );
 
@@ -252,7 +351,7 @@ class VoiceService {
     if (this.recognition && this.state.isListening) {
       this.recognition.stop();
     }
-    
+
     if (this.mediaStream) {
       this.mediaStream.getTracks().forEach(track => track.stop());
       this.mediaStream = null;
@@ -331,11 +430,11 @@ class VoiceService {
       };
 
       this.mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-      
+
       // Create audio context for additional processing
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       const source = this.audioContext.createMediaStreamSource(this.mediaStream);
-      
+
       // Add noise suppression if available
       if (this.audioContext.createScriptProcessor) {
         this.noiseSuppressionNode = this.audioContext.createScriptProcessor(4096, 1, 1);
@@ -397,6 +496,28 @@ class VoiceService {
   }
 
   /**
+   * Clean transcript by removing unwanted punctuation and extra characters
+   */
+  private cleanTranscript(transcript: string): string {
+    if (!transcript) return '';
+
+    return transcript
+      // Remove trailing periods, commas, and other punctuation
+      .replace(/[.,!?;:]+$/g, '')
+      // Remove multiple spaces
+      .replace(/\s+/g, ' ')
+      // Remove leading/trailing whitespace
+      .trim()
+      // Convert to lowercase for consistency
+      .toLowerCase()
+      // Remove any remaining unwanted characters but keep essential ones
+      .replace(/[^\w\s\-']/g, '')
+      // Clean up any double spaces that might have been created
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  /**
    * Check if voice services are supported
    */
   public isSupported(): boolean {
@@ -423,12 +544,12 @@ class VoiceService {
   public cleanup(): void {
     this.stopListening();
     this.stopSpeaking();
-    
+
     if (this.audioContext) {
       this.audioContext.close();
       this.audioContext = null;
     }
-    
+
     if (this.mediaStream) {
       this.mediaStream.getTracks().forEach(track => track.stop());
       this.mediaStream = null;

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Search Cleaning Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-case {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+        .input {
+            font-weight: bold;
+            color: #dc3545;
+            margin-bottom: 5px;
+        }
+        .output {
+            color: #28a745;
+            font-family: monospace;
+        }
+        .demo-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            background: #e7f3ff;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Voice Search Cleaning Test</h1>
+        <p>This page demonstrates how voice search input is cleaned to remove unwanted punctuation and characters.</p>
+
+        <div class="demo-section">
+            <h3>🎤 Live Voice Search Test</h3>
+            <p>Test voice search with automatic cleaning:</p>
+            <button onclick="startVoiceTest()" id="voice-btn">Start Voice Test</button>
+            <div id="voice-result"></div>
+        </div>
+
+        <h3>📝 Text Cleaning Examples</h3>
+        <p>Here are examples of how different voice inputs are cleaned:</p>
+
+        <div class="test-case">
+            <div class="input">Input: "Find Samsung Galaxy Buds Pro."</div>
+            <div class="output">Cleaned: "find samsung galaxy buds pro"</div>
+        </div>
+
+        <div class="test-case">
+            <div class="input">Input: "Show me Nike shoes, please!"</div>
+            <div class="output">Cleaned: "show me nike shoes please"</div>
+        </div>
+
+        <div class="test-case">
+            <div class="input">Input: "I want iPhone 14 Pro Max..."</div>
+            <div class="output">Cleaned: "i want iphone 14 pro max"</div>
+        </div>
+
+        <div class="test-case">
+            <div class="input">Input: "Apple products under Rs. 50,000!!!"</div>
+            <div class="output">Cleaned: "apple products under rs 50000"</div>
+        </div>
+
+        <div class="test-case">
+            <div class="input">Input: "Beauty products for women???"</div>
+            <div class="output">Cleaned: "beauty products for women"</div>
+        </div>
+
+        <div class="test-case">
+            <div class="input">Input: "Electronics... under 25000..."</div>
+            <div class="output">Cleaned: "electronics under 25000"</div>
+        </div>
+
+        <h3>🧪 Interactive Cleaning Test</h3>
+        <div class="demo-section">
+            <p>Type or paste text to see how it gets cleaned:</p>
+            <input type="text" id="test-input" placeholder="Enter text with punctuation..." style="width: 100%; padding: 10px; margin: 10px 0;">
+            <button onclick="testCleaning()">Clean Text</button>
+            <div id="cleaning-result"></div>
+        </div>
+
+        <h3>✅ Benefits of Voice Search Cleaning</h3>
+        <ul>
+            <li><strong>Consistent Processing:</strong> Removes variations in punctuation</li>
+            <li><strong>Better Matching:</strong> Improves search accuracy and entity extraction</li>
+            <li><strong>Clean Display:</strong> Shows clean text to users without dots or extra characters</li>
+            <li><strong>Improved NLP:</strong> Helps natural language processing work more effectively</li>
+            <li><strong>User Experience:</strong> Provides clean, professional-looking search queries</li>
+        </ul>
+
+        <h3>🔧 Technical Implementation</h3>
+        <p>The cleaning process involves:</p>
+        <ol>
+            <li>Remove trailing punctuation (periods, commas, exclamation marks, etc.)</li>
+            <li>Normalize whitespace (remove extra spaces)</li>
+            <li>Convert to lowercase for consistent processing</li>
+            <li>Remove unwanted special characters</li>
+            <li>Preserve essential characters (hyphens, apostrophes)</li>
+            <li>Trim leading and trailing spaces</li>
+        </ol>
+    </div>
+
+    <script>
+        // Text cleaning function (mirrors the backend implementation)
+        function cleanText(text) {
+            if (!text) return '';
+            
+            return text
+                // Remove trailing periods, commas, and other punctuation
+                .replace(/[.,!?;:]+$/g, '')
+                // Remove multiple spaces
+                .replace(/\s+/g, ' ')
+                // Remove leading/trailing whitespace
+                .trim()
+                // Convert to lowercase for consistency
+                .toLowerCase()
+                // Remove any remaining unwanted characters but keep essential ones
+                .replace(/[^\w\s\-']/g, '')
+                // Clean up any double spaces that might have been created
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function testCleaning() {
+            const input = document.getElementById('test-input').value;
+            const cleaned = cleanText(input);
+            const resultDiv = document.getElementById('cleaning-result');
+            
+            resultDiv.innerHTML = `
+                <div class="result">
+                    <strong>Original:</strong> "${input}"<br>
+                    <strong>Cleaned:</strong> "${cleaned}"<br>
+                    <strong>Length:</strong> ${input.length} → ${cleaned.length} characters
+                </div>
+            `;
+        }
+
+        function startVoiceTest() {
+            const btn = document.getElementById('voice-btn');
+            const resultDiv = document.getElementById('voice-result');
+            
+            // Check if speech recognition is supported
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                resultDiv.innerHTML = '<div class="result" style="border-left-color: #dc3545;">❌ Speech Recognition not supported in this browser</div>';
+                return;
+            }
+            
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-IN';
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            
+            btn.disabled = true;
+            btn.textContent = 'Listening... (speak now)';
+            
+            resultDiv.innerHTML = '<div class="result">🎤 Listening... Please speak a search query!</div>';
+            
+            const timeout = setTimeout(() => {
+                recognition.stop();
+                resultDiv.innerHTML = '<div class="result" style="border-left-color: #ffc107;">⏰ Timeout - No speech detected</div>';
+                btn.disabled = false;
+                btn.textContent = 'Start Voice Test';
+            }, 10000);
+            
+            recognition.onresult = (event) => {
+                clearTimeout(timeout);
+                const transcript = event.results[0][0].transcript;
+                const confidence = event.results[0][0].confidence || 0;
+                const cleaned = cleanText(transcript);
+                
+                resultDiv.innerHTML = `
+                    <div class="result">
+                        <strong>✅ Voice Recognition Successful!</strong><br><br>
+                        <strong>Original Speech:</strong> "${transcript}"<br>
+                        <strong>Cleaned Query:</strong> "${cleaned}"<br>
+                        <strong>Confidence:</strong> ${Math.round(confidence * 100)}%<br>
+                        <strong>Length:</strong> ${transcript.length} → ${cleaned.length} characters
+                    </div>
+                `;
+                
+                btn.disabled = false;
+                btn.textContent = 'Start Voice Test';
+            };
+            
+            recognition.onerror = (event) => {
+                clearTimeout(timeout);
+                resultDiv.innerHTML = `
+                    <div class="result" style="border-left-color: #dc3545;">
+                        ❌ Voice recognition error: ${event.error}<br>
+                        Try speaking clearly or check microphone permissions.
+                    </div>
+                `;
+                
+                btn.disabled = false;
+                btn.textContent = 'Start Voice Test';
+            };
+            
+            recognition.start();
+        }
+
+        // Auto-test the cleaning function on page load
+        window.onload = function() {
+            console.log('🧹 Voice Search Cleaning Test Page Loaded');
+            
+            // Test some examples
+            const testCases = [
+                "Find Samsung Galaxy Buds Pro.",
+                "Show me Nike shoes, please!",
+                "I want iPhone 14 Pro Max...",
+                "Apple products under Rs. 50,000!!!",
+                "Beauty products for women???",
+                "Electronics... under 25000..."
+            ];
+            
+            console.log('Testing cleaning function:');
+            testCases.forEach(testCase => {
+                const cleaned = cleanText(testCase);
+                console.log(`"${testCase}" → "${cleaned}"`);
+            });
+        };
+    </script>
+</body>
+</html>

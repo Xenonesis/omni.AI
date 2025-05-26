@@ -15,7 +15,7 @@ Thank you for your interest in contributing to omniverse.AI! This document provi
 
 ## 📜 **Code of Conduct**
 
-This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [support@omniverse.ai](mailto:support@omniverse.ai).
+This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to [itisaddy7@gmail.com](mailto:itisaddy7@gmail.com).
 
 ## 🚀 **Getting Started**
 
@@ -109,6 +109,7 @@ git commit -m "test: add accessibility tests for voice components"
 ```
 
 **Commit Types:**
+
 - `feat`: New features
 - `fix`: Bug fixes
 - `docs`: Documentation changes
@@ -154,11 +155,11 @@ interface VoiceSearchProps {
 const VoiceSearch: React.FC<VoiceSearchProps> = ({
   onResult,
   isListening = false,
-  className = ''
+  className = "",
 }) => {
   // Use hooks properly
   const [isActive, setIsActive] = useState(false);
-  
+
   // Memoize expensive calculations
   const processedResults = useMemo(() => {
     return expensiveCalculation(results);
@@ -181,10 +182,10 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
 ```tsx
 // ✅ Good: Use Tailwind classes with proper organization
 <button className="
-  px-4 py-2 
-  bg-blue-500 hover:bg-blue-600 
-  text-white font-medium 
-  rounded-lg shadow-md 
+  px-4 py-2
+  bg-blue-500 hover:bg-blue-600
+  text-white font-medium
+  rounded-lg shadow-md
   transition-colors duration-200
   focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
   disabled:opacity-50 disabled:cursor-not-allowed
@@ -228,18 +229,18 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
 
 ```typescript
 // Example test structure
-describe('VoiceSearch Component', () => {
-  it('should start listening when button is clicked', async () => {
+describe("VoiceSearch Component", () => {
+  it("should start listening when button is clicked", async () => {
     const onResult = jest.fn();
     render(<VoiceSearch onResult={onResult} />);
-    
-    const button = screen.getByLabelText('Start voice search');
+
+    const button = screen.getByLabelText("Start voice search");
     fireEvent.click(button);
-    
-    expect(button).toHaveAttribute('aria-pressed', 'true');
+
+    expect(button).toHaveAttribute("aria-pressed", "true");
   });
 
-  it('should be accessible', async () => {
+  it("should be accessible", async () => {
     const { container } = render(<VoiceSearch onResult={jest.fn()} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -251,15 +252,15 @@ describe('VoiceSearch Component', () => {
 
 ```typescript
 // Test complete user flows
-describe('Voice Shopping Flow', () => {
-  it('should complete voice search to purchase flow', async () => {
+describe("Voice Shopping Flow", () => {
+  it("should complete voice search to purchase flow", async () => {
     // Test the complete user journey
-    await voiceSearch('Find Nike shoes under 10000');
-    await selectProduct('Nike Air Force 1');
+    await voiceSearch("Find Nike shoes under 10000");
+    await selectProduct("Nike Air Force 1");
     await addToCart();
     await proceedToCheckout();
-    
-    expect(screen.getByText('Order Summary')).toBeInTheDocument();
+
+    expect(screen.getByText("Order Summary")).toBeInTheDocument();
   });
 });
 ```
@@ -268,12 +269,12 @@ describe('Voice Shopping Flow', () => {
 
 ```typescript
 // Test performance metrics
-describe('Performance', () => {
-  it('should load products within 2 seconds', async () => {
+describe("Performance", () => {
+  it("should load products within 2 seconds", async () => {
     const startTime = performance.now();
     await loadProducts();
     const endTime = performance.now();
-    
+
     expect(endTime - startTime).toBeLessThan(2000);
   });
 });
@@ -293,37 +294,44 @@ describe('Performance', () => {
 
 ```markdown
 ## 📋 Description
+
 Brief description of changes
 
 ## 🎯 Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## 🧪 Testing
+
 - [ ] Unit tests added/updated
 - [ ] Integration tests added/updated
 - [ ] Accessibility tests passing
 - [ ] Performance tests passing
 
 ## 📱 Mobile Testing
+
 - [ ] Tested on mobile devices
 - [ ] Touch interactions working
 - [ ] Responsive design verified
 
 ## ♿ Accessibility
+
 - [ ] ARIA labels added
 - [ ] Keyboard navigation working
 - [ ] Screen reader compatible
 - [ ] Color contrast verified
 
 ## 📊 Performance
+
 - [ ] Bundle size impact checked
 - [ ] Animation performance verified
 - [ ] Core Web Vitals maintained
 
 ## 📸 Screenshots
+
 Include screenshots for UI changes
 ```
 
@@ -338,6 +346,7 @@ Use the bug report template:
 Clear description of the bug
 
 **Steps to Reproduce**
+
 1. Go to '...'
 2. Click on '...'
 3. Scroll down to '...'
@@ -350,6 +359,7 @@ What you expected to happen
 Add screenshots if applicable
 
 **Environment**
+
 - OS: [e.g. iOS]
 - Browser: [e.g. chrome, safari]
 - Version: [e.g. 22]
@@ -402,16 +412,19 @@ Any other context or screenshots
 ### **High Priority Areas**
 
 1. **Voice Recognition Improvements**
+
    - Multi-language support enhancement
    - Noise cancellation algorithms
    - Accent recognition improvements
 
 2. **Accessibility Enhancements**
+
    - Screen reader optimizations
    - Keyboard navigation improvements
    - High contrast mode support
 
 3. **Mobile Experience**
+
    - Touch gesture improvements
    - Performance optimizations
    - PWA features
@@ -431,6 +444,7 @@ Any other context or screenshots
 ## 🎉 **Recognition**
 
 Contributors will be recognized in:
+
 - README.md contributors section
 - Release notes
 - Project documentation
@@ -439,7 +453,7 @@ Contributors will be recognized in:
 ## 📞 **Getting Help**
 
 - 💬 [GitHub Discussions](https://github.com/your-username/omniverse-ai-voice-marketplace/discussions)
-- 📧 [Email Support](mailto:support@omniverse.ai)
+- 📧 [Email Support](mailto:itisaddy7@gmail.com)
 - 📚 [Documentation](https://github.com/your-username/omniverse-ai-voice-marketplace/wiki)
 
 ## 📄 **License**

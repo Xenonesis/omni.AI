@@ -29,10 +29,10 @@
 
 <div align="center">
 
-| 🌐 **Live Demo** | 🎬 **Video Demo** | 📚 **Documentation** |
-|:---:|:---:|:---:|
+|                      🌐 **Live Demo**                       |                        🎬 **Video Demo**                         |                  📚 **Documentation**                   |
+| :---------------------------------------------------------: | :--------------------------------------------------------------: | :-----------------------------------------------------: |
 | [omniverseai.netlify.app](https://omniverseai.netlify.app/) | [YouTube Demo](https://youtu.be/t0l8Xd4SySU?si=bmTofC96xXdD2wks) | [API Docs](https://www.omnidim.io/docs/getting-started) |
-| Experience the live platform | Watch the full walkthrough | Explore API integration |
+|                Experience the live platform                 |                    Watch the full walkthrough                    |                 Explore API integration                 |
 
 </div>
 
@@ -41,17 +41,20 @@
 <div align="center">
 
 ### 🌐 **[Experience the Live Platform](https://omniverseai.netlify.app/)**
-*Try voice search, browse products, and experience the AI-powered shopping journey*
+
+_Try voice search, browse products, and experience the AI-powered shopping journey_
 
 ### 🎥 **[Watch Full Video Demonstration](https://youtu.be/t0l8Xd4SySU?si=bmTofC96xXdD2wks)**
-*Complete walkthrough of features, voice commands, and user interface*
+
+_Complete walkthrough of features, voice commands, and user interface_
 
 ---
 
 **🚀 Quick Demo Steps:**
+
 1. Visit [omniverseai.netlify.app](https://omniverseai.netlify.app/)
 2. Click the voice search button (🎤)
-3. Say: *"Find Nike shoes under 10000 rupees"*
+3. Say: _"Find Nike shoes under 10000 rupees"_
 4. Explore the AI-powered results and filtering options
 
 </div>
@@ -62,26 +65,26 @@
 
 <div align="center">
 
-| 🎤 **Voice AI** | 🛍️ **Smart Shopping** | 🔍 **Intelligent Search** | 💰 **Price Intelligence** |
-|:---:|:---:|:---:|:---:|
-| Real-time voice recognition | 30+ Premium products | AI-powered discovery | Multi-seller comparison |
-| Natural language processing | Indian marketplace focus | Advanced filtering | Best deal recommendations |
-| 95%+ accuracy rate | Verified sellers | Typo tolerance | Price drop alerts |
-| Hindi & English support | Live inventory tracking | 60fps animations | Savings insights |
+|       🎤 **Voice AI**       |  🛍️ **Smart Shopping**   | 🔍 **Intelligent Search** | 💰 **Price Intelligence** |
+| :-------------------------: | :----------------------: | :-----------------------: | :-----------------------: |
+| Real-time voice recognition |   30+ Premium products   |   AI-powered discovery    |  Multi-seller comparison  |
+| Natural language processing | Indian marketplace focus |    Advanced filtering     | Best deal recommendations |
+|     95%+ accuracy rate      |     Verified sellers     |      Typo tolerance       |     Price drop alerts     |
+|   Hindi & English support   | Live inventory tracking  |     60fps animations      |     Savings insights      |
 
-| 📱 **Mobile-First Design** | 🎨 **Enhanced UI/UX** | ♿ **Accessibility** | ⚡ **Performance** |
-|:---:|:---:|:---:|:---:|
-| Fully responsive design | Modern glassmorphism navbar | WCAG 2.1 AA compliant | 60fps smooth animations |
-| Touch-optimized interactions | Smart mobile menu | Screen reader support | <200ms API response |
-| Safe area support | Voice status indicators | Keyboard navigation | Optimized bundle sizes |
-| Mobile-first breakpoints | Micro-interactions | Reduced motion support | Progressive loading |
+|  📱 **Mobile-First Design**  |    🎨 **Enhanced UI/UX**    |  ♿ **Accessibility**  |   ⚡ **Performance**    |
+| :--------------------------: | :-------------------------: | :--------------------: | :---------------------: |
+|   Fully responsive design    | Modern glassmorphism navbar | WCAG 2.1 AA compliant  | 60fps smooth animations |
+| Touch-optimized interactions |      Smart mobile menu      | Screen reader support  |   <200ms API response   |
+|      Safe area support       |   Voice status indicators   |  Keyboard navigation   | Optimized bundle sizes  |
+|   Mobile-first breakpoints   |     Micro-interactions      | Reduced motion support |   Progressive loading   |
 
 </div>
 
 ### 🎤 **Advanced Voice Shopping**
 
 - **🎯 Speech-to-Text Integration**: Real-time voice recognition with 95%+ accuracy
-- **🧠 Natural Language Understanding**: Process complex shopping queries like *"Find me Nike shoes under Rs.10,000 with good reviews"*
+- **🧠 Natural Language Understanding**: Process complex shopping queries like _"Find me Nike shoes under Rs.10,000 with good reviews"_
 - **🗣️ Voice-Guided Navigation**: Complete hands-free shopping experience
 - **🌐 Multi-Language Support**: Hindi and English voice commands
 - **♿ Accessibility Features**: Screen reader compatible with reduced motion support
@@ -107,6 +110,7 @@
 ### 🎨 **Comprehensive UI/UX Design System**
 
 #### **🌈 Visual Design Language**
+
 - **🎨 Color Psychology**: Carefully selected color palette optimized for e-commerce conversion
 - **📐 Golden Ratio Layout**: Mathematically pleasing proportions throughout the interface
 - **🔤 Typography Hierarchy**: Clear information architecture with 9-level font scale
@@ -115,6 +119,7 @@
 - **🎭 Dark/Light Mode**: Adaptive theming with automatic system preference detection
 
 #### **🎬 Advanced Animation System**
+
 - **⚡ 60fps Performance**: Hardware-accelerated animations using CSS transforms and opacity
 - **🎯 Purposeful Motion**: Every animation serves a functional purpose (loading, feedback, navigation)
 - **♿ Reduced Motion Support**: Respects user accessibility preferences with `prefers-reduced-motion`
@@ -123,6 +128,7 @@
 - **🎨 Loading States**: Beautiful skeleton screens and progress indicators for all async operations
 
 #### **📱 Mobile-First Responsive Design**
+
 - **🎯 Touch-Optimized Interface**: 44px minimum touch targets following Apple/Google guidelines
 - **👆 Gesture Support**: Swipe navigation, pull-to-refresh, and pinch-to-zoom where appropriate
 - **📐 Flexible Grid System**: CSS Grid and Flexbox for complex responsive layouts
@@ -131,6 +137,7 @@
 - **⚡ Mobile Performance**: Optimized bundle sizes and lazy loading for fast mobile networks
 
 #### **🎤 Voice Interface Design**
+
 - **🎙️ Visual Voice Feedback**: Real-time waveform visualization during voice input
 - **🔊 Audio Cues**: Subtle sound effects for voice recognition start/stop/success/error states
 - **💬 Voice Command Hints**: Contextual suggestions for what users can say
@@ -139,6 +146,7 @@
 - **♿ Voice Accessibility**: Screen reader announcements for voice interaction states
 
 #### **🛍️ E-commerce UX Patterns**
+
 - **🔍 Smart Search Interface**: Auto-complete, typo tolerance, and search suggestions
 - **🏷️ Product Card Design**: Optimized for quick scanning with key information hierarchy
 - **💰 Price Display Psychology**: Strategic use of color, size, and positioning for conversion
@@ -149,6 +157,7 @@
 #### **🎨 Interactive Components Library**
 
 ##### **🔘 Button System**
+
 - **Primary Buttons**: Gradient backgrounds with hover elevation and active states
 - **Secondary Buttons**: Outlined style with smooth fill animations on hover
 - **Icon Buttons**: Circular design with ripple effects and tooltip support
@@ -156,6 +165,7 @@
 - **CTA Buttons**: High-contrast design optimized for conversion with urgency indicators
 
 ##### **📋 Form Elements**
+
 - **Smart Input Fields**: Auto-validation with real-time feedback and error states
 - **Voice Input Integration**: Speech-to-text capability in search and form fields
 - **Floating Labels**: Modern material design with smooth animation transitions
@@ -163,6 +173,7 @@
 - **Accessibility Features**: Proper labeling, keyboard navigation, and screen reader support
 
 ##### **🎛️ Filter & Sort Interface**
+
 - **Collapsible Filter Panels**: Organized categories with expand/collapse animations
 - **Range Sliders**: Custom-styled price and rating sliders with real-time updates
 - **Tag-based Filters**: Visual tag system with easy add/remove interactions
@@ -170,6 +181,7 @@
 - **Filter Chips**: Applied filters displayed as removable chips with clear actions
 
 ##### **📊 Data Visualization**
+
 - **Product Comparison Tables**: Side-by-side comparison with highlighting differences
 - **Price History Charts**: Interactive graphs showing price trends over time
 - **Rating Distributions**: Visual breakdown of review ratings with bar charts
@@ -179,6 +191,7 @@
 #### **🎯 User Experience Flows**
 
 ##### **🛒 Shopping Journey Optimization**
+
 - **Discovery Phase**: Voice-guided product exploration with smart suggestions
 - **Research Phase**: Detailed product information with comparison tools
 - **Decision Phase**: Price analysis, reviews, and seller verification
@@ -186,6 +199,7 @@
 - **Post-Purchase**: Order tracking and satisfaction feedback collection
 
 ##### **🎤 Voice Interaction Patterns**
+
 - **Wake Word Detection**: "Hey Omniverse" activation with visual feedback
 - **Context Preservation**: Maintains conversation state across multiple queries
 - **Error Recovery**: Graceful handling of misunderstood commands with clarification prompts
@@ -193,6 +207,7 @@
 - **Voice Shortcuts**: Quick commands for frequent actions (cart, favorites, orders)
 
 ##### **📱 Mobile UX Patterns**
+
 - **Thumb-Friendly Navigation**: Bottom navigation bar for easy one-handed use
 - **Swipe Gestures**: Intuitive swipe actions for product browsing and filtering
 - **Pull-to-Refresh**: Standard mobile pattern for content updates
@@ -202,6 +217,7 @@
 #### **🎨 Design Principles & Philosophy**
 
 ##### **🌟 Core Design Values**
+
 - **Simplicity First**: Clean, uncluttered interface focusing on essential elements
 - **Accessibility by Design**: WCAG 2.1 AA compliance built into every component
 - **Performance-Driven**: Every design decision optimized for speed and efficiency
@@ -209,6 +225,7 @@
 - **Cultural Sensitivity**: Design elements respectful of Indian cultural preferences
 
 ##### **🎭 Visual Hierarchy System**
+
 - **Primary Actions**: High-contrast buttons with prominent placement and sizing
 - **Secondary Actions**: Subtle styling that doesn't compete with primary elements
 - **Information Architecture**: Clear content organization with logical grouping
@@ -216,6 +233,7 @@
 - **Progressive Disclosure**: Complex information revealed gradually as needed
 
 ##### **🌈 Color Psychology & Branding**
+
 - **Trust Colors**: Blue tones for security, reliability, and trustworthiness
 - **Action Colors**: Orange/red for urgency, calls-to-action, and deals
 - **Success Colors**: Green for confirmations, success states, and positive feedback
@@ -225,6 +243,7 @@
 #### **🔄 Interaction Design Patterns**
 
 ##### **⚡ Micro-interactions Catalog**
+
 - **Button Hover States**: Subtle elevation and color transitions (150ms duration)
 - **Loading Animations**: Skeleton screens and progress indicators with branded styling
 - **Form Validation**: Real-time feedback with smooth error state transitions
@@ -233,6 +252,7 @@
 - **Search Suggestions**: Fade-in animations with staggered timing (100ms intervals)
 
 ##### **🎪 Page Transitions**
+
 - **Route Changes**: Smooth slide transitions between pages (300ms duration)
 - **Modal Overlays**: Backdrop blur with scale-in animation (250ms duration)
 - **Drawer Navigation**: Slide-out menus with momentum-based easing
@@ -240,6 +260,7 @@
 - **Content Loading**: Fade-in animations for new content (200ms duration)
 
 ##### **📱 Touch Interactions**
+
 - **Tap Targets**: Minimum 44px touch targets following accessibility guidelines
 - **Ripple Effects**: Material Design-inspired feedback for button presses
 - **Long Press Actions**: Context menus and quick actions with haptic feedback
@@ -249,6 +270,7 @@
 #### **🎯 Conversion Optimization Features**
 
 ##### **💰 E-commerce Psychology**
+
 - **Scarcity Indicators**: Stock levels and limited-time offers with urgency styling
 - **Social Proof**: Customer reviews, ratings, and purchase notifications
 - **Trust Signals**: Security badges, verified seller indicators, and guarantees
@@ -256,6 +278,7 @@
 - **FOMO Elements**: "Others are viewing" and "Recently purchased" notifications
 
 ##### **🛒 Cart & Checkout UX**
+
 - **Persistent Cart**: Floating cart icon with item count and quick preview
 - **Guest Checkout**: Streamlined flow without forced registration
 - **Progress Indicators**: Clear checkout steps with completion status
@@ -263,6 +286,7 @@
 - **Payment Security**: Visual security indicators and trusted payment methods
 
 ##### **📊 Personalization Features**
+
 - **Adaptive Interface**: Layout adjusts based on user behavior and preferences
 - **Smart Recommendations**: AI-powered product suggestions with explanation
 - **Browsing History**: Easy access to recently viewed products
@@ -281,7 +305,7 @@
 
 - **🤖 AI-Powered Search**: Smart product discovery with typo tolerance and semantic understanding
 - **🎛️ Advanced Filters**: Category, price range, brand, ratings, availability, and shipping options
-- **🎤 Voice Search**: *"Show me Samsung phones under Rs.50,000"* or *"Find gaming laptops"*
+- **🎤 Voice Search**: _"Show me Samsung phones under Rs.50,000"_ or _"Find gaming laptops"_
 - **⚡ Real-time Results**: Instant search with 60fps smooth animations and transitions
 - **📝 Search History**: Personalized search suggestions based on user behavior
 
@@ -312,6 +336,7 @@
 ## 🏗️ Technical Architecture
 
 ### **Frontend Stack**
+
 ```
 React 18.3.1 + TypeScript 5.5.3
 ├── Vite 5.4.2 (Build Tool)
@@ -323,6 +348,7 @@ React 18.3.1 + TypeScript 5.5.3
 ```
 
 ### **Backend Stack**
+
 ```
 Node.js + Express 5.1.0
 ├── CORS 2.8.5 (Cross-Origin)
@@ -332,6 +358,7 @@ Node.js + Express 5.1.0
 ```
 
 ### **Development Tools**
+
 ```
 ESLint 9.9.1 (Code Quality)
 ├── TypeScript ESLint 8.3.0
@@ -343,50 +370,54 @@ ESLint 9.9.1 (Code Quality)
 ## 📦 Product Catalog
 
 ### 📱 **Electronics (10 Products)**
-| Product | Price (Rs.) | Seller | Rating | Features |
-|---------|-------------|--------|--------|----------|
-| Apple iPhone 14 Pro Max | 1,29,999 | TechMart | 4.8⭐ | A16 Bionic, Pro Camera System |
-| Samsung Galaxy Buds Pro | 11,499 | AudioPoint | 4.5⭐ | Active Noise Cancellation |
-| Sony WH-1000XM5 Headphones | 29,990 | GadgetZilla | 4.7⭐ | Industry-leading Noise Canceling |
-| Apple MacBook Air M2 | 99,990 | MacCorner | 4.9⭐ | M2 Chip, 13.6" Liquid Retina |
-| Lenovo Legion 5 | 84,990 | GameCentral | 4.6⭐ | Gaming Laptop, RTX Graphics |
-| LG 55" OLED Smart TV | 1,14,990 | HomeVision | 4.8⭐ | 4K OLED, webOS Smart Platform |
-| Canon EOS R10 | 79,999 | CamZone | 4.5⭐ | Mirrorless Camera, 24.2MP |
-| Xiaomi Mi Smart Band 8 | 3,499 | FitTech | 4.3⭐ | Health Tracking, 16-day Battery |
-| JBL Flip 6 Speaker | 8,999 | SoundHub | 4.6⭐ | Portable Bluetooth, IP67 |
-| Amazon Echo Dot (5th Gen) | 5,499 | EComWorld | 4.4⭐ | Alexa Voice Assistant |
+
+| Product                    | Price (Rs.) | Seller      | Rating | Features                         |
+| -------------------------- | ----------- | ----------- | ------ | -------------------------------- |
+| Apple iPhone 14 Pro Max    | 1,29,999    | TechMart    | 4.8⭐  | A16 Bionic, Pro Camera System    |
+| Samsung Galaxy Buds Pro    | 11,499      | AudioPoint  | 4.5⭐  | Active Noise Cancellation        |
+| Sony WH-1000XM5 Headphones | 29,990      | GadgetZilla | 4.7⭐  | Industry-leading Noise Canceling |
+| Apple MacBook Air M2       | 99,990      | MacCorner   | 4.9⭐  | M2 Chip, 13.6" Liquid Retina     |
+| Lenovo Legion 5            | 84,990      | GameCentral | 4.6⭐  | Gaming Laptop, RTX Graphics      |
+| LG 55" OLED Smart TV       | 1,14,990    | HomeVision  | 4.8⭐  | 4K OLED, webOS Smart Platform    |
+| Canon EOS R10              | 79,999      | CamZone     | 4.5⭐  | Mirrorless Camera, 24.2MP        |
+| Xiaomi Mi Smart Band 8     | 3,499       | FitTech     | 4.3⭐  | Health Tracking, 16-day Battery  |
+| JBL Flip 6 Speaker         | 8,999       | SoundHub    | 4.6⭐  | Portable Bluetooth, IP67         |
+| Amazon Echo Dot (5th Gen)  | 5,499       | EComWorld   | 4.4⭐  | Alexa Voice Assistant            |
 
 ### 👕 **Fashion & Footwear (10 Products)**
-| Product | Price (Rs.) | Seller | Rating | Features |
-|---------|-------------|--------|--------|----------|
-| Nike Air Force 1 | 7,495 | KicksKart | 4.7⭐ | Classic Basketball Shoe |
-| Adidas Ultraboost 22 | 11,999 | ShoeSpot | 4.8⭐ | Boost Midsole Technology |
-| Puma Running Shoes | 3,499 | SportyFeet | 4.5⭐ | Lightweight, Breathable |
-| Levi's 511 Slim Fit Jeans | 3,799 | DenimWorld | 4.6⭐ | Premium Denim, Slim Fit |
-| Zara Oversized Hoodie | 2,299 | StyleMe | 4.4⭐ | Cotton Blend, Trendy Design |
-| Uniqlo AIRism Tee | 999 | WearWell | 4.2⭐ | Moisture-Wicking Technology |
-| H&M Cotton Chinos | 2,199 | TrendHub | 4.3⭐ | 100% Cotton, Smart Casual |
-| Ray-Ban Aviators | 6,490 | VisionMart | 4.6⭐ | Classic Aviator Design |
-| Fossil Gen 6 Watch | 18,495 | WatchVault | 4.5⭐ | Wear OS, Heart Rate Monitor |
-| Casio G-Shock GA-2100 | 7,599 | TimeSquare | 4.7⭐ | Shock Resistant, 200M Water |
+
+| Product                   | Price (Rs.) | Seller     | Rating | Features                    |
+| ------------------------- | ----------- | ---------- | ------ | --------------------------- |
+| Nike Air Force 1          | 7,495       | KicksKart  | 4.7⭐  | Classic Basketball Shoe     |
+| Adidas Ultraboost 22      | 11,999      | ShoeSpot   | 4.8⭐  | Boost Midsole Technology    |
+| Puma Running Shoes        | 3,499       | SportyFeet | 4.5⭐  | Lightweight, Breathable     |
+| Levi's 511 Slim Fit Jeans | 3,799       | DenimWorld | 4.6⭐  | Premium Denim, Slim Fit     |
+| Zara Oversized Hoodie     | 2,299       | StyleMe    | 4.4⭐  | Cotton Blend, Trendy Design |
+| Uniqlo AIRism Tee         | 999         | WearWell   | 4.2⭐  | Moisture-Wicking Technology |
+| H&M Cotton Chinos         | 2,199       | TrendHub   | 4.3⭐  | 100% Cotton, Smart Casual   |
+| Ray-Ban Aviators          | 6,490       | VisionMart | 4.6⭐  | Classic Aviator Design      |
+| Fossil Gen 6 Watch        | 18,495      | WatchVault | 4.5⭐  | Wear OS, Heart Rate Monitor |
+| Casio G-Shock GA-2100     | 7,599       | TimeSquare | 4.7⭐  | Shock Resistant, 200M Water |
 
 ### 💄 **Beauty & Personal Care (10 Products)**
-| Product | Price (Rs.) | Seller | Rating | Features |
-|---------|-------------|--------|--------|----------|
-| L'Oréal Revitalift Serum | 1,099 | GlowStore | 4.5⭐ | Anti-Aging, Pro-Retinol |
-| Neutrogena Hydro Boost | 849 | DermaCare | 4.6⭐ | Hyaluronic Acid, Oil-Free |
-| Gillette Fusion Razor | 499 | ShaveIt | 4.3⭐ | 5-Blade Technology |
-| Maybelline Fit Me Foundation | 549 | BeautyMart | 4.4⭐ | Natural Finish, 40 Shades |
-| Mamaearth Ubtan Face Wash | 249 | NatureRoot | 4.2⭐ | Natural Ingredients, Gentle |
-| Nivea Body Lotion | 329 | FreshKart | 4.3⭐ | 48H Moisture, All Skin Types |
-| Philips Beard Trimmer | 1,499 | GroomBuddy | 4.5⭐ | 20 Length Settings, Cordless |
-| Dyson Airwrap | 44,900 | HairPro | 4.8⭐ | Multi-Styler, Coanda Technology |
-| Dove Intense Repair Shampoo | 299 | CareNest | 4.2⭐ | Keratin Repair, Damaged Hair |
-| The Ordinary Niacinamide 10% | 599 | SkinLabs | 4.7⭐ | Blemish Control, Zinc 1% |
+
+| Product                      | Price (Rs.) | Seller     | Rating | Features                        |
+| ---------------------------- | ----------- | ---------- | ------ | ------------------------------- |
+| L'Oréal Revitalift Serum     | 1,099       | GlowStore  | 4.5⭐  | Anti-Aging, Pro-Retinol         |
+| Neutrogena Hydro Boost       | 849         | DermaCare  | 4.6⭐  | Hyaluronic Acid, Oil-Free       |
+| Gillette Fusion Razor        | 499         | ShaveIt    | 4.3⭐  | 5-Blade Technology              |
+| Maybelline Fit Me Foundation | 549         | BeautyMart | 4.4⭐  | Natural Finish, 40 Shades       |
+| Mamaearth Ubtan Face Wash    | 249         | NatureRoot | 4.2⭐  | Natural Ingredients, Gentle     |
+| Nivea Body Lotion            | 329         | FreshKart  | 4.3⭐  | 48H Moisture, All Skin Types    |
+| Philips Beard Trimmer        | 1,499       | GroomBuddy | 4.5⭐  | 20 Length Settings, Cordless    |
+| Dyson Airwrap                | 44,900      | HairPro    | 4.8⭐  | Multi-Styler, Coanda Technology |
+| Dove Intense Repair Shampoo  | 299         | CareNest   | 4.2⭐  | Keratin Repair, Damaged Hair    |
+| The Ordinary Niacinamide 10% | 599         | SkinLabs   | 4.7⭐  | Blemish Control, Zinc 1%        |
 
 ## 🚀 Quick Start
 
 ### **Prerequisites**
+
 ```bash
 Node.js >= 18.0.0
 npm >= 9.0.0
@@ -394,6 +425,7 @@ Git
 ```
 
 ### **Installation**
+
 ```bash
 # Clone the repository
 git clone https://github.com/your-username/omniverse-ai-voice-marketplace.git
@@ -410,6 +442,7 @@ npm run dev
 ```
 
 ### **Access Points**
+
 - **Frontend**: http://localhost:5174
 - **Marketplace**: http://localhost:5174/marketplace
 - **API Server**: http://localhost:3001
@@ -419,6 +452,7 @@ npm run dev
 ## 🎮 Usage Guide
 
 ### **Voice Shopping Commands**
+
 ```
 "Show me Nike shoes under 10000 rupees"
 "Find Samsung phones with good ratings"
@@ -428,6 +462,7 @@ npm run dev
 ```
 
 ### **Search Filters**
+
 - **Category**: Electronics, Fashion, Beauty
 - **Price Range**: Min/Max price filtering
 - **Brand**: Filter by specific brands
@@ -436,6 +471,7 @@ npm run dev
 - **Shipping**: Fast shipping options
 
 ### **API Endpoints**
+
 ```bash
 # Search products
 GET /api/search?q=nike&category=fashion&max_price=10000
@@ -452,6 +488,7 @@ GET /api/search?q=skincare&sort_by=rating&sort_order=desc
 ## 🔧 Configuration
 
 ### **Environment Variables**
+
 ```env
 # API Configuration
 API_PORT=3001
@@ -472,14 +509,15 @@ SMTP_PASS=your_app_password
 ```
 
 ### **omniverse.AI Widget Integration**
+
 ```html
 <!-- Add to your website -->
 <script src="https://widget.omniverse.ai/widget.js"></script>
 <script>
   Omniverse.init({
-    secretKey: '201ff4fd19c1ffd37b272cc1eacb874a',
-    theme: 'light',
-    position: 'bottom-right'
+    secretKey: "201ff4fd19c1ffd37b272cc1eacb874a",
+    theme: "light",
+    position: "bottom-right",
   });
 </script>
 ```
@@ -487,6 +525,7 @@ SMTP_PASS=your_app_password
 ## 📱 Features Deep Dive
 
 ### **Voice Recognition System**
+
 - **Speech-to-Text**: Web Speech API integration
 - **Natural Language Processing**: Advanced query understanding
 - **Context Awareness**: Maintains conversation context
@@ -494,6 +533,7 @@ SMTP_PASS=your_app_password
 - **Multi-Language**: Hindi and English support
 
 ### **AI Recommendations**
+
 - **Collaborative Filtering**: User behavior analysis
 - **Content-Based Filtering**: Product similarity matching
 - **Hybrid Approach**: Combined recommendation strategies
@@ -501,6 +541,7 @@ SMTP_PASS=your_app_password
 - **Personalization**: User preference tracking
 
 ### **Performance Optimizations**
+
 - **60fps Animations**: Smooth Framer Motion transitions
 - **Lazy Loading**: Progressive image loading
 - **Code Splitting**: Optimized bundle sizes
@@ -508,6 +549,7 @@ SMTP_PASS=your_app_password
 - **SEO Optimization**: Server-side rendering ready
 
 ### **Accessibility Features**
+
 - **Screen Reader Support**: ARIA labels and descriptions
 - **Keyboard Navigation**: Full keyboard accessibility
 - **Reduced Motion**: Respects user motion preferences
@@ -517,6 +559,7 @@ SMTP_PASS=your_app_password
 ## 🧪 Testing
 
 ### **API Testing**
+
 ```bash
 # Test all products
 curl "http://localhost:3001/api/search?q="
@@ -532,6 +575,7 @@ curl "http://localhost:3001/api/search?q=nike&sort_by=price"
 ```
 
 ### **Frontend Testing**
+
 ```bash
 # Run development server
 npm run dev
@@ -549,6 +593,7 @@ npm run lint
 ## 📊 Analytics & Tracking
 
 ### **Google Sheets Integration**
+
 - **User Interactions**: Search queries and clicks
 - **Purchase Tracking**: Order completion rates
 - **Performance Metrics**: Page load times and errors
@@ -556,6 +601,7 @@ npm run lint
 - **Product Analytics**: Popular products and categories
 
 ### **CRM Features**
+
 - **Customer Profiles**: User behavior tracking
 - **Purchase History**: Order management
 - **Preference Learning**: Personalized recommendations
@@ -565,6 +611,7 @@ npm run lint
 ## 🔐 Security Features
 
 ### **Data Protection**
+
 - **Input Validation**: Sanitized user inputs
 - **CORS Configuration**: Secure cross-origin requests
 - **Rate Limiting**: API abuse prevention
@@ -572,6 +619,7 @@ npm run lint
 - **Privacy Compliance**: GDPR-ready data handling
 
 ### **Authentication Ready**
+
 - **JWT Integration**: Token-based authentication
 - **OAuth Support**: Social login capabilities
 - **Session Management**: Secure session handling
@@ -581,6 +629,7 @@ npm run lint
 ## 🚀 Deployment
 
 ### **Production Build**
+
 ```bash
 # Build frontend
 npm run build
@@ -594,6 +643,7 @@ pm2 start "npm run preview" --name "omniverse-frontend"
 ```
 
 ### **Docker Deployment**
+
 ```dockerfile
 # Dockerfile example
 FROM node:18-alpine
@@ -607,6 +657,7 @@ CMD ["npm", "start"]
 ```
 
 ### **Environment Setup**
+
 ```bash
 # Production environment
 NODE_ENV=production
@@ -621,6 +672,7 @@ SSL_KEY_PATH=/path/to/key.pem
 ## 🤝 Contributing
 
 ### **Development Workflow**
+
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
 3. Commit changes: `git commit -m 'Add amazing feature'`
@@ -628,6 +680,7 @@ SSL_KEY_PATH=/path/to/key.pem
 5. Open a Pull Request
 
 ### **Code Standards**
+
 - **TypeScript**: Strict type checking enabled
 - **ESLint**: Airbnb configuration with custom rules
 - **Prettier**: Consistent code formatting
@@ -652,7 +705,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Documentation**: [Wiki](https://github.com/your-username/omniverse-ai-voice-marketplace/wiki)
 - **Issues**: [GitHub Issues](https://github.com/your-username/omniverse-ai-voice-marketplace/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/your-username/omniverse-ai-voice-marketplace/discussions)
-- **Email**: support@omniverse.ai
+- **Email**: itisaddy7@gmail.com
 
 ## 🏢 Project Structure
 
@@ -693,6 +746,7 @@ omniverse-ai-voice-marketplace/
 ## 🎨 UI/UX Design System
 
 ### **Color Palette**
+
 ```css
 /* Primary Colors */
 --primary-50: #eff6ff;
@@ -718,52 +772,55 @@ omniverse-ai-voice-marketplace/
 ```
 
 ### **Typography Scale**
+
 ```css
 /* Font Families */
-font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 
 /* Font Sizes */
-text-xs: 0.75rem;     /* 12px */
-text-sm: 0.875rem;    /* 14px */
-text-base: 1rem;      /* 16px */
-text-lg: 1.125rem;    /* 18px */
-text-xl: 1.25rem;     /* 20px */
-text-2xl: 1.5rem;     /* 24px */
-text-3xl: 1.875rem;   /* 30px */
-text-4xl: 2.25rem;    /* 36px */
-text-6xl: 3.75rem;    /* 60px */
+text-xs: 0.75rem; /* 12px */
+text-sm: 0.875rem; /* 14px */
+text-base: 1rem; /* 16px */
+text-lg: 1.125rem; /* 18px */
+text-xl: 1.25rem; /* 20px */
+text-2xl: 1.5rem; /* 24px */
+text-3xl: 1.875rem; /* 30px */
+text-4xl: 2.25rem; /* 36px */
+text-6xl: 3.75rem; /* 60px */
 ```
 
 ### **Animation System**
+
 ```javascript
 // Framer Motion Variants
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: "easeOut" }
+  transition: { duration: 0.5, ease: "easeOut" },
 };
 
 const staggerContainer = {
   animate: {
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const scaleOnHover = {
   whileHover: { scale: 1.05 },
-  whileTap: { scale: 0.95 }
+  whileTap: { scale: 0.95 },
 };
 ```
 
 ## 🔧 Advanced Configuration
 
 ### **Vite Configuration**
+
 ```typescript
 // vite.config.ts
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
@@ -771,63 +828,61 @@ export default defineConfig({
     port: 5174,
     host: true,
     proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
+      "/api": {
+        target: "http://localhost:3001",
         changeOrigin: true,
-        secure: false
-      }
-    }
+        secure: false,
+      },
+    },
   },
   build: {
-    outDir: 'dist',
+    outDir: "dist",
     sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          animations: ['framer-motion'],
-          ui: ['lucide-react']
-        }
-      }
-    }
-  }
+          vendor: ["react", "react-dom"],
+          animations: ["framer-motion"],
+          ui: ["lucide-react"],
+        },
+      },
+    },
+  },
 });
 ```
 
 ### **Tailwind Configuration**
+
 ```javascript
 // tailwind.config.js
 module.exports = {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         primary: {
-          50: '#eff6ff',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8'
+          50: "#eff6ff",
+          500: "#3b82f6",
+          600: "#2563eb",
+          700: "#1d4ed8",
         },
         accent: {
-          500: '#8b5cf6',
-          600: '#7c3aed',
-          700: '#6d28d9'
-        }
+          500: "#8b5cf6",
+          600: "#7c3aed",
+          700: "#6d28d9",
+        },
       },
       animation: {
-        'fade-in': 'fadeIn 0.5s ease-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'pulse-slow': 'pulse 3s infinite'
+        "fade-in": "fadeIn 0.5s ease-out",
+        "slide-up": "slideUp 0.3s ease-out",
+        "pulse-slow": "pulse 3s infinite",
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif']
-      }
-    }
+        sans: ["Inter", "system-ui", "sans-serif"],
+      },
+    },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography')
-  ]
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 };
 ```
 
@@ -869,21 +924,22 @@ module.exports = {
 ### **Search API Endpoints**
 
 #### **GET /api/search**
+
 Search products with advanced filtering options.
 
 **Parameters:**
 
 ```typescript
 interface SearchParams {
-  q?: string;              // Search query
-  category?: string;       // Product category
-  brand?: string;          // Brand filter
-  min_price?: number;      // Minimum price
-  max_price?: number;      // Maximum price
-  sort_by?: 'price' | 'rating' | 'reviews' | 'relevance';
-  sort_order?: 'asc' | 'desc';
+  q?: string; // Search query
+  category?: string; // Product category
+  brand?: string; // Brand filter
+  min_price?: number; // Minimum price
+  max_price?: number; // Maximum price
+  sort_by?: "price" | "rating" | "reviews" | "relevance";
+  sort_order?: "asc" | "desc";
   fast_shipping?: boolean; // Fast shipping filter
-  free_returns?: boolean;  // Free returns filter
+  free_returns?: boolean; // Free returns filter
 }
 ```
 
@@ -917,6 +973,7 @@ GET /api/search?q=smartphone&category=electronics&max_price=100000&sort_by=ratin
 ```
 
 #### **GET /api/health**
+
 Health check endpoint for monitoring API status.
 
 **Response:**
@@ -936,7 +993,7 @@ Health check endpoint for monitoring API status.
 interface Product {
   id: string;
   name: string;
-  category: 'electronics' | 'fashion' | 'beauty';
+  category: "electronics" | "fashion" | "beauty";
   brand: string;
   description: string;
   specifications: Record<string, string>;
@@ -947,7 +1004,7 @@ interface Product {
   tags: string[];
   releaseDate?: string;
   isLimitedEdition: boolean;
-  stockStatus: 'in-stock' | 'low-stock' | 'out-of-stock';
+  stockStatus: "in-stock" | "low-stock" | "out-of-stock";
 }
 ```
 
@@ -961,7 +1018,7 @@ interface Seller {
   rating: number;
   totalSales: number;
   location: string;
-  verificationStatus: 'verified' | 'unverified';
+  verificationStatus: "verified" | "unverified";
   responseTime: string;
   memberSince: string;
   specialties: string[];
@@ -978,7 +1035,7 @@ interface SellerOffer {
   price: number;
   originalPrice?: number;
   discount?: number;
-  condition: 'new' | 'like-new' | 'good' | 'fair';
+  condition: "new" | "like-new" | "good" | "fair";
   stockQuantity: number;
   shippingOptions: ShippingOption[];
   returnPolicy: ReturnPolicy;
@@ -1038,6 +1095,7 @@ interface SellerOffer {
 ## 🔍 Search Features Deep Dive
 
 ### **Natural Language Processing**
+
 - **Query Understanding**: Interprets complex search queries
 - **Intent Recognition**: Identifies user shopping intent
 - **Entity Extraction**: Extracts brands, categories, price ranges
@@ -1062,7 +1120,7 @@ const calculateRelevanceScore = (product, query) => {
   }
 
   // Tag matches
-  product.tags.forEach(tag => {
+  product.tags.forEach((tag) => {
     if (tag.toLowerCase().includes(query.toLowerCase())) {
       score += 60;
     }
@@ -1088,9 +1146,9 @@ interface SearchFilters {
   priceRange?: [number, number];
   brand?: string;
   rating?: number;
-  availability?: 'in-stock' | 'all';
-  shipping?: 'fast' | 'free' | 'all';
-  condition?: 'new' | 'used' | 'all';
+  availability?: "in-stock" | "all";
+  shipping?: "fast" | "free" | "all";
+  condition?: "new" | "used" | "all";
   seller?: string;
 }
 ```
@@ -1098,6 +1156,7 @@ interface SearchFilters {
 ## 📊 Performance Metrics
 
 ### **Frontend Performance**
+
 - **First Contentful Paint**: < 1.5s
 - **Largest Contentful Paint**: < 2.5s
 - **Cumulative Layout Shift**: < 0.1
@@ -1105,6 +1164,7 @@ interface SearchFilters {
 - **Time to Interactive**: < 3.5s
 
 ### **API Performance**
+
 - **Response Time**: < 200ms average
 - **Throughput**: 1000+ requests/minute
 - **Uptime**: 99.9% availability
@@ -1112,6 +1172,7 @@ interface SearchFilters {
 - **Cache Hit Rate**: > 80%
 
 ### **Voice Recognition Metrics**
+
 - **Recognition Accuracy**: 95%+
 - **Response Time**: < 500ms
 - **Language Support**: Hindi, English
@@ -1121,6 +1182,7 @@ interface SearchFilters {
 ## 🔒 Security & Privacy
 
 ### **Data Protection**
+
 - **HTTPS Encryption**: All data in transit encrypted
 - **Input Sanitization**: XSS and injection prevention
 - **Rate Limiting**: API abuse protection
@@ -1128,6 +1190,7 @@ interface SearchFilters {
 - **Error Handling**: No sensitive data in error messages
 
 ### **Privacy Compliance**
+
 - **GDPR Ready**: European privacy regulation compliance
 - **Data Minimization**: Collect only necessary data
 - **User Consent**: Clear consent mechanisms
@@ -1141,7 +1204,7 @@ interface SearchFilters {
 interface JWTPayload {
   userId: string;
   email: string;
-  role: 'user' | 'seller' | 'admin';
+  role: "user" | "seller" | "admin";
   permissions: string[];
   iat: number;
   exp: number;
@@ -1149,9 +1212,9 @@ interface JWTPayload {
 
 // Role-based access control
 const permissions = {
-  user: ['view_products', 'place_orders', 'manage_profile'],
-  seller: ['manage_inventory', 'view_analytics', 'process_orders'],
-  admin: ['manage_users', 'system_config', 'view_all_data']
+  user: ["view_products", "place_orders", "manage_profile"],
+  seller: ["manage_inventory", "view_analytics", "process_orders"],
+  admin: ["manage_users", "system_config", "view_all_data"],
 };
 ```
 
@@ -1160,6 +1223,7 @@ const permissions = {
 ### ♿ **Comprehensive Accessibility Features**
 
 #### **🎯 WCAG 2.1 AA Compliance**
+
 - **Keyboard Navigation**: Full keyboard accessibility with logical tab order and focus indicators
 - **Screen Reader Support**: Comprehensive ARIA labels, descriptions, and live regions
 - **Color Contrast**: Minimum 4.5:1 contrast ratio for normal text, 3:1 for large text
@@ -1168,6 +1232,7 @@ const permissions = {
 - **Semantic HTML**: Proper heading hierarchy and landmark regions for navigation
 
 #### **🎤 Voice Accessibility**
+
 - **Voice Command Alternatives**: Every voice action has keyboard/mouse equivalent
 - **Audio Feedback**: Optional audio confirmations for voice interactions
 - **Visual Voice States**: Clear visual indicators for listening, processing, and error states
@@ -1176,6 +1241,7 @@ const permissions = {
 - **Noise Cancellation**: Background noise filtering for better recognition accuracy
 
 #### **📱 Mobile Accessibility**
+
 - **Touch Target Size**: Minimum 44px touch targets following iOS/Android guidelines
 - **Gesture Alternatives**: Alternative methods for all gesture-based interactions
 - **Orientation Support**: Full functionality in both portrait and landscape modes
@@ -1186,6 +1252,7 @@ const permissions = {
 ### 🔍 **Usability Testing Framework**
 
 #### **📊 User Testing Methodology**
+
 - **Task-Based Testing**: Specific shopping scenarios with success metrics
 - **A/B Testing**: Continuous optimization of UI elements and flows
 - **Heat Map Analysis**: User interaction patterns and attention tracking
@@ -1194,6 +1261,7 @@ const permissions = {
 - **Accessibility Testing**: Testing with screen readers and assistive technologies
 
 #### **🎯 Key Performance Indicators (KPIs)**
+
 - **Task Completion Rate**: >90% for primary shopping tasks
 - **Voice Recognition Accuracy**: >95% for clear speech in quiet environments
 - **Search Success Rate**: >85% for product discovery tasks
@@ -1202,6 +1270,7 @@ const permissions = {
 - **User Satisfaction**: Post-interaction surveys and feedback collection
 
 #### **🧪 Testing Scenarios**
+
 - **Voice Shopping Journey**: "Find Nike shoes under ₹10,000" end-to-end flow
 - **Mobile Product Discovery**: Touch-based browsing and filtering on mobile devices
 - **Accessibility Navigation**: Screen reader and keyboard-only navigation testing
@@ -1212,6 +1281,7 @@ const permissions = {
 ### 🎨 **Design System Documentation**
 
 #### **📐 Layout & Spacing System**
+
 - **Grid System**: 12-column responsive grid with 16px gutters
 - **Spacing Scale**: 4px base unit with 8px, 16px, 24px, 32px, 48px, 64px increments
 - **Container Widths**: xs(475px), sm(640px), md(768px), lg(1024px), xl(1280px), 2xl(1536px)
@@ -1220,6 +1290,7 @@ const permissions = {
 - **Z-index Scale**: Organized layering system for overlays and modals
 
 #### **🎭 Component States & Variations**
+
 - **Button States**: Default, hover, active, disabled, loading, and focus states
 - **Input States**: Default, focus, error, success, and disabled variations
 - **Card Components**: Product cards, info cards, and interactive card variations
@@ -1228,6 +1299,7 @@ const permissions = {
 - **Loading States**: Skeleton screens, spinners, and progress indicators
 
 #### **🌈 Theming & Customization**
+
 - **CSS Custom Properties**: Centralized theme variables for easy customization
 - **Dark Mode Support**: Complete dark theme with proper contrast ratios
 - **Brand Customization**: Configurable color schemes and typography
@@ -1238,6 +1310,7 @@ const permissions = {
 ## 🚀 **Version 3.0 - Major Release Update**
 
 ### 📅 **Release Information**
+
 - **Version**: 3.0.0
 - **Release Date**: January 2024
 - **Codename**: "Voice Commerce Revolution"
@@ -1248,18 +1321,19 @@ const permissions = {
 
 <div align="center">
 
-| 🆕 **New Features** | 🔧 **Improvements** | 🐛 **Bug Fixes** | 📱 **Mobile** |
-|:---:|:---:|:---:|:---:|
-| Advanced Voice AI | 60fps Animations | Voice Recognition | Touch Optimization |
-| Comprehensive UI/UX | Performance Boost | Search Accuracy | Responsive Design |
-| Accessibility Suite | Security Enhancements | API Stability | Gesture Support |
-| Testing Framework | Code Quality | Error Handling | PWA Features |
+| 🆕 **New Features** |  🔧 **Improvements**  | 🐛 **Bug Fixes**  |   📱 **Mobile**    |
+| :-----------------: | :-------------------: | :---------------: | :----------------: |
+|  Advanced Voice AI  |   60fps Animations    | Voice Recognition | Touch Optimization |
+| Comprehensive UI/UX |   Performance Boost   |  Search Accuracy  | Responsive Design  |
+| Accessibility Suite | Security Enhancements |   API Stability   |  Gesture Support   |
+|  Testing Framework  |     Code Quality      |  Error Handling   |    PWA Features    |
 
 </div>
 
 ### 🆕 **Major New Features**
 
 #### **🎤 Advanced Voice AI System**
+
 - **🧠 Enhanced NLP Engine**: Improved natural language understanding with 95%+ accuracy
 - **🌐 Multi-language Support**: Hindi and English voice commands with accent tolerance
 - **🎯 Context Awareness**: Maintains conversation state across multiple queries
@@ -1268,6 +1342,7 @@ const permissions = {
 - **🎪 Voice Shortcuts**: Quick commands for frequent actions (cart, favorites, orders)
 
 #### **🎨 Comprehensive UI/UX Design System**
+
 - **🌈 Advanced Color System**: Psychology-based color palette optimized for e-commerce
 - **📐 Golden Ratio Layouts**: Mathematically pleasing proportions throughout interface
 - **🎭 Component Library**: 50+ reusable components with multiple variants
@@ -1276,6 +1351,7 @@ const permissions = {
 - **🌙 Dark Mode Support**: Complete dark theme with proper contrast ratios
 
 #### **♿ Comprehensive Accessibility Suite**
+
 - **🎯 WCAG 2.1 AA Compliance**: Full accessibility compliance with automated testing
 - **⌨️ Keyboard Navigation**: Complete keyboard accessibility with logical tab order
 - **📱 Mobile Accessibility**: Touch targets, gesture alternatives, zoom compatibility
@@ -1284,6 +1360,7 @@ const permissions = {
 - **🎨 High Contrast**: Compatible with system accessibility settings
 
 #### **🧪 Advanced Testing Framework**
+
 - **📊 Usability Testing**: Task-based testing with success metrics and KPIs
 - **🎯 A/B Testing**: Continuous optimization of UI elements and user flows
 - **🔍 Heat Map Analysis**: User interaction patterns and attention tracking
@@ -1294,6 +1371,7 @@ const permissions = {
 ### 🔧 **Major Improvements**
 
 #### **⚡ Performance Enhancements**
+
 - **🚀 Bundle Optimization**: 40% reduction in bundle size through code splitting
 - **📱 Mobile Performance**: Optimized rendering for 60fps on mobile devices
 - **🎬 Animation Performance**: Hardware-accelerated animations with GPU optimization
@@ -1302,6 +1380,7 @@ const permissions = {
 - **⚡ Lazy Loading**: Progressive image and component loading
 
 #### **🎨 Enhanced User Experience**
+
 - **📱 Mobile-First Design**: Complete responsive redesign for all screen sizes
 - **👆 Touch Optimization**: 44px minimum touch targets and gesture support
 - **🎯 User Journey**: Optimized shopping flow from discovery to purchase
@@ -1310,6 +1389,7 @@ const permissions = {
 - **📊 Personalization**: Adaptive interface based on user behavior
 
 #### **🔒 Security & Privacy**
+
 - **🛡️ Enhanced Security**: HTTPS encryption, input sanitization, rate limiting
 - **🔐 Authentication Ready**: JWT integration with OAuth support
 - **📋 GDPR Compliance**: Privacy-first data handling with user consent
@@ -1320,6 +1400,7 @@ const permissions = {
 ### 📱 **Mobile & Responsive Enhancements**
 
 #### **📐 Advanced Responsive System**
+
 - **📱 Breakpoint System**: xs(475px), sm(640px), md(768px), lg(1024px), xl(1280px), 2xl(1536px)
 - **🔒 Safe Area Support**: Proper handling of device notches and status bars
 - **📐 Flexible Grid**: CSS Grid and Flexbox for complex responsive layouts
@@ -1328,6 +1409,7 @@ const permissions = {
 - **⚡ Mobile Optimization**: Optimized bundle sizes for fast mobile networks
 
 #### **👆 Touch & Gesture Support**
+
 - **🎯 Touch Targets**: Minimum 44px touch targets following platform guidelines
 - **👆 Gesture Navigation**: Swipe actions for browsing and filtering
 - **📱 Pull-to-Refresh**: Standard mobile pattern for content updates
@@ -1338,6 +1420,7 @@ const permissions = {
 ### 🛠️ **Technical Improvements**
 
 #### **🏗️ Architecture Enhancements**
+
 - **⚛️ React 18.3.1**: Latest React features with concurrent rendering
 - **📘 TypeScript 5.5.3**: Strict type checking with improved developer experience
 - **⚡ Vite 5.4.2**: Lightning-fast development with optimized build system
@@ -1346,6 +1429,7 @@ const permissions = {
 - **🔧 ESLint 9.9.1**: Enhanced code quality with strict linting rules
 
 #### **📊 API & Backend**
+
 - **🟢 Express 5.1.0**: Modern Node.js backend with enhanced performance
 - **🧠 Natural 6.12.0**: Advanced NLP processing for voice commands
 - **🔄 CORS 2.8.5**: Secure cross-origin request handling
@@ -1356,6 +1440,7 @@ const permissions = {
 ### 🐛 **Bug Fixes & Stability Improvements**
 
 #### **🎤 Voice Recognition Fixes**
+
 - **✅ Fixed**: Voice recognition timeout handling and graceful fallbacks
 - **✅ Fixed**: Background noise interference causing recognition failures
 - **✅ Fixed**: Multi-language switching bugs between Hindi and English
@@ -1366,6 +1451,7 @@ const permissions = {
 - **✅ Fixed**: Voice feedback audio conflicts with system sounds
 
 #### **📱 Mobile & UI Fixes**
+
 - **✅ Fixed**: Touch target sizing inconsistencies on small screens
 - **✅ Fixed**: Scroll behavior issues on iOS Safari with momentum scrolling
 - **✅ Fixed**: Animation performance degradation on low-end Android devices
@@ -1376,6 +1462,7 @@ const permissions = {
 - **✅ Fixed**: Touch gesture conflicts with browser navigation
 
 #### **🔍 Search & API Fixes**
+
 - **✅ Fixed**: Search result accuracy and relevance scoring algorithm
 - **✅ Fixed**: API response caching causing stale data display
 - **✅ Fixed**: Product filtering edge cases with multiple criteria
@@ -1386,6 +1473,7 @@ const permissions = {
 - **✅ Fixed**: Category filtering reset when applying price filters
 
 #### **🎨 UI/UX Fixes**
+
 - **✅ Fixed**: Component state management causing UI inconsistencies
 - **✅ Fixed**: Animation timing conflicts causing visual glitches
 - **✅ Fixed**: Form validation messages overlapping with input fields
@@ -1398,6 +1486,7 @@ const permissions = {
 ### 📈 **Performance Metrics Improvements**
 
 #### **⚡ Speed Enhancements**
+
 - **🚀 Page Load Time**: Improved from 3.2s to 1.8s (44% faster)
 - **📱 Mobile Performance**: Consistent 60fps animations on all supported devices
 - **🎤 Voice Response**: Reduced from 800ms to <500ms (38% faster)
@@ -1408,6 +1497,7 @@ const permissions = {
 - **📡 Network Efficiency**: 40% reduction in API calls through smart caching
 
 #### **📊 User Experience Metrics**
+
 - **🎯 Task Completion**: Improved from 82% to 94% success rate
 - **🎤 Voice Accuracy**: Enhanced from 89% to 95%+ recognition accuracy
 - **📱 Mobile Conversion**: 25% increase in mobile purchase completion
@@ -1422,19 +1512,21 @@ const permissions = {
 #### **⚠️ Breaking Changes**
 
 ##### **🎤 Voice API Changes**
+
 ```javascript
 // v2.x (Deprecated)
-voiceSearch.start({ language: 'en' });
+voiceSearch.start({ language: "en" });
 
 // v3.0 (New)
 voiceSearch.start({
-  language: 'en-IN',
-  fallback: 'hi-IN',
-  timeout: 5000
+  language: "en-IN",
+  fallback: "hi-IN",
+  timeout: 5000,
 });
 ```
 
 ##### **🎨 Component API Changes**
+
 ```javascript
 // v2.x (Deprecated)
 <VoiceButton onClick={handleClick} />
@@ -1449,19 +1541,29 @@ voiceSearch.start({
 ```
 
 ##### **📱 Responsive Breakpoints**
+
 ```css
 /* v2.x (Deprecated) */
-@media (max-width: 768px) { /* Mobile styles */ }
+@media (max-width: 768px) {
+  /* Mobile styles */
+}
 
 /* v3.0 (New) */
-@media (max-width: 475px) { /* xs */ }
-@media (max-width: 640px) { /* sm */ }
-@media (max-width: 768px) { /* md */ }
+@media (max-width: 475px) {
+  /* xs */
+}
+@media (max-width: 640px) {
+  /* sm */
+}
+@media (max-width: 768px) {
+  /* md */
+}
 ```
 
 #### **🔧 Migration Steps**
 
 ##### **1. Update Dependencies**
+
 ```bash
 # Update to latest versions
 npm update react@18.3.1
@@ -1476,6 +1578,7 @@ npm install react-intersection-observer
 ```
 
 ##### **2. Update Configuration Files**
+
 ```javascript
 // vite.config.ts - Add new optimizations
 export default defineConfig({
@@ -1484,30 +1587,34 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          animations: ['framer-motion'],
-          ui: ['lucide-react']
-        }
-      }
-    }
-  }
+          vendor: ["react", "react-dom"],
+          animations: ["framer-motion"],
+          ui: ["lucide-react"],
+        },
+      },
+    },
+  },
 });
 ```
 
 ##### **3. Update Component Imports**
+
 ```javascript
 // v2.x (Deprecated)
-import { VoiceSearch } from './components/VoiceSearch';
+import { VoiceSearch } from "./components/VoiceSearch";
 
 // v3.0 (New)
-import { VoiceSearch } from './components/voice/VoiceSearch';
-import { useVoiceAccessibility } from './hooks/useVoiceAccessibility';
+import { VoiceSearch } from "./components/voice/VoiceSearch";
+import { useVoiceAccessibility } from "./hooks/useVoiceAccessibility";
 ```
 
 ##### **4. Update Styling Classes**
+
 ```css
 /* v2.x (Deprecated) */
-.voice-button { @apply bg-blue-500 hover:bg-blue-600; }
+.voice-button {
+  @apply bg-blue-500 hover:bg-blue-600;
+}
 
 /* v3.0 (New) */
 .voice-button {
@@ -1535,11 +1642,12 @@ import { useVoiceAccessibility } from './hooks/useVoiceAccessibility';
 - **📚 Documentation**: [Migration Guide](https://docs.omniverse.ai/migration/v3)
 - **💬 Community**: [Discord Support Channel](https://discord.gg/omniverse-ai)
 - **🐛 Issues**: [GitHub Issues](https://github.com/Xenonesis/omni.AI/issues)
-- **📧 Email**: migration-support@omniverse.ai
+- **📧 Email**: itisaddy7@gmail.com
 
 ### 🎉 **What's Next in v3.1**
 
 #### **🔮 Upcoming Features**
+
 - **🤖 Advanced AI Recommendations**: Machine learning-powered product suggestions
 - **🌍 Global Marketplace**: Support for international sellers and currencies
 - **📱 Native Mobile Apps**: iOS and Android applications
@@ -1548,6 +1656,7 @@ import { useVoiceAccessibility } from './hooks/useVoiceAccessibility';
 - **📊 Advanced Analytics**: Enhanced business intelligence dashboard
 
 #### **🗓️ Release Timeline**
+
 - **v3.1 Beta**: March 2024
 - **v3.1 Stable**: April 2024
 - **v3.2 Planning**: May 2024
@@ -1558,14 +1667,14 @@ import { useVoiceAccessibility } from './hooks/useVoiceAccessibility';
 
 ### 🏆 **Key Metrics & Performance**
 
-| 📊 **Metric** | 📈 **Value** | 🎯 **Target** | ✅ **Status** |
-|:---:|:---:|:---:|:---:|
-| **Voice Recognition Accuracy** | 95%+ | 90%+ | ✅ Exceeded |
-| **Search Response Time** | <200ms | <500ms | ✅ Exceeded |
-| **Product Catalog** | 30+ Items | 25+ Items | ✅ Exceeded |
-| **Animation Performance** | 60fps | 60fps | ✅ Achieved |
-| **Mobile Responsiveness** | 100% | 100% | ✅ Achieved |
-| **Accessibility Score** | A+ | A | ✅ Exceeded |
+|         📊 **Metric**          | 📈 **Value** | 🎯 **Target** | ✅ **Status** |
+| :----------------------------: | :----------: | :-----------: | :-----------: |
+| **Voice Recognition Accuracy** |     95%+     |     90%+      |  ✅ Exceeded  |
+|    **Search Response Time**    |    <200ms    |    <500ms     |  ✅ Exceeded  |
+|      **Product Catalog**       |  30+ Items   |   25+ Items   |  ✅ Exceeded  |
+|   **Animation Performance**    |    60fps     |     60fps     |  ✅ Achieved  |
+|   **Mobile Responsiveness**    |     100%     |     100%      |  ✅ Achieved  |
+|    **Accessibility Score**     |      A+      |       A       |  ✅ Exceeded  |
 
 </div>
 
@@ -1573,13 +1682,13 @@ import { useVoiceAccessibility } from './hooks/useVoiceAccessibility';
 
 <div align="center">
 
-| **Frontend** | **Backend** | **AI/ML** | **Deployment** |
-|:---:|:---:|:---:|:---:|
-| ⚛️ React 18.3.1 | 🟢 Node.js + Express | 🧠 Natural Language Processing | 🌐 Netlify |
-| 📘 TypeScript 5.5.3 | 🔄 CORS 2.8.5 | 🎤 Web Speech API | 🔧 Vite Build |
-| ⚡ Vite 5.4.2 | 📊 Natural 6.12.0 | 🤖 AI Recommendations | 📱 PWA Ready |
-| 🎨 Tailwind CSS | 🌐 Node Fetch | 🔍 Smart Search | ⚡ CDN Optimized |
-| 🎬 Framer Motion | 📈 Analytics APIs | 💬 Voice Commands | 🔒 HTTPS Secure |
+|    **Frontend**     |     **Backend**      |           **AI/ML**            |  **Deployment**  |
+| :-----------------: | :------------------: | :----------------------------: | :--------------: |
+|   ⚛️ React 18.3.1   | 🟢 Node.js + Express | 🧠 Natural Language Processing |    🌐 Netlify    |
+| 📘 TypeScript 5.5.3 |    🔄 CORS 2.8.5     |       🎤 Web Speech API        |  🔧 Vite Build   |
+|    ⚡ Vite 5.4.2    |  📊 Natural 6.12.0   |     🤖 AI Recommendations      |   📱 PWA Ready   |
+|   🎨 Tailwind CSS   |    🌐 Node Fetch     |        🔍 Smart Search         | ⚡ CDN Optimized |
+|  🎬 Framer Motion   |  📈 Analytics APIs   |       💬 Voice Commands        | 🔒 HTTPS Secure  |
 
 </div>
 
@@ -1617,15 +1726,19 @@ import { useVoiceAccessibility } from './hooks/useVoiceAccessibility';
 <div align="center">
 
 ### 1️⃣ **Try the Live Demo**
+
 **[Visit omniverseai.netlify.app](https://omniverseai.netlify.app/)**
-*Experience voice shopping in action*
+_Experience voice shopping in action_
 
 ### 2️⃣ **Watch the Video**
+
 **[YouTube Walkthrough](https://youtu.be/t0l8Xd4SySU?si=bmTofC96xXdD2wks)**
-*See all features demonstrated*
+_See all features demonstrated_
 
 ### 3️⃣ **Explore the Code**
+
 **Clone and run locally**
+
 ```bash
 git clone https://github.com/Xenonesis/omni.AI.git
 npm install && npm run dev
@@ -1641,17 +1754,17 @@ npm install && npm run dev
 
 ### 🌐 **Links & Resources**
 
-| 🔗 **Resource** | 📝 **Description** | 🎯 **Action** |
-|:---:|:---:|:---:|
-| **[Live Demo](https://omniverseai.netlify.app/)** | Experience the platform | Try Now |
-| **[Video Demo](https://youtu.be/t0l8Xd4SySU?si=bmTofC96xXdD2wks)** | Complete walkthrough | Watch |
-| **[API Documentation](https://www.omnidim.io/docs/getting-started)** | Integration guide | Explore |
-| **[GitHub Repository](https://github.com/Xenonesis/omni.AI)** | Source code access | Clone |
-| **[Issues & Feedback](https://github.com/Xenonesis/omni.AI/issues)** | Report bugs or suggestions | Contribute |
+|                           🔗 **Resource**                            |     📝 **Description**     | 🎯 **Action** |
+| :------------------------------------------------------------------: | :------------------------: | :-----------: |
+|          **[Live Demo](https://omniverseai.netlify.app/)**           |  Experience the platform   |    Try Now    |
+|  **[Video Demo](https://youtu.be/t0l8Xd4SySU?si=bmTofC96xXdD2wks)**  |    Complete walkthrough    |     Watch     |
+| **[API Documentation](https://www.omnidim.io/docs/getting-started)** |     Integration guide      |    Explore    |
+|    **[GitHub Repository](https://github.com/Xenonesis/omni.AI)**     |     Source code access     |     Clone     |
+| **[Issues & Feedback](https://github.com/Xenonesis/omni.AI/issues)** | Report bugs or suggestions |  Contribute   |
 
 ### 💬 **Get in Touch**
 
-**📧 Email**: support@omniverse.ai
+**📧 Email**: itisaddy7@gmail.com
 **🐛 Issues**: [GitHub Issues](https://github.com/Xenonesis/omni.AI/issues)
 **💡 Discussions**: [GitHub Discussions](https://github.com/Xenonesis/omni.AI/discussions)
 **📚 Repository**: [GitHub Repository](https://github.com/Xenonesis/omni.AI)
@@ -1672,12 +1785,12 @@ npm install && npm run dev
 
 **Built with ❤️ for the future of voice-powered e-commerce**
 
-*Transforming online shopping through AI-powered voice interactions*
+_Transforming online shopping through AI-powered voice interactions_
 
 ---
 
-**© 2024 omniverse.AI Voice Shopping Marketplace. All rights reserved.**
+**© 2025 omniverse.AI Voice Shopping Marketplace. All rights reserved.**
 
-*Made with cutting-edge technology for the Indian marketplace*
+_Made with cutting-edge technology for the Indian marketplace_
 
 </div>

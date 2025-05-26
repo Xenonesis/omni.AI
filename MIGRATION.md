@@ -18,6 +18,7 @@ This guide will help you migrate from omniverse.AI v2.x to v3.0. Version 3.0 int
 ### **1. Node.js & React Requirements**
 
 **Before (v2.x):**
+
 ```json
 {
   "engines": {
@@ -30,6 +31,7 @@ This guide will help you migrate from omniverse.AI v2.x to v3.0. Version 3.0 int
 ```
 
 **After (v3.0):**
+
 ```json
 {
   "engines": {
@@ -42,6 +44,7 @@ This guide will help you migrate from omniverse.AI v2.x to v3.0. Version 3.0 int
 ```
 
 **Migration Steps:**
+
 1. Update Node.js: `nvm install 18 && nvm use 18`
 2. Update dependencies: `npm install react@^18.3.1 react-dom@^18.3.1`
 3. Update TypeScript types: `npm install @types/react@^18.3.5`
@@ -49,22 +52,25 @@ This guide will help you migrate from omniverse.AI v2.x to v3.0. Version 3.0 int
 ### **2. Voice Command Syntax Changes**
 
 **Before (v2.x):**
+
 ```javascript
 // Old rigid command structure
-"search nike shoes price less than 10000"
-"filter category electronics"
-"sort by price ascending"
+"search nike shoes price less than 10000";
+"filter category electronics";
+"sort by price ascending";
 ```
 
 **After (v3.0):**
+
 ```javascript
 // New natural language processing
-"Find Nike shoes under 10000 rupees"
-"Show me electronics"
-"Sort by lowest price first"
+"Find Nike shoes under 10000 rupees";
+"Show me electronics";
+"Sort by lowest price first";
 ```
 
 **Migration Steps:**
+
 1. Update voice command documentation
 2. Test existing voice workflows
 3. Train users on new natural language syntax
@@ -72,9 +78,10 @@ This guide will help you migrate from omniverse.AI v2.x to v3.0. Version 3.0 int
 ### **3. Component API Changes**
 
 **Before (v2.x):**
+
 ```tsx
 // Old component structure
-<VoiceSearch 
+<VoiceSearch
   onResult={(result) => handleResult(result)}
   language="en"
   accuracy="high"
@@ -82,20 +89,22 @@ This guide will help you migrate from omniverse.AI v2.x to v3.0. Version 3.0 int
 ```
 
 **After (v3.0):**
+
 ```tsx
 // New enhanced component with better TypeScript support
-<EnhancedVoiceSearch 
+<EnhancedVoiceSearch
   onSearchResult={(result: SearchResult) => handleResult(result)}
-  languages={['en', 'hi']}
+  languages={["en", "hi"]}
   config={{
-    accuracy: 'high',
+    accuracy: "high",
     contextAware: true,
-    errorRecovery: true
+    errorRecovery: true,
   }}
 />
 ```
 
 **Migration Steps:**
+
 1. Update component imports
 2. Migrate props to new API structure
 3. Add TypeScript types for better type safety
@@ -103,14 +112,14 @@ This guide will help you migrate from omniverse.AI v2.x to v3.0. Version 3.0 int
 ### **4. Animation System Migration**
 
 **Before (v2.x):**
+
 ```tsx
 // Old CSS-based animations
-<div className="fade-in slide-up">
-  Content
-</div>
+<div className="fade-in slide-up">Content</div>
 ```
 
 **After (v3.0):**
+
 ```tsx
 // New Framer Motion system
 <motion.div
@@ -123,6 +132,7 @@ This guide will help you migrate from omniverse.AI v2.x to v3.0. Version 3.0 int
 ```
 
 **Migration Steps:**
+
 1. Replace CSS animations with Framer Motion
 2. Update animation timing for 60fps performance
 3. Add reduced motion support
@@ -162,7 +172,7 @@ This guide will help you migrate from omniverse.AI v2.x to v3.0. Version 3.0 int
 
 ```tsx
 // Implement lazy loading
-const ProductCard = lazy(() => import('./ProductCard'));
+const ProductCard = lazy(() => import("./ProductCard"));
 
 // Use React.memo for expensive components
 const OptimizedProductList = React.memo(ProductList);
@@ -172,7 +182,7 @@ const OptimizedProductList = React.memo(ProductList);
   items={products}
   itemHeight={200}
   renderItem={renderProduct}
-/>
+/>;
 ```
 
 ## 🔧 **Configuration Updates**
@@ -180,6 +190,7 @@ const OptimizedProductList = React.memo(ProductList);
 ### **1. Environment Variables**
 
 **Add new variables:**
+
 ```env
 # v3.0 new variables
 VITE_VOICE_API_VERSION=3.0
@@ -198,20 +209,20 @@ export default defineConfig({
     // New performance plugins
     splitVendorChunkPlugin(),
     // Accessibility testing
-    a11y()
+    a11y(),
   ],
   build: {
     // New optimization settings
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          animations: ['framer-motion'],
-          voice: ['compromise', 'natural']
-        }
-      }
-    }
-  }
+          vendor: ["react", "react-dom"],
+          animations: ["framer-motion"],
+          voice: ["compromise", "natural"],
+        },
+      },
+    },
+  },
 });
 ```
 
@@ -251,14 +262,14 @@ npm run test:mobile
 
 ```typescript
 // New test patterns
-describe('Voice Search v3.0', () => {
-  it('should handle natural language queries', async () => {
-    const result = await voiceSearch.process('Find Nike shoes under 10000');
+describe("Voice Search v3.0", () => {
+  it("should handle natural language queries", async () => {
+    const result = await voiceSearch.process("Find Nike shoes under 10000");
     expect(result.products).toHaveLength(5);
     expect(result.filters.maxPrice).toBe(10000);
   });
 
-  it('should be accessible', async () => {
+  it("should be accessible", async () => {
     const { container } = render(<VoiceSearch />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -275,7 +286,7 @@ describe('Voice Search v3.0', () => {
 const handleTouch = useCallback((event: TouchEvent) => {
   // New gesture recognition
   const gesture = recognizeGesture(event);
-  if (gesture.type === 'swipe') {
+  if (gesture.type === "swipe") {
     handleSwipe(gesture.direction);
   }
 }, []);
@@ -303,7 +314,7 @@ const handleTouch = useCallback((event: TouchEvent) => {
 
 ```typescript
 // Enhanced input validation
-import { sanitizeInput } from '@/utils/security';
+import { sanitizeInput } from "@/utils/security";
 
 const handleVoiceInput = (input: string) => {
   const sanitized = sanitizeInput(input);
@@ -318,9 +329,9 @@ const handleVoiceInput = (input: string) => {
 const apiClient = axios.create({
   baseURL: process.env.VITE_API_URL,
   headers: {
-    'X-API-Version': '3.0',
-    'X-Client-Version': '3.0.0'
-  }
+    "X-API-Version": "3.0",
+    "X-Client-Version": "3.0.0",
+  },
 });
 ```
 
@@ -330,7 +341,7 @@ const apiClient = axios.create({
 
 ```typescript
 // Monitor performance metrics
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+import { getCLS, getFID, getFCP, getLCP, getTTFB } from "web-vitals";
 
 getCLS(console.log);
 getFID(console.log);
@@ -374,11 +385,13 @@ VITE_BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 ### **Common Issues:**
 
 1. **Voice recognition not working**
+
    - Check microphone permissions
    - Verify HTTPS connection
    - Test with different browsers
 
 2. **Performance issues**
+
    - Enable hardware acceleration
    - Check bundle size with `npm run analyze`
    - Verify lazy loading implementation
@@ -393,7 +406,7 @@ VITE_BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 - 📚 [Documentation](https://github.com/your-username/omniverse-ai-voice-marketplace/wiki)
 - 🐛 [Report Issues](https://github.com/your-username/omniverse-ai-voice-marketplace/issues)
 - 💬 [Discussions](https://github.com/your-username/omniverse-ai-voice-marketplace/discussions)
-- 📧 [Email Support](mailto:support@omniverse.ai)
+- 📧 [Email Support](mailto:itisaddy7@gmail.com)
 
 ## ✅ **Post-Migration Checklist**
 

@@ -128,9 +128,9 @@ class ProductionDeployer {
 
     // Create production environment file
     const prodEnv = `
-# Production Environment - omniverse.AI v3.0.0
+# Production Environment - omniverse.AI v3.2.0
 NODE_ENV=production
-VITE_APP_VERSION=3.0.0
+VITE_APP_VERSION=3.2.0
 VITE_BUILD_DATE=${new Date().toISOString()}
 VITE_DEPLOYMENT_ID=${this.deploymentId}
 VITE_COPYRIGHT_YEAR=2025

@@ -285,3 +285,149 @@
 .btn-glow:hover::before {
   left: 100%;
 }
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.will-change-auto {
+  will-change: auto;
+}
+
+/* Hardware acceleration for better performance */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimize font rendering */
+.optimize-text {
+  text-rendering: optimizeSpeed;
+  font-smooth: never;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
+}
+
+/* Custom scrollbar for better UX */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Optimized animations for 60fps */
+@keyframes optimizedFadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes optimizedScaleIn {
+  from {
+    opacity: 0;
+    transform: scale3d(0.95, 0.95, 1);
+  }
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes optimizedSlideInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-20px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Performance-optimized animation classes */
+.animate-optimized-fade-in-up {
+  animation: optimizedFadeInUp 0.3s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+.animate-optimized-scale-in {
+  animation: optimizedScaleIn 0.3s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+.animate-optimized-slide-in-left {
+  animation: optimizedSlideInLeft 0.3s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+/* Reset will-change after animation */
+.animate-optimized-fade-in-up:not(:hover),
+.animate-optimized-scale-in:not(:hover),
+.animate-optimized-slide-in-left:not(:hover) {
+  animation-fill-mode: forwards;
+}
+
+.animate-optimized-fade-in-up.animation-complete,
+.animate-optimized-scale-in.animation-complete,
+.animate-optimized-slide-in-left.animation-complete {
+  will-change: auto;
+}
+
+/* Image optimization classes */
+.optimized-image {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.lazy-image {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.lazy-image.loading {
+  opacity: 0;
+}
+
+.lazy-image.loaded {
+  opacity: 1;
+}
+
+/* Reduce layout shifts */
+.aspect-ratio-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-ratio-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-ratio-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+/* Critical resource hints */
+.preload-hint {
+  content-visibility: auto;
+  contain-intrinsic-size: 200px;
+}

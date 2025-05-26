@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 
 interface LazyImageProps {
@@ -8,78 +8,220 @@ interface LazyImageProps {
   placeholder?: string;
   onLoad?: () => void;
   onError?: () => void;
+  // Enhanced props for optimization
+  sizes?: string;
+  srcSet?: string;
+  priority?: boolean;
+  quality?: number;
+  width?: number;
+  height?: number;
+  webpSrc?: string;
+  avifSrc?: string;
+  blurDataURL?: string;
+  loading?: 'lazy' | 'eager';
 }
+
+// WebP support detection
+const supportsWebP = (() => {
+  if (typeof window === 'undefined') return false;
+  const canvas = document.createElement('canvas');
+  canvas.width = 1;
+  canvas.height = 1;
+  return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+})();
+
+// AVIF support detection
+const supportsAVIF = (() => {
+  if (typeof window === 'undefined') return false;
+  const canvas = document.createElement('canvas');
+  canvas.width = 1;
+  canvas.height = 1;
+  return canvas.toDataURL('image/avif').indexOf('data:image/avif') === 0;
+})();
 
 const LazyImage: React.FC<LazyImageProps> = ({
   src,
   alt,
   className = '',
-  placeholder = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzlmYTZiMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkxvYWRpbmcuLi48L3RleHQ+PC9zdmc+',
+  placeholder,
   onLoad,
   onError,
+  sizes,
+  srcSet,
+  priority = false,
+  quality = 75,
+  width,
+  height,
+  webpSrc,
+  avifSrc,
+  blurDataURL,
+  loading = 'lazy',
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
+  const [isInView, setIsInView] = useState(priority); // Load immediately if priority
   const [hasError, setHasError] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState<string>('');
   const imgRef = useRef<HTMLImageElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
+  // Generate optimized placeholder
+  const optimizedPlaceholder = useMemo(() => {
+    if (blurDataURL) return blurDataURL;
+    if (placeholder) return placeholder;
+
+    // Generate a simple SVG placeholder with dimensions
+    const w = width || 400;
+    const h = height || 400;
+    return `data:image/svg+xml;base64,${btoa(`
+      <svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" fill="#f3f4f6"/>
+        <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="14"
+              fill="#9ca3af" text-anchor="middle" dy=".3em">Loading...</text>
+      </svg>
+    `)}`;
+  }, [blurDataURL, placeholder, width, height]);
+
+  // Determine the best image source based on browser support
+  const getBestImageSrc = useCallback(() => {
+    if (supportsAVIF && avifSrc) return avifSrc;
+    if (supportsWebP && webpSrc) return webpSrc;
+    return src;
+  }, [src, webpSrc, avifSrc]);
+
+  // Set up intersection observer for lazy loading
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    if (priority || isInView) return;
+
+    observerRef.current = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsInView(true);
-          observer.disconnect();
+          setCurrentSrc(getBestImageSrc());
+          observerRef.current?.disconnect();
         }
       },
       {
         threshold: 0.1,
-        rootMargin: '50px',
+        rootMargin: '100px', // Increased for better UX
       }
     );
 
     if (imgRef.current) {
-      observer.observe(imgRef.current);
+      observerRef.current.observe(imgRef.current);
     }
 
-    return () => observer.disconnect();
-  }, []);
+    return () => observerRef.current?.disconnect();
+  }, [priority, isInView, getBestImageSrc]);
 
-  const handleLoad = () => {
+  // Set initial source for priority images
+  useEffect(() => {
+    if (priority) {
+      setCurrentSrc(getBestImageSrc());
+    }
+  }, [priority, getBestImageSrc]);
+
+  const handleLoad = useCallback(() => {
     setIsLoaded(true);
     onLoad?.();
-  };
+  }, [onLoad]);
 
-  const handleError = () => {
+  const handleError = useCallback(() => {
     setHasError(true);
-    onError?.();
+    // Fallback to original src if optimized version fails
+    if (currentSrc !== src) {
+      setCurrentSrc(src);
+      setHasError(false);
+    } else {
+      onError?.();
+    }
+  }, [currentSrc, src, onError]);
+
+  // Preload critical images
+  useEffect(() => {
+    if (priority && currentSrc) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = currentSrc;
+      if (sizes) link.setAttribute('imagesizes', sizes);
+      if (srcSet) link.setAttribute('imagesrcset', srcSet);
+      document.head.appendChild(link);
+
+      return () => {
+        try {
+          document.head.removeChild(link);
+        } catch (e) {
+          // Link might already be removed
+        }
+      };
+    }
+  }, [priority, currentSrc, sizes, srcSet]);
+
+  // Optimized animation variants using only transform and opacity
+  const imageVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.3,
+        ease: [0.25, 0.46, 0.45, 0.94] // Custom easing for smooth transition
+      }
+    }
   };
 
   return (
-    <div ref={imgRef} className={`relative overflow-hidden ${className}`}>
-      {/* Placeholder */}
-      <motion.img
-        src={placeholder}
+    <div
+      ref={imgRef}
+      className={`relative overflow-hidden ${className}`}
+      style={{
+        aspectRatio: width && height ? `${width}/${height}` : undefined,
+        willChange: isLoaded ? 'auto' : 'opacity' // Optimize for animation
+      }}
+    >
+      {/* Optimized Placeholder */}
+      <img
+        src={optimizedPlaceholder}
         alt=""
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
           isLoaded ? 'opacity-0' : 'opacity-100'
         }`}
         aria-hidden="true"
+        loading="eager" // Load placeholder immediately
+        decoding="sync" // Synchronous decoding for placeholder
       />
 
-      {/* Actual Image */}
-      {isInView && (
-        <motion.img
-          src={src}
-          alt={alt}
-          className={`w-full h-full object-cover transition-opacity duration-300 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          onLoad={handleLoad}
-          onError={handleError}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isLoaded ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        />
+      {/* Main Image with Picture element for better format support */}
+      {(isInView || priority) && (
+        <picture>
+          {/* AVIF source for modern browsers */}
+          {avifSrc && (
+            <source srcSet={avifSrc} type="image/avif" sizes={sizes} />
+          )}
+          {/* WebP source for supported browsers */}
+          {webpSrc && (
+            <source srcSet={webpSrc} type="image/webp" sizes={sizes} />
+          )}
+          {/* Fallback image */}
+          <motion.img
+            src={currentSrc}
+            alt={alt}
+            className="w-full h-full object-cover"
+            onLoad={handleLoad}
+            onError={handleError}
+            variants={imageVariants}
+            initial="hidden"
+            animate={isLoaded ? "visible" : "hidden"}
+            sizes={sizes}
+            srcSet={srcSet}
+            width={width}
+            height={height}
+            loading={loading}
+            decoding="async" // Asynchronous decoding for better performance
+            style={{
+              willChange: isLoaded ? 'auto' : 'opacity'
+            }}
+          />
+        </picture>
       )}
 
       {/* Error State */}
@@ -92,9 +234,16 @@ const LazyImage: React.FC<LazyImageProps> = ({
         </div>
       )}
 
-      {/* Loading Shimmer */}
+      {/* Loading Shimmer - CSS-only animation for better performance */}
       {!isLoaded && !hasError && (
-        <div className="absolute inset-0 bg-gradient-to-r from-neutral-200 via-neutral-100 to-neutral-200 animate-pulse" />
+        <div
+          className="absolute inset-0 skeleton"
+          style={{
+            background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
+            backgroundSize: '200px 100%',
+            animation: 'shimmer 1.5s infinite'
+          }}
+        />
       )}
     </div>
   );

@@ -1,4 +1,6 @@
-/* OmniDimension Chat Bot Custom Animations */
+/* OmniDimension Chat Bot Custom Animations - COMMENTED OUT (Using widget only) */
+
+/*
 
 /* Logo pulse animation with custom duration */
 .logo-pulse {
@@ -184,7 +186,7 @@
   .chat-entrance {
     animation-duration: 0.3s;
   }
-  
+
   .message-slide-in {
     animation-duration: 0.2s;
   }
@@ -203,9 +205,10 @@
   .loading-spin {
     animation: none;
   }
-  
+
   .chat-entrance,
   .message-slide-in {
     animation-duration: 0.1s;
   }
 }
+*/

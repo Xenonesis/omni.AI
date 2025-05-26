@@ -24,6 +24,7 @@ type ChatBotAction =
   | { type: 'TOGGLE_MINIMIZE' }
   | { type: 'ADD_MESSAGE'; payload: ChatMessage }
   | { type: 'REMOVE_MESSAGE'; payload: string }
+  | { type: 'REMOVE_TYPING_MESSAGES' }
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_VOICE_MODE'; payload: boolean }
   | { type: 'SET_LISTENING'; payload: boolean }
@@ -68,6 +69,12 @@ function chatBotReducer(state: ChatBotState, action: ChatBotAction): ChatBotStat
       return {
         ...state,
         messages: state.messages.filter(msg => msg.id !== action.payload),
+      };
+
+    case 'REMOVE_TYPING_MESSAGES':
+      return {
+        ...state,
+        messages: state.messages.filter(msg => !msg.isTyping),
       };
 
     case 'SET_LOADING':
@@ -115,7 +122,7 @@ function chatBotReducer(state: ChatBotState, action: ChatBotAction): ChatBotStat
 interface ChatBotContextType {
   state: ChatBotState;
   dispatch: React.Dispatch<ChatBotAction>;
-  
+
   // Convenience methods
   openChat: () => void;
   closeChat: () => void;
@@ -123,6 +130,7 @@ interface ChatBotContextType {
   toggleMinimize: () => void;
   addMessage: (message: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
   removeMessage: (id: string) => void;
+  removeTypingMessages: () => void;
   setLoading: (loading: boolean) => void;
   setVoiceMode: (enabled: boolean) => void;
   setListening: (listening: boolean) => void;
@@ -153,17 +161,38 @@ export const ChatBotProvider: React.FC<ChatBotProviderProps> = ({ children }) =>
   const closeChat = () => dispatch({ type: 'TOGGLE_CHAT', payload: false });
   const toggleChat = (open?: boolean) => dispatch({ type: 'TOGGLE_CHAT', payload: open });
   const toggleMinimize = () => dispatch({ type: 'TOGGLE_MINIMIZE' });
-  
+
   const addMessage = (message: Omit<ChatMessage, 'id' | 'timestamp'>) => {
+    // Generate a more unique ID to prevent duplicates
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substr(2, 9);
+    const counter = Math.floor(Math.random() * 10000);
+
     const fullMessage: ChatMessage = {
       ...message,
-      id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `msg_${timestamp}_${counter}_${random}`,
       timestamp: new Date(),
     };
-    dispatch({ type: 'ADD_MESSAGE', payload: fullMessage });
+
+    // Check if message with same content and type already exists in last 5 messages
+    const recentMessages = state.messages.slice(-5);
+    const isDuplicate = recentMessages.some(existingMsg =>
+      existingMsg.content === message.content &&
+      existingMsg.type === message.type &&
+      !existingMsg.isTyping &&
+      !message.isTyping
+    );
+
+    // Only add if not a duplicate (unless it's a typing indicator)
+    if (!isDuplicate || message.isTyping) {
+      dispatch({ type: 'ADD_MESSAGE', payload: fullMessage });
+    }
   };
 
   const removeMessage = (id: string) => dispatch({ type: 'REMOVE_MESSAGE', payload: id });
+  const removeTypingMessages = () => {
+    dispatch({ type: 'REMOVE_TYPING_MESSAGES' });
+  };
   const setLoading = (loading: boolean) => dispatch({ type: 'SET_LOADING', payload: loading });
   const setVoiceMode = (enabled: boolean) => dispatch({ type: 'SET_VOICE_MODE', payload: enabled });
   const setListening = (listening: boolean) => dispatch({ type: 'SET_LISTENING', payload: listening });
@@ -180,6 +209,7 @@ export const ChatBotProvider: React.FC<ChatBotProviderProps> = ({ children }) =>
     toggleMinimize,
     addMessage,
     removeMessage,
+    removeTypingMessages,
     setLoading,
     setVoiceMode,
     setListening,

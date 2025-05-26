@@ -7,6 +7,12 @@ import { useMarketplace } from '../../context/MarketplaceContext';
 import { useAppContext } from '../../context/AppContext';
 import Card from '../ui/Card';
 import LazyImage from '../ui/LazyImage';
+import {
+  cardVariants,
+  staggerItem,
+  withPerformanceOptimization,
+  prefersReducedMotion
+} from '../../utils/optimizedAnimations';
 
 interface OptimizedProductCardProps {
   product: Product;
@@ -92,18 +98,26 @@ const OptimizedProductCard: React.FC<OptimizedProductCardProps> = memo(({
     }
   }, [isSaved, appDispatch, product, bestOffer, seller, appState.savedDeals.length]);
 
-  // Reduced motion variants for better performance
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.3,
-        delay: Math.min(index * 0.05, 0.5) // Cap delay to prevent long waits
+  // Optimized animation variants using only transform and opacity
+  const optimizedCardVariants = useMemo(() => {
+    const baseVariants = {
+      hidden: {
+        opacity: 0,
+        transform: 'translateY(20px)'
+      },
+      visible: {
+        opacity: 1,
+        transform: 'translateY(0px)',
+        transition: {
+          duration: prefersReducedMotion() ? 0.1 : 0.3,
+          delay: Math.min((index || 0) * 0.05, 0.5), // Cap delay to prevent long waits
+          ease: [0.25, 0.46, 0.45, 0.94] // Custom easing for smooth motion
+        }
       }
-    }
-  };
+    };
+
+    return withPerformanceOptimization(baseVariants);
+  }, [index]);
 
   if (viewMode === 'list') {
     return (
@@ -175,10 +189,11 @@ const OptimizedProductCard: React.FC<OptimizedProductCardProps> = memo(({
 
   return (
     <motion.div
-      variants={cardVariants}
+      variants={optimizedCardVariants}
       initial="hidden"
       animate="visible"
       className="h-full"
+      style={{ willChange: 'transform, opacity' }} // Optimize for animation
     >
       <Card
         className="h-full hover:shadow-xl transition-shadow duration-200 cursor-pointer"
@@ -189,6 +204,11 @@ const OptimizedProductCard: React.FC<OptimizedProductCardProps> = memo(({
             src={product.images[0]}
             alt={product.name}
             className="w-full h-36 sm:h-40 md:h-48"
+            width={400}
+            height={300}
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+            priority={index !== undefined && index < 6} // Prioritize first 6 images
+            loading={index !== undefined && index < 6 ? 'eager' : 'lazy'}
           />
 
           {product.isLimitedEdition && (

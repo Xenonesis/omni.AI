@@ -4,12 +4,12 @@ import { AppProvider } from './context/AppContext';
 import { SearchProvider } from './context/SearchContext';
 import { MarketplaceProvider } from './context/MarketplaceContext';
 import { VoiceSearchProvider } from './context/VoiceSearchContext';
-import { ChatBotProvider } from './context/ChatBotContext';
+// import { ChatBotProvider } from './context/ChatBotContext';
 import APIErrorBoundary from './components/ui/APIErrorBoundary';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import PerformanceMonitor from './components/ui/PerformanceMonitor';
-import OmniverseChatBot from './components/chat/OmniverseChatBot';
+import UnifiedChatSystem from './components/chat/UnifiedChatSystem';
 import HomePage from './pages/HomePage';
 import HistoryPage from './pages/HistoryPage';
 import SavedDealsPage from './pages/SavedDealsPage';
@@ -19,8 +19,9 @@ import ProductDetailsPage from './pages/ProductDetailsPage';
 import VoiceShoppingPage from './pages/VoiceShoppingPage';
 import OrderManagementPage from './pages/OrderManagementPage';
 import SellerDashboardPage from './pages/SellerDashboardPage';
-import TestOfferCardPage from './pages/TestOfferCardPage';
+
 import VoiceSearchDebug from './components/debug/VoiceSearchDebug';
+import OmniDimensionDebug from './components/debug/OmniDimensionDebug';
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
         <SearchProvider>
           <MarketplaceProvider>
             <VoiceSearchProvider>
-              <ChatBotProvider>
+              {/* <ChatBotProvider> */}
                 <Router>
               <div className="flex flex-col min-h-screen">
                 <Header />
@@ -46,16 +47,17 @@ function App() {
                     <Route path="/voice-shopping" element={<VoiceShoppingPage />} />
                     <Route path="/orders" element={<OrderManagementPage />} />
                     <Route path="/seller-dashboard" element={<SellerDashboardPage />} />
-                    <Route path="/test-offer-card" element={<TestOfferCardPage />} />
+
                     <Route path="/debug-voice" element={<VoiceSearchDebug />} />
                   </Routes>
                 </main>
                 <Footer />
                 <PerformanceMonitor />
-                <OmniverseChatBot />
+                {/* <UnifiedChatSystem /> */}
+                {/* <OmniDimensionDebug /> */}
               </div>
             </Router>
-              </ChatBotProvider>
+              {/* </ChatBotProvider> */}
             </VoiceSearchProvider>
           </MarketplaceProvider>
         </SearchProvider>

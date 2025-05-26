@@ -2,7 +2,10 @@
  * API Connection Service
  * Ensures the marketplace API is always available and handles connection management
  * Supports both development and production environments with automatic fallback
+ * Enhanced with intelligent caching for better performance
  */
+
+import { cacheService, CACHE_KEYS } from './cacheService';
 
 export interface APIConnectionStatus {
   isConnected: boolean;
@@ -262,6 +265,50 @@ export class APIConnectionService {
   }
 
   /**
+   * Make a cached API request with automatic retry and intelligent fallback support
+   */
+  public async makeCachedRequest(
+    endpoint: string,
+    options: RequestInit = {},
+    ttl?: number
+  ): Promise<Response> {
+    const cacheKey = `api:${endpoint}`;
+
+    // Try to get from cache first for GET requests
+    if (!options.method || options.method === 'GET') {
+      const cachedData = cacheService.get(cacheKey);
+      if (cachedData) {
+        console.log(`📦 Cache hit for: ${endpoint}`);
+        return new Response(JSON.stringify(cachedData), {
+          status: 200,
+          statusText: 'OK',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Cache-Status': 'HIT'
+          },
+        });
+      }
+    }
+
+    // Make the actual request
+    const response = await this.makeRequest(endpoint, options);
+
+    // Cache successful GET responses
+    if (response.ok && (!options.method || options.method === 'GET')) {
+      try {
+        const responseClone = response.clone();
+        const data = await responseClone.json();
+        cacheService.set(cacheKey, data, ttl);
+        console.log(`💾 Cached response for: ${endpoint}`);
+      } catch (error) {
+        console.warn('Failed to cache response:', error);
+      }
+    }
+
+    return response;
+  }
+
+  /**
    * Make an API request with automatic retry and intelligent fallback support
    */
   public async makeRequest(endpoint: string, options: RequestInit = {}): Promise<Response> {
@@ -343,15 +390,10 @@ export class APIConnectionService {
     };
 
     // Customize response based on endpoint
-    if (endpoint.includes('voice-agent') || endpoint.includes('voice')) {
-      fallbackData = {
-        ...fallbackData,
-        text: 'I\'m currently in offline mode, but I can still help you! What would you like to find?',
-        action: 'search',
-        confidence: 0.9,
-        shouldSpeak: true,
-        fallbackMode: true
-      };
+    if (endpoint.includes('voice-agent') || endpoint.includes('voice') || endpoint.includes('chat')) {
+      // For chat/voice endpoints, we should not provide fallback responses
+      // Instead, throw an error to indicate the service is unavailable
+      throw new Error('OmniDimension API is currently unavailable. Please try again later.');
     } else if (endpoint.includes('products') || endpoint.includes('search')) {
       fallbackData = {
         ...fallbackData,

@@ -12,10 +12,10 @@ import {
   Loader,
   Sparkles
 } from 'lucide-react';
-import { callChatBotAPI } from '../../services/voiceAgentApi';
+// import { callChatBotAPI } from '../../services/voiceAgentApi';
 import { voiceService } from '../../services/voiceService';
 import { useChatBot } from '../../context/ChatBotContext';
-import './ChatBotAnimations.css';
+// import './ChatBotAnimations.css';
 
 // Custom omniverse.AI Logo Component
 const OmniverseLogo: React.FC<{ size?: number; className?: string }> = ({
@@ -101,7 +101,7 @@ interface OmniverseChatBotProps {
 const OmniverseChatBot: React.FC<OmniverseChatBotProps> = ({
   className = ''
 }) => {
-  const { state, toggleChat, toggleMinimize, addMessage, setLoading, setListening } = useChatBot();
+  const { state, toggleChat, toggleMinimize, addMessage, removeTypingMessages, setLoading, setListening } = useChatBot();
   const { isOpen, isMinimized, messages, isLoading, isListening, sessionId } = state;
 
   const [inputMessage, setInputMessage] = useState('');
@@ -121,15 +121,22 @@ const OmniverseChatBot: React.FC<OmniverseChatBotProps> = ({
     }
   }, [isOpen, isMinimized]);
 
-  // Initialize chat with welcome message
+  // Initialize chat with welcome message (only once per session)
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      addMessage({
-        type: 'bot',
-        content: 'Hello! I\'m your omniverse.AI assistant. I can help you find products, answer questions, and guide you through our marketplace. How can I assist you today?'
-      });
+      const welcomeMessage = {
+        type: 'bot' as const,
+        content: 'Hello! I\'m your fallback chat assistant. The OmniDimension widget is not available, but I can still help you. Please note that for the full OmniDimension experience, the widget should load automatically. How can I assist you today?'
+      };
+
+      // Use a timeout to ensure this only runs once
+      const timeoutId = setTimeout(() => {
+        addMessage(welcomeMessage);
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
-  }, [isOpen, messages.length, addMessage]);
+  }, [isOpen, sessionId, addMessage]); // Use sessionId instead of messages.length
 
   const sendMessage = async (content: string, isVoice = false) => {
     if (!content.trim()) return;
@@ -158,13 +165,16 @@ const OmniverseChatBot: React.FC<OmniverseChatBotProps> = ({
         timestamp: new Date().toISOString()
       };
 
-      const response = await callChatBotAPI(content, context);
+      // const response = await callChatBotAPI(content, context);
+      const response = { text: 'This chat is disabled. Please use the OmniDimension widget.' };
 
-      // Remove typing indicator (this would need to be implemented in context)
-      // For now, just add the bot response
+      // Remove all typing indicators before adding the response
+      removeTypingMessages();
+
+      // Add the bot response
       addMessage({
         type: 'bot',
-        content: response.text || response.message || 'I understand your request. Let me help you with that.'
+        content: response.text || response.message || response.response || 'I received your message and I\'m here to help.'
       });
 
       // If voice mode is active, speak the response
@@ -179,10 +189,13 @@ const OmniverseChatBot: React.FC<OmniverseChatBotProps> = ({
     } catch (error) {
       console.error('Chat bot API error:', error);
 
+      // Remove typing indicators on error too
+      removeTypingMessages();
+
       // Add error message
       addMessage({
         type: 'bot',
-        content: 'I apologize, but I\'m having trouble connecting to my services right now. Please try again in a moment.'
+        content: 'I\'m currently unable to connect to the OmniDimension services. For the best experience, please ensure the OmniDimension widget is loaded, or try refreshing the page.'
       });
     } finally {
       setLoading(false);
@@ -226,6 +239,10 @@ const OmniverseChatBot: React.FC<OmniverseChatBotProps> = ({
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
+  // OLD BOT UI COMMENTED OUT - Using OmniDimension widget only
+  return null;
+
+  /* OLD BOT UI - COMMENTED OUT
   if (!isOpen) return null;
 
   return (
@@ -464,6 +481,7 @@ const OmniverseChatBot: React.FC<OmniverseChatBotProps> = ({
       </motion.div>
     </motion.div>
   );
+  */
 };
 
 export default OmniverseChatBot;

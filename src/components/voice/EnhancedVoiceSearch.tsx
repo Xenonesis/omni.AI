@@ -21,7 +21,7 @@ import { conversationEngine, AIResponse } from '../../services/conversationEngin
 import { useMarketplace } from '../../context/MarketplaceContext';
 import Button from '../ui/Button';
 import MicrophoneTestModal from '../debug/MicrophoneTestModal';
-import { callVoiceAgentAPI } from '../../services/voiceAgentApi';
+// import { callVoiceAgentAPI } from '../../services/voiceAgentApi';
 import { apiConnection } from '../../services/apiConnection';
 
 interface EnhancedVoiceSearchProps {
@@ -265,8 +265,14 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
 
       console.log('🧠 Enhanced context:', enhancedContext);
 
-      // Call the voice agent API with enhanced context
-      const agentResponse = await callVoiceAgentAPI(enhancedContext);
+      // Call the voice agent API with enhanced context (commented out - using OmniDimension widget)
+      // const agentResponse = await callVoiceAgentAPI(enhancedContext);
+      const agentResponse = {
+        text: 'Voice agent is disabled. Please use the OmniDimension widget for chat functionality.',
+        action: 'search',
+        confidence: 0.9,
+        shouldSpeak: false
+      };
 
       // Process agent response
       await handleAgentResponse(agentResponse, text);

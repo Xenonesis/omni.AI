@@ -131,7 +131,6 @@ const HomePage: React.FC = () => {
       {/* Enhanced UI Components */}
       <ScrollProgress />
       {!shouldReduceMotion && <CursorFollower />}
-      <FloatingActionButton onVoiceSearch={handleStartSearch} />
 
       {/* Voice Search Modal Overlay */}
       {isVoiceSearchActive && (

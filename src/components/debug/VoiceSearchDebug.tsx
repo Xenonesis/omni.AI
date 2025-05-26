@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mic, AlertCircle, CheckCircle, Loader, Settings } from 'lucide-react';
 import { voiceService } from '../../services/voiceService';
-import { callVoiceAgentAPI } from '../../services/voiceAgentApi';
+// import { callVoiceAgentAPI } from '../../services/voiceAgentApi';
 import { apiConnection } from '../../services/apiConnection';
 
 const VoiceSearchDebug: React.FC = () => {
@@ -17,11 +17,11 @@ const VoiceSearchDebug: React.FC = () => {
     // Check voice support
     const supported = voiceService.isSupported();
     setIsSupported(supported);
-    
+
     // Check API status
     const status = apiConnection.getStatus();
     setApiStatus(status.isConnected ? 'connected' : 'disconnected');
-    
+
     console.log('🔍 Voice Debug - Voice supported:', supported);
     console.log('🔍 Voice Debug - API status:', status);
   }, []);
@@ -29,10 +29,10 @@ const VoiceSearchDebug: React.FC = () => {
   const testVoiceRecognition = async () => {
     setError(null);
     setTestResults([]);
-    
+
     try {
       console.log('🎤 Testing voice recognition...');
-      
+
       await voiceService.startListening({
         onStart: () => {
           console.log('✅ Voice recognition started');
@@ -68,7 +68,7 @@ const VoiceSearchDebug: React.FC = () => {
   const testVoiceAgent = async () => {
     try {
       console.log('🤖 Testing voice agent API...');
-      
+
       const testPayload = {
         transcript: 'hello test',
         timestamp: new Date().toISOString(),
@@ -81,20 +81,20 @@ const VoiceSearchDebug: React.FC = () => {
         }
       };
 
-      const response = await callVoiceAgentAPI(testPayload);
-      console.log('✅ Voice agent response:', response);
-      
-      setTestResults(prev => [...prev, { 
-        test: 'Voice Agent API', 
-        status: 'success', 
-        message: `API responded: "${response.text || response.message}"` 
+      // const response = await callVoiceAgentAPI(testPayload);
+      // console.log('✅ Voice agent response:', response);
+
+      setTestResults(prev => [...prev, {
+        test: 'Voice Agent API',
+        status: 'success',
+        message: 'API test disabled - using OmniDimension widget instead'
       }]);
     } catch (error: any) {
       console.error('❌ Voice agent test failed:', error);
-      setTestResults(prev => [...prev, { 
-        test: 'Voice Agent API', 
-        status: 'error', 
-        message: error.message 
+      setTestResults(prev => [...prev, {
+        test: 'Voice Agent API',
+        status: 'error',
+        message: error.message
       }]);
     }
   };
@@ -103,17 +103,17 @@ const VoiceSearchDebug: React.FC = () => {
     try {
       console.log('🗣️ Testing text-to-speech...');
       await voiceService.speak('Hello, this is a test of the text to speech system.');
-      setTestResults(prev => [...prev, { 
-        test: 'Text-to-Speech', 
-        status: 'success', 
-        message: 'Text-to-speech working correctly' 
+      setTestResults(prev => [...prev, {
+        test: 'Text-to-Speech',
+        status: 'success',
+        message: 'Text-to-speech working correctly'
       }]);
     } catch (error: any) {
       console.error('❌ Text-to-speech test failed:', error);
-      setTestResults(prev => [...prev, { 
-        test: 'Text-to-Speech', 
-        status: 'error', 
-        message: error.message 
+      setTestResults(prev => [...prev, {
+        test: 'Text-to-Speech',
+        status: 'error',
+        message: error.message
       }]);
     }
   };
@@ -128,7 +128,7 @@ const VoiceSearchDebug: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6 text-center">🔍 Voice Search Debug Panel</h2>
-      
+
       {/* System Status */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-gray-50 p-4 rounded-lg">
@@ -142,23 +142,23 @@ const VoiceSearchDebug: React.FC = () => {
             <span>{isSupported ? 'Supported' : 'Not Supported'}</span>
           </div>
         </div>
-        
+
         <div className="bg-gray-50 p-4 rounded-lg">
           <h3 className="font-semibold mb-2">API Status</h3>
           <div className="flex items-center space-x-2">
             <div className={`w-3 h-3 rounded-full ${
-              apiStatus === 'connected' ? 'bg-green-500' : 
+              apiStatus === 'connected' ? 'bg-green-500' :
               apiStatus === 'checking' ? 'bg-yellow-500 animate-pulse' : 'bg-red-500'
             }`} />
             <span className="capitalize">{apiStatus}</span>
           </div>
         </div>
-        
+
         <div className="bg-gray-50 p-4 rounded-lg">
           <h3 className="font-semibold mb-2">Browser</h3>
           <div className="flex items-center space-x-2">
-            <span className="text-sm">{navigator.userAgent.includes('Chrome') ? 'Chrome' : 
-                                      navigator.userAgent.includes('Edge') ? 'Edge' : 
+            <span className="text-sm">{navigator.userAgent.includes('Chrome') ? 'Chrome' :
+                                      navigator.userAgent.includes('Edge') ? 'Edge' :
                                       navigator.userAgent.includes('Firefox') ? 'Firefox' : 'Other'}</span>
           </div>
         </div>
@@ -172,7 +172,7 @@ const VoiceSearchDebug: React.FC = () => {
         >
           Run All Tests
         </button>
-        
+
         <button
           onClick={testVoiceRecognition}
           disabled={!isSupported || isListening}
@@ -180,14 +180,14 @@ const VoiceSearchDebug: React.FC = () => {
         >
           {isListening ? 'Listening...' : 'Test Voice Recognition'}
         </button>
-        
+
         <button
           onClick={testVoiceAgent}
           className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
         >
           Test Voice Agent API
         </button>
-        
+
         <button
           onClick={testTextToSpeech}
           className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"

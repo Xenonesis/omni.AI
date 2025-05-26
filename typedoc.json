@@ -1,0 +1,134 @@
+{
+  "entryPoints": ["./src"],
+  "entryPointStrategy": "expand",
+  "out": "./docs",
+  "name": "omniverse.AI Voice Shopping Marketplace",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "readme": "./README.md",
+  "theme": "default",
+  "hideGenerator": false,
+  "disableSources": false,
+  "sourceLinkTemplate": "https://github.com/your-username/omniverse-ai-voice-marketplace/blob/{gitRevision}/{path}#L{line}",
+  "gitRevision": "main",
+  "gitRemote": "origin",
+  "gaID": "",
+  "exclude": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
+  "externalPattern": [
+    "**/node_modules/**"
+  ],
+  "categorizeByGroup": true,
+  "categoryOrder": [
+    "Components",
+    "Services",
+    "Utils",
+    "Types",
+    "Hooks",
+    "*"
+  ],
+  "sort": [
+    "source-order"
+  ],
+  "kindSortOrder": [
+    "Project",
+    "Module",
+    "Namespace",
+    "Enum",
+    "Enum member",
+    "Class",
+    "Interface",
+    "Type alias",
+    "Constructor",
+    "Property",
+    "Variable",
+    "Function",
+    "Accessor",
+    "Method",
+    "Parameter",
+    "Other",
+    "Type parameter",
+    "Reference"
+  ],
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true
+  },
+  "visibilityFilters": {
+    "protected": false,
+    "private": false,
+    "inherited": true,
+    "external": false
+  },
+  "searchInComments": true,
+  "cleanOutputDir": true,
+  "titleLink": "https://omniverseai.netlify.app",
+  "navigationLinks": {
+    "Live Demo": "https://omniverseai.netlify.app",
+    "GitHub": "https://github.com/your-username/omniverse-ai-voice-marketplace",
+    "API Docs": "https://www.omnidim.io/docs/getting-started"
+  },
+  "sidebarLinks": {
+    "Documentation": "https://github.com/your-username/omniverse-ai-voice-marketplace/wiki",
+    "Issues": "https://github.com/your-username/omniverse-ai-voice-marketplace/issues",
+    "Discussions": "https://github.com/your-username/omniverse-ai-voice-marketplace/discussions"
+  },
+  "customCss": "./docs/custom.css",
+  "markedOptions": {
+    "mangle": false
+  },
+  "blockTags": [
+    "@alpha",
+    "@beta",
+    "@defaultValue",
+    "@decorator",
+    "@deprecated",
+    "@eventProperty",
+    "@example",
+    "@experimental",
+    "@inheritDoc",
+    "@internal",
+    "@label",
+    "@override",
+    "@packageDocumentation",
+    "@param",
+    "@privateRemarks",
+    "@public",
+    "@readonly",
+    "@remarks",
+    "@returns",
+    "@sealed",
+    "@see",
+    "@since",
+    "@throws",
+    "@typeParam",
+    "@virtual"
+  ],
+  "inlineTags": [
+    "@inheritDoc",
+    "@label",
+    "@link",
+    "@linkcode",
+    "@linkplain"
+  ],
+  "modifierTags": [
+    "@alpha",
+    "@beta",
+    "@deprecated",
+    "@eventProperty",
+    "@experimental",
+    "@internal",
+    "@override",
+    "@packageDocumentation",
+    "@public",
+    "@readonly",
+    "@sealed",
+    "@virtual"
+  ]
+}

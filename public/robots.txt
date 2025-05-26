@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://your-domain.netlify.app/sitemap.xml
+
+# Disallow admin/test pages
+Disallow: /test-*
+Disallow: /admin/
+Disallow: /api/
+
+# Allow important pages
+Allow: /
+Allow: /marketplace
+Allow: /voice-shopping
+Allow: /orders
+Allow: /settings

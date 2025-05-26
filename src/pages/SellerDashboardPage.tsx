@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  TrendingUp, 
-  DollarSign, 
-  Package, 
-  Star, 
-  Eye, 
-  ShoppingCart, 
-  Users, 
+import {
+  TrendingUp,
+  DollarSign,
+  Package,
+  Star,
+  Eye,
+  ShoppingCart,
+  Users,
   Calendar,
   Plus,
   Edit,
@@ -88,10 +88,10 @@ const SellerDashboardPage: React.FC = () => {
     },
   ];
 
-  const StatCard: React.FC<{ 
-    title: string; 
-    value: string | number; 
-    change?: string; 
+  const StatCard: React.FC<{
+    title: string;
+    value: string | number;
+    change?: string;
     icon: React.ReactNode;
     color: string;
   }> = ({ title, value, change, icon, color }) => (
@@ -126,7 +126,7 @@ const SellerDashboardPage: React.FC = () => {
                 <h1 className="text-3xl md:text-4xl font-bold mb-2">Seller Dashboard</h1>
                 <p className="text-primary-100">Welcome back, SneakerVault!</p>
               </div>
-              
+
               <div className="flex gap-3 mt-4 md:mt-0">
                 <Button
                   icon={<Plus size={20} />}
@@ -156,6 +156,7 @@ const SellerDashboardPage: React.FC = () => {
               {(['7d', '30d', '90d', '1y'] as const).map((period) => (
                 <button
                   key={period}
+                  type="button"
                   onClick={() => setSelectedPeriod(period)}
                   className={`px-4 py-2 text-sm font-medium transition-colors ${
                     selectedPeriod === period
@@ -163,8 +164,8 @@ const SellerDashboardPage: React.FC = () => {
                       : 'bg-white text-neutral-600 hover:bg-neutral-50'
                   }`}
                 >
-                  {period === '7d' ? '7 Days' : 
-                   period === '30d' ? '30 Days' : 
+                  {period === '7d' ? '7 Days' :
+                   period === '30d' ? '30 Days' :
                    period === '90d' ? '90 Days' : '1 Year'}
                 </button>
               ))}
@@ -183,7 +184,7 @@ const SellerDashboardPage: React.FC = () => {
               color="bg-blue-500"
             />
           </ScrollReveal>
-          
+
           <ScrollReveal direction="up" delay={0.2}>
             <StatCard
               title="Revenue"
@@ -193,7 +194,7 @@ const SellerDashboardPage: React.FC = () => {
               color="bg-green-500"
             />
           </ScrollReveal>
-          
+
           <ScrollReveal direction="up" delay={0.3}>
             <StatCard
               title="Active Listings"
@@ -203,7 +204,7 @@ const SellerDashboardPage: React.FC = () => {
               color="bg-purple-500"
             />
           </ScrollReveal>
-          
+
           <ScrollReveal direction="up" delay={0.4}>
             <StatCard
               title="Average Rating"
@@ -223,7 +224,7 @@ const SellerDashboardPage: React.FC = () => {
                 <h3 className="text-xl font-bold text-neutral-900">Recent Orders</h3>
                 <Button variant="outline" size="sm">View All</Button>
               </div>
-              
+
               <div className="space-y-4">
                 {recentOrders.map((order) => (
                   <div key={order.id} className="flex items-center justify-between p-4 bg-neutral-50 rounded-lg">
@@ -255,15 +256,15 @@ const SellerDashboardPage: React.FC = () => {
                 <h3 className="text-xl font-bold text-neutral-900">Top Performing Products</h3>
                 <Button variant="outline" size="sm">Manage</Button>
               </div>
-              
+
               <div className="space-y-4">
                 {topProducts.map((product, index) => (
                   <div key={product.id} className="flex items-center gap-4 p-4 bg-neutral-50 rounded-lg">
                     <div className="flex items-center justify-center w-8 h-8 bg-primary-600 text-white rounded-full text-sm font-bold">
                       {index + 1}
                     </div>
-                    <img 
-                      src={product.image} 
+                    <img
+                      src={product.image}
                       alt={product.name}
                       className="w-12 h-12 object-cover rounded-lg"
                     />
@@ -298,7 +299,7 @@ const SellerDashboardPage: React.FC = () => {
               color="bg-indigo-500"
             />
           </ScrollReveal>
-          
+
           <ScrollReveal direction="up" delay={0.2}>
             <StatCard
               title="Conversion Rate"
@@ -308,7 +309,7 @@ const SellerDashboardPage: React.FC = () => {
               color="bg-orange-500"
             />
           </ScrollReveal>
-          
+
           <ScrollReveal direction="up" delay={0.3}>
             <StatCard
               title="Total Customers"

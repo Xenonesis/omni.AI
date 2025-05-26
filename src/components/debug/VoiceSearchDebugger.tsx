@@ -89,8 +89,10 @@ const VoiceSearchDebugger: React.FC<VoiceSearchDebuggerProps> = ({ isOpen, onClo
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">🔍 Voice Search Debugger</h2>
               <button
+                type="button"
                 onClick={onClose}
                 className="text-white hover:text-gray-200 text-2xl"
+                aria-label="Close debugger"
               >
                 ×
               </button>
@@ -114,6 +116,7 @@ const VoiceSearchDebugger: React.FC<VoiceSearchDebuggerProps> = ({ isOpen, onClo
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
+                  type="button"
                   onClick={handleTestQuery}
                   disabled={isValidating || !testQuery.trim()}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
@@ -132,6 +135,7 @@ const VoiceSearchDebugger: React.FC<VoiceSearchDebuggerProps> = ({ isOpen, onClo
                 {commonTestQueries.slice(0, 8).map((query, index) => (
                   <button
                     key={index}
+                    type="button"
                     onClick={() => handleQuickTest(query)}
                     className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
                   >
@@ -144,6 +148,7 @@ const VoiceSearchDebugger: React.FC<VoiceSearchDebuggerProps> = ({ isOpen, onClo
             {/* Batch Test */}
             <div className="mb-6">
               <button
+                type="button"
                 onClick={handleBatchTest}
                 disabled={isValidating}
                 className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50"
@@ -160,7 +165,7 @@ const VoiceSearchDebugger: React.FC<VoiceSearchDebuggerProps> = ({ isOpen, onClo
                 className="mb-6 p-4 border rounded-lg"
               >
                 <h3 className="text-lg font-semibold mb-3">🔍 Validation Results</h3>
-                
+
                 {/* Accuracy Score */}
                 <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-3 ${getAccuracyBg(validationResult.accuracy)} ${getAccuracyColor(validationResult.accuracy)}`}>
                   Accuracy: {(validationResult.accuracy * 100).toFixed(1)}%
@@ -231,7 +236,7 @@ const VoiceSearchDebugger: React.FC<VoiceSearchDebuggerProps> = ({ isOpen, onClo
                         </ul>
                       </div>
                     )}
-                    
+
                     {validationResult.suggestions.length > 0 && (
                       <div>
                         <h4 className="font-medium text-blue-700 mb-2">💡 Suggestions</h4>
@@ -255,7 +260,7 @@ const VoiceSearchDebugger: React.FC<VoiceSearchDebuggerProps> = ({ isOpen, onClo
                 className="p-4 border rounded-lg"
               >
                 <h3 className="text-lg font-semibold mb-3">📊 Batch Test Results</h3>
-                
+
                 {/* Summary */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                   <div className="text-center p-3 bg-blue-50 rounded">

@@ -128,7 +128,9 @@ class VoiceService {
     this.recognition.maxAlternatives = this.config.maxAlternatives;
 
     this.recognition.onstart = () => {
+      console.log('🎤 Speech recognition started');
       this.state.isListening = true;
+      this.state.isProcessing = false;
       this.state.error = undefined;
       this.callbacks.onStart?.();
     };
@@ -267,7 +269,16 @@ class VoiceService {
     };
 
     this.recognition.onend = () => {
+      console.log('🎤 Speech recognition ended');
       this.state.isListening = false;
+      this.state.isProcessing = false;
+
+      // Clean up audio resources
+      if (this.mediaStream) {
+        this.mediaStream.getTracks().forEach(track => track.stop());
+        this.mediaStream = null;
+      }
+
       this.callbacks.onEnd?.();
     };
   }
@@ -323,8 +334,11 @@ class VoiceService {
       throw new Error('Speech recognition not supported');
     }
 
+    // If already listening, stop first and wait a bit
     if (this.state.isListening) {
       this.stopListening();
+      // Wait for the recognition to fully stop
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     this.callbacks = { ...this.callbacks, ...callbacks };
@@ -337,10 +351,21 @@ class VoiceService {
 
       this.state.interimTranscript = '';
       this.state.finalTranscript = '';
+
+      // Additional safety check before starting
+      if (this.state.isListening) {
+        console.warn('Recognition still active, forcing stop');
+        this.recognition.abort();
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+
       this.recognition.start();
-    } catch (error) {
-      this.state.error = `Failed to start listening: ${error}`;
-      this.callbacks.onError?.(this.state.error);
+    } catch (error: any) {
+      const errorMessage = `Failed to start listening: ${error.message || error}`;
+      this.state.error = errorMessage;
+      this.state.isListening = false;
+      this.callbacks.onError?.(errorMessage);
+      throw new Error(errorMessage);
     }
   }
 
@@ -348,13 +373,38 @@ class VoiceService {
    * Stop listening
    */
   public stopListening(): void {
-    if (this.recognition && this.state.isListening) {
-      this.recognition.stop();
+    if (this.recognition) {
+      try {
+        if (this.state.isListening) {
+          this.recognition.stop();
+        }
+      } catch (error) {
+        console.warn('Error stopping recognition:', error);
+        // Force abort if stop fails
+        try {
+          this.recognition.abort();
+        } catch (abortError) {
+          console.warn('Error aborting recognition:', abortError);
+        }
+      }
     }
+
+    // Reset state immediately
+    this.state.isListening = false;
+    this.state.isProcessing = false;
 
     if (this.mediaStream) {
       this.mediaStream.getTracks().forEach(track => track.stop());
       this.mediaStream = null;
+    }
+
+    if (this.audioContext && this.audioContext.state !== 'closed') {
+      try {
+        this.audioContext.close();
+      } catch (error) {
+        console.warn('Error closing audio context:', error);
+      }
+      this.audioContext = null;
     }
   }
 

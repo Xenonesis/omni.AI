@@ -10,16 +10,16 @@ import ScrollReveal from '../components/ui/ScrollReveal';
 
 const OrderManagementPage: React.FC = () => {
   const navigate = useNavigate();
-  const { 
-    state, 
-    getProductById, 
-    getSellerById, 
-    removeFromCart, 
-    getCartTotal, 
+  const {
+    state,
+    getProductById,
+    getSellerById,
+    removeFromCart,
+    getCartTotal,
     createOrder,
-    dispatch 
+    dispatch
   } = useMarketplace();
-  
+
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<'cart' | 'shipping' | 'payment' | 'confirmation'>('cart');
 
@@ -36,17 +36,17 @@ const OrderManagementPage: React.FC = () => {
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
-    
+
     try {
       // Simulate checkout process
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       const order = await createOrder({
         items: state.cart.map(item => {
           const product = getProductById(item.productId);
           const offers = state.offers[item.productId] || [];
           const offer = offers.find(o => o.id === item.offerId);
-          
+
           return {
             id: `item_${Date.now()}_${Math.random()}`,
             productId: item.productId,
@@ -112,40 +112,44 @@ const OrderManagementPage: React.FC = () => {
     return (
       <Card className="p-6">
         <div className="flex gap-4">
-          <img 
-            src={product.images[0]} 
+          <img
+            src={product.images[0]}
             alt={product.name}
             className="w-24 h-24 object-cover rounded-lg"
           />
-          
+
           <div className="flex-1">
             <h3 className="font-semibold text-lg text-neutral-900 mb-2">
               {product.name}
             </h3>
-            
+
             <div className="text-sm text-neutral-600 mb-3">
               Sold by <span className="font-medium text-primary-600">{seller.name}</span>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <button
+                  type="button"
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
                   className="w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-neutral-100"
+                  aria-label="Decrease quantity"
                 >
                   <Minus size={16} />
                 </button>
-                
+
                 <span className="font-medium text-lg">{item.quantity}</span>
-                
+
                 <button
+                  type="button"
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
                   className="w-8 h-8 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-neutral-100"
+                  aria-label="Increase quantity"
                 >
                   <Plus size={16} />
                 </button>
               </div>
-              
+
               <div className="text-right">
                 <div className="text-xl font-bold text-primary-600">
                   ${itemTotal.toFixed(2)}
@@ -156,10 +160,12 @@ const OrderManagementPage: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           <button
+            type="button"
             onClick={() => removeFromCart(item.id)}
             className="p-2 text-neutral-400 hover:text-red-500 transition-colors"
+            aria-label="Remove item from cart"
           >
             <Trash2 size={20} />
           </button>
@@ -181,15 +187,15 @@ const OrderManagementPage: React.FC = () => {
             >
               <Check className="w-8 h-8 text-white" />
             </motion.div>
-            
+
             <h2 className="text-2xl font-bold text-neutral-900 mb-4">
               Order Confirmed!
             </h2>
-            
+
             <p className="text-neutral-600 mb-6">
               Thank you for your purchase. You'll receive email confirmations and tracking information shortly.
             </p>
-            
+
             <div className="space-y-3">
               <Button fullWidth onClick={() => navigate('/marketplace')}>
                 Continue Shopping
@@ -217,7 +223,7 @@ const OrderManagementPage: React.FC = () => {
                   {state.cart.length} {state.cart.length === 1 ? 'item' : 'items'} in your cart
                 </p>
               </div>
-              
+
               <div className="text-right">
                 <div className="text-sm text-primary-100">Total</div>
                 <div className="text-3xl font-bold">${getCartTotal().toFixed(2)}</div>
@@ -235,7 +241,7 @@ const OrderManagementPage: React.FC = () => {
               <ScrollReveal direction="left">
                 <h2 className="text-2xl font-bold text-neutral-900 mb-6">Your Items</h2>
               </ScrollReveal>
-              
+
               {state.cart.map((item, index) => (
                 <ScrollReveal key={item.id} direction="left" delay={index * 0.1}>
                   <CartItemCard item={item} />
@@ -248,7 +254,7 @@ const OrderManagementPage: React.FC = () => {
               <ScrollReveal direction="right">
                 <Card className="p-6 sticky top-8">
                   <h3 className="text-xl font-bold text-neutral-900 mb-6">Order Summary</h3>
-                  
+
                   <div className="space-y-3 mb-6">
                     <div className="flex justify-between">
                       <span className="text-neutral-600">Subtotal</span>
@@ -279,7 +285,7 @@ const OrderManagementPage: React.FC = () => {
                     >
                       {isCheckingOut ? 'Processing...' : 'Proceed to Checkout'}
                     </Button>
-                    
+
                     <Button
                       fullWidth
                       variant="outline"
@@ -319,7 +325,7 @@ const OrderManagementPage: React.FC = () => {
               <p className="text-neutral-600 mb-8 max-w-md mx-auto">
                 Discover amazing deals on limited-edition items with our AI-powered voice search.
               </p>
-              
+
               <div className="space-y-4">
                 <Button
                   size="lg"
@@ -328,7 +334,7 @@ const OrderManagementPage: React.FC = () => {
                 >
                   Start Voice Shopping
                 </Button>
-                
+
                 <Button
                   variant="outline"
                   size="lg"

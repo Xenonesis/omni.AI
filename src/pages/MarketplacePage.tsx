@@ -1,162 +1,218 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { Search, Filter, Grid, List, Star, TrendingUp, Mic, ShoppingCart, X } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Search, Grid, List, TrendingUp, Mic, X, BookmarkCheck } from 'lucide-react';
 import { useMarketplace } from '../context/MarketplaceContext';
+import { useAppContext } from '../context/AppContext';
 import { Product } from '../types/marketplace';
 import Button from '../components/ui/Button';
 import Card from '../components/ui/Card';
 import ScrollReveal from '../components/ui/ScrollReveal';
+import OptimizedProductCard from '../components/marketplace/OptimizedProductCard';
+import Pagination from '../components/ui/Pagination';
+import { useUnifiedVoiceSearch } from '../hooks/useUnifiedVoiceSearch';
+import ProductSkeleton from '../components/ui/ProductSkeleton';
+import { apiConnection } from '../services/apiConnection';
 
 const MarketplacePage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { state, searchProducts, getBestOffer, getSellerById } = useMarketplace();
+  const { dispatch: appDispatch } = useAppContext();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'price' | 'rating' | 'popularity'>('popularity');
-  const [isVoiceSearching, setIsVoiceSearching] = useState(false);
-  const [voiceTranscript, setVoiceTranscript] = useState('');
   const [showVoiceResults, setShowVoiceResults] = useState(false);
+
+  // Unified voice search hook
+  const voiceSearch = useUnifiedVoiceSearch({
+    onResult: (transcript, isFinal) => {
+      if (isFinal) {
+        setSearchQuery(transcript);
+        setShowVoiceResults(true);
+      }
+    },
+    onError: (error) => {
+      alert(error);
+    },
+    onSearchComplete: (query) => {
+      console.log('✅ Voice search completed for:', query);
+    }
+  });
   const [apiStatus, setApiStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
 
-  // Use search results if available, otherwise filter products normally
-  const displayProducts = showVoiceResults && state.currentSearch?.products
-    ? state.currentSearch.products
-    : state.products;
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage, setProductsPerPage] = useState(30); // Show all 30 products on one page
 
-  const categories = [
-    { id: 'all', name: 'All Products', count: displayProducts.length },
-    { id: 'electronics', name: 'Electronics', count: displayProducts.filter(p => p.category === 'electronics').length },
-    { id: 'fashion', name: 'Fashion & Footwear', count: displayProducts.filter(p => p.category === 'fashion').length },
-    { id: 'beauty', name: 'Beauty & Personal Care', count: displayProducts.filter(p => p.category === 'beauty').length },
-  ];
-
-  const filteredProducts = displayProducts.filter(product => {
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    const matchesSearch = !searchQuery ||
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    return matchesCategory && matchesSearch;
-  });
-
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortBy) {
-      case 'price':
-        const priceA = getBestOffer(a.id)?.price || a.basePrice;
-        const priceB = getBestOffer(b.id)?.price || b.basePrice;
-        return priceA - priceB;
-      case 'rating':
-        return b.averageRating - a.averageRating;
-      case 'popularity':
-        return b.totalReviews - a.totalReviews;
-      default:
-        return 0;
-    }
-  });
-
-  // Check API status on component mount
+  // Initialize search query from URL parameters
   useEffect(() => {
-    checkAPIStatus();
+    const searchParam = searchParams.get('search');
+    if (searchParam) {
+      setSearchQuery(searchParam);
+    }
+  }, [searchParams]);
+
+  // Memoized product calculations for better performance
+  const displayProducts = useMemo(() =>
+    showVoiceResults && state.currentSearch?.products
+      ? state.currentSearch.products
+      : state.products,
+    [showVoiceResults, state.currentSearch?.products, state.products]
+  );
+
+  const categories = useMemo(() => [
+    { id: 'all', name: 'All Products', count: displayProducts.length },
+    { id: 'electronics', name: 'Electronics', count: displayProducts.filter(p => p.category.toLowerCase() === 'electronics').length },
+    { id: 'fashion', name: 'Fashion & Footwear', count: displayProducts.filter(p => p.category.toLowerCase() === 'fashion').length },
+    { id: 'beauty', name: 'Beauty & Personal Care', count: displayProducts.filter(p => p.category.toLowerCase() === 'beauty').length },
+  ], [displayProducts]);
+
+  const filteredProducts = useMemo(() =>
+    displayProducts.filter(product => {
+      const matchesCategory = selectedCategory === 'all' || product.category.toLowerCase() === selectedCategory;
+      const matchesSearch = !searchQuery ||
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      return matchesCategory && matchesSearch;
+    }),
+    [displayProducts, selectedCategory, searchQuery]
+  );
+
+  const sortedProducts = useMemo(() =>
+    [...filteredProducts].sort((a, b) => {
+      switch (sortBy) {
+        case 'price':
+          const priceA = getBestOffer(a.id)?.price || a.basePrice;
+          const priceB = getBestOffer(b.id)?.price || b.basePrice;
+          return priceA - priceB;
+        case 'rating':
+          return b.averageRating - a.averageRating;
+        case 'popularity':
+          return b.totalReviews - a.totalReviews;
+        default:
+          return 0;
+      }
+    }),
+    [filteredProducts, sortBy, getBestOffer]
+  );
+
+  // Pagination calculations
+  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const currentProducts = sortedProducts.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchQuery, sortBy, productsPerPage]);
+
+  // Optimized handlers with useCallback
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  // Check API status
-  const checkAPIStatus = async () => {
-    try {
-      setApiStatus('checking');
-      const response = await fetch('http://localhost:3001/api/health');
-      if (response.ok) {
+  const handleCategoryChange = useCallback((categoryId: string) => {
+    setSelectedCategory(categoryId);
+  }, []);
+
+  const handleSortChange = useCallback((newSortBy: string) => {
+    setSortBy(newSortBy as 'price' | 'rating' | 'popularity');
+  }, []);
+
+  const handleViewModeChange = useCallback((mode: 'grid' | 'list') => {
+    setViewMode(mode);
+  }, []);
+
+  // Track search when query changes - updated to work with API search results
+  useEffect(() => {
+    if (searchQuery.trim() && displayProducts.length > 0) {
+      const timer = setTimeout(() => {
+        console.log('📝 Adding search to history:', searchQuery, 'Products found:', displayProducts.length);
+
+        appDispatch({
+          type: 'ADD_SEARCH_HISTORY',
+          payload: {
+            query: searchQuery,
+            product: displayProducts[0], // First result as representative
+            recommendations: displayProducts.slice(0, 3).map(product => ({
+              offer: {
+                id: product.id,
+                sellerId: getBestOffer(product.id)?.sellerId || 'direct',
+                productId: product.id, // Add productId for navigation
+                productName: product.name,
+                price: getBestOffer(product.id)?.price || product.basePrice,
+                originalPrice: product.basePrice,
+                sellerName: getBestOffer(product.id) ? getSellerById(getBestOffer(product.id)!.sellerId)?.name || 'Unknown' : 'Direct',
+                rating: product.averageRating,
+                deliveryTime: '2-3 days',
+                shippingCost: 0,
+                currency: 'INR',
+                stock: 10,
+                estimatedDeliveryDays: 3,
+                reputationScore: product.averageRating,
+                returnPolicy: '30 days',
+                inStock: product.stockStatus === 'in-stock',
+                imageUrl: product.images[0],
+                productUrl: `/product/${product.id}`,
+                stockStatus: product.stockStatus,
+                discount: getBestOffer(product.id)?.discount || 0,
+                condition: getBestOffer(product.id)?.condition || 'new',
+                lastUpdated: new Date().toISOString(),
+              },
+              totalScore: product.averageRating * 20,
+              priceScore: 85,
+              deliveryScore: 90,
+              reputationScore: product.averageRating * 20,
+              returnPolicyScore: 95,
+            }))
+          }
+        });
+      }, 1000); // Debounce search tracking
+
+      return () => clearTimeout(timer);
+    }
+  }, [searchQuery, displayProducts, appDispatch, getBestOffer, getSellerById]);
+
+  // Check API status on component mount and monitor connection
+  useEffect(() => {
+    const updateApiStatus = () => {
+      const status = apiConnection.getStatus();
+      if (status.isConnected) {
         setApiStatus('connected');
-        console.log('✅ Marketplace API is connected');
       } else {
         setApiStatus('disconnected');
-        console.log('❌ Marketplace API health check failed');
-      }
-    } catch (error) {
-      setApiStatus('disconnected');
-      console.log('❌ Marketplace API is not available:', error);
-    }
-  };
-
-  // Clean transcript function to remove unwanted punctuation
-  const cleanTranscript = (text: string): string => {
-    if (!text) return '';
-
-    return text
-      // Remove trailing periods, commas, and other punctuation
-      .replace(/[.,!?;:]+$/g, '')
-      // Remove multiple spaces
-      .replace(/\s+/g, ' ')
-      // Remove leading/trailing whitespace
-      .trim()
-      // Convert to lowercase for consistency
-      .toLowerCase()
-      // Remove any remaining unwanted characters but keep essential ones
-      .replace(/[^\w\s\-']/g, '')
-      // Clean up any double spaces that might have been created
-      .replace(/\s+/g, ' ')
-      .trim();
-  };
-
-  const handleVoiceSearch = async () => {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      alert('Voice search is not supported in your browser');
-      return;
-    }
-
-    setIsVoiceSearching(true);
-    setVoiceTranscript('');
-
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-
-    recognition.continuous = false;
-    recognition.interimResults = true;
-    recognition.lang = 'en-IN'; // Changed to Indian English for better accuracy
-
-    recognition.onresult = async (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      const isFinal = event.results[0].isFinal;
-
-      // Clean the transcript for display and processing
-      const cleanedTranscript = cleanTranscript(transcript);
-      setVoiceTranscript(cleanedTranscript);
-
-      if (isFinal) {
-        setSearchQuery(cleanedTranscript);
-        setShowVoiceResults(true);
-
-        try {
-          console.log('🎤 Voice search query (original):', transcript);
-          console.log('🧹 Voice search query (cleaned):', cleanedTranscript);
-          // Search products and stay on marketplace page
-          await searchProducts(cleanedTranscript, {
-            category: selectedCategory !== 'all' ? selectedCategory : undefined
-          });
-
-          // Show success feedback
-          console.log('✅ Voice search completed successfully');
-        } catch (error) {
-          console.error('❌ Voice search failed:', error);
-          alert('Voice search failed. Please try again.');
-        }
       }
     };
 
-    recognition.onerror = (event: any) => {
-      console.error('Speech recognition error:', event.error);
-      setIsVoiceSearching(false);
-      setVoiceTranscript('');
-      alert(`Voice recognition error: ${event.error}`);
+    // Initial status check
+    updateApiStatus();
+
+    // Listen for connection status changes
+    const handleConnectionChange = () => {
+      updateApiStatus();
     };
 
-    recognition.onend = () => {
-      setIsVoiceSearching(false);
-    };
+    // Listen for API connection events
+    window.addEventListener('api-connection-failed', handleConnectionChange);
 
-    recognition.start();
+    // Check status periodically
+    const statusInterval = setInterval(updateApiStatus, 5000);
+
+    return () => {
+      window.removeEventListener('api-connection-failed', handleConnectionChange);
+      clearInterval(statusInterval);
+    };
+  }, []);
+
+  // Use unified voice search function
+  const handleVoiceSearch = () => {
+    voiceSearch.startListening();
   };
 
   const handleSearch = async () => {
@@ -176,86 +232,7 @@ const MarketplacePage: React.FC = () => {
     }
   };
 
-  const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
-    const bestOffer = getBestOffer(product.id);
-    const seller = bestOffer ? getSellerById(bestOffer.sellerId) : null;
-    const savings = bestOffer ? product.basePrice - bestOffer.price : 0;
 
-    return (
-      <Card
-        className="h-full hover:shadow-xl transition-all duration-300 cursor-pointer"
-        onClick={() => navigate(`/product/${product.id}`)}
-      >
-        <div className="relative">
-          <img
-            src={product.images[0]}
-            alt={product.name}
-            className="w-full h-48 object-cover rounded-t-lg"
-          />
-          {product.isLimitedEdition && (
-            <span className="absolute top-2 left-2 bg-accent-600 text-white px-2 py-1 rounded-full text-xs font-medium">
-              Limited Edition
-            </span>
-          )}
-          {savings > 0 && (
-            <span className="absolute top-2 right-2 bg-green-600 text-white px-2 py-1 rounded-full text-xs font-medium">
-              Save Rs.{savings}
-            </span>
-          )}
-        </div>
-
-        <div className="p-4">
-          <h3 className="font-semibold text-lg text-neutral-900 mb-2 line-clamp-2">
-            {product.name}
-          </h3>
-
-          <div className="flex items-center mb-2">
-            <div className="flex items-center">
-              <Star className="w-4 h-4 text-yellow-400 fill-current" />
-              <span className="ml-1 text-sm text-neutral-600">
-                {product.averageRating} ({product.totalReviews})
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              {bestOffer ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold text-primary-600">
-                    Rs.{bestOffer.price.toLocaleString()}
-                  </span>
-                  {savings > 0 && (
-                    <span className="text-sm text-neutral-500 line-through">
-                      Rs.{product.basePrice.toLocaleString()}
-                    </span>
-                  )}
-                </div>
-              ) : (
-                <span className="text-2xl font-bold text-neutral-900">
-                  Rs.{product.basePrice.toLocaleString()}
-                </span>
-              )}
-            </div>
-
-            <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-              product.stockStatus === 'in-stock' ? 'bg-green-100 text-green-700' :
-              product.stockStatus === 'low-stock' ? 'bg-yellow-100 text-yellow-700' :
-              'bg-red-100 text-red-700'
-            }`}>
-              {product.stockStatus.replace('-', ' ')}
-            </div>
-          </div>
-
-          {seller && (
-            <div className="text-sm text-neutral-600">
-              Best offer from <span className="font-medium">{seller.name}</span>
-            </div>
-          )}
-        </div>
-      </Card>
-    );
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-neutral-50">
@@ -286,23 +263,30 @@ const MarketplacePage: React.FC = () => {
                     ? 'bg-red-500'
                     : 'bg-yellow-500 animate-pulse'
                 }`} />
-                {apiStatus === 'connected' && 'Real Data API Connected'}
-                {apiStatus === 'disconnected' && 'Using Mock Data (API Offline)'}
+                {apiStatus === 'connected' && (
+                  <>
+                    Real Data API Connected
+                    <span className="ml-2 text-xs opacity-75">
+                      ({apiConnection.getStatus().environment} • {apiConnection.getStatus().apiUrl.includes('localhost') ? 'Local' : 'Production'})
+                    </span>
+                  </>
+                )}
+                {apiStatus === 'disconnected' && 'API Connection Failed - Retrying...'}
                 {apiStatus === 'checking' && 'Checking API Connection...'}
               </div>
             </div>
 
             {/* Voice Transcript Display */}
-            {(isVoiceSearching || voiceTranscript) && (
+            {(voiceSearch.state.isListening || voiceSearch.state.transcript || voiceSearch.state.interimTranscript) && (
               <div className="max-w-2xl mx-auto mb-4">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-white/20">
                   <div className="flex items-center space-x-2">
-                    <Mic className={`w-4 h-4 ${isVoiceSearching ? 'text-red-400 animate-pulse' : 'text-white'}`} />
+                    <Mic className={`w-4 h-4 ${voiceSearch.state.isListening ? 'text-red-400 animate-pulse' : 'text-white'}`} />
                     <span className="text-white/80 text-sm">
-                      {isVoiceSearching ? 'Listening...' : 'Voice Search:'}
+                      {voiceSearch.state.isListening ? 'Listening...' : 'Voice Search:'}
                     </span>
                     <span className="text-white font-medium">
-                      {voiceTranscript || 'Say something...'}
+                      {voiceSearch.state.interimTranscript || voiceSearch.state.transcript || 'Say something...'}
                     </span>
                   </div>
                 </div>
@@ -323,15 +307,63 @@ const MarketplacePage: React.FC = () => {
                   />
                 </div>
 
-                <Button
+                <motion.button
                   onClick={handleVoiceSearch}
-                  loading={isVoiceSearching}
-                  icon={<Mic size={20} />}
-                  variant="outline"
-                  className="!bg-white/20 !text-white !border-white/30 hover:!bg-white/30"
+                  disabled={voiceSearch.state.isListening || voiceSearch.state.isProcessing}
+                  className={`
+                    flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all duration-300
+                    ${voiceSearch.state.isListening
+                      ? 'bg-red-500 text-white shadow-lg'
+                      : voiceSearch.state.isProcessing
+                      ? 'bg-yellow-500 text-white shadow-md'
+                      : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 shadow-md hover:shadow-lg'
+                    }
+                    focus:outline-none focus:ring-4 focus:ring-purple-300
+                  `}
+                  whileHover={!voiceSearch.state.isListening && !voiceSearch.state.isProcessing ? { scale: 1.05 } : {}}
+                  whileTap={{ scale: 0.95 }}
+                  animate={voiceSearch.state.isListening ? {
+                    boxShadow: [
+                      "0 0 0 0 rgba(239, 68, 68, 0.4)",
+                      "0 0 0 20px rgba(239, 68, 68, 0)",
+                      "0 0 0 0 rgba(239, 68, 68, 0)"
+                    ]
+                  } : {}}
+                  transition={{
+                    boxShadow: {
+                      duration: 1.5,
+                      repeat: voiceSearch.state.isListening ? Infinity : 0,
+                      ease: "easeInOut"
+                    }
+                  }}
                 >
-                  Voice Search
-                </Button>
+                  {voiceSearch.state.isListening ? (
+                    <>
+                      <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 1, repeat: Infinity }}
+                      >
+                        <Mic size={20} />
+                      </motion.div>
+                      <span>Listening...</span>
+                    </>
+                  ) : voiceSearch.state.isProcessing ? (
+                    <>
+                      <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      >
+                        <Mic size={20} />
+                      </motion.div>
+                      <span>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Mic size={20} />
+                      <span>Voice Search</span>
+                    </>
+                  )}
+                </motion.button>
 
                 <Button
                   onClick={handleSearch}
@@ -349,13 +381,14 @@ const MarketplacePage: React.FC = () => {
       {/* Filters and Controls */}
       <section className="py-8 bg-white border-b border-neutral-200">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
+          <div className="flex flex-col md:flex-row gap-6 items-center justify-between w-full">
             {/* Categories */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 w-full md:w-auto justify-center md:justify-start">
               {categories.map((category) => (
                 <button
                   key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
+                  type="button"
+                  onClick={() => handleCategoryChange(category.id)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                     selectedCategory === category.id
                       ? 'bg-primary-600 text-white'
@@ -368,11 +401,27 @@ const MarketplacePage: React.FC = () => {
             </div>
 
             {/* Controls */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4 w-full md:w-auto justify-center md:justify-end">
+              <select
+                value={productsPerPage}
+                onChange={(e) => {
+                  setProductsPerPage(Number(e.target.value));
+                  setCurrentPage(1); // Reset to first page
+                }}
+                className="px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                aria-label="Products per page"
+              >
+                <option value={12}>12 per page</option>
+                <option value={24}>24 per page</option>
+                <option value={30}>30 per page (All)</option>
+                <option value={50}>50 per page</option>
+              </select>
+
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e) => handleSortChange(e.target.value)}
                 className="px-3 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                aria-label="Sort products by"
               >
                 <option value="popularity">Sort by Popularity</option>
                 <option value="price">Sort by Price</option>
@@ -381,14 +430,20 @@ const MarketplacePage: React.FC = () => {
 
               <div className="flex border border-neutral-300 rounded-lg overflow-hidden">
                 <button
-                  onClick={() => setViewMode('grid')}
+                  type="button"
+                  onClick={() => handleViewModeChange('grid')}
                   className={`p-2 ${viewMode === 'grid' ? 'bg-primary-600 text-white' : 'bg-white text-neutral-600'}`}
+                  aria-label="Grid view"
+                  title="Grid view"
                 >
                   <Grid size={20} />
                 </button>
                 <button
-                  onClick={() => setViewMode('list')}
+                  type="button"
+                  onClick={() => handleViewModeChange('list')}
                   className={`p-2 ${viewMode === 'list' ? 'bg-primary-600 text-white' : 'bg-white text-neutral-600'}`}
+                  aria-label="List view"
+                  title="List view"
                 >
                   <List size={20} />
                 </button>
@@ -401,28 +456,33 @@ const MarketplacePage: React.FC = () => {
       {/* Products Grid */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
             <div>
               <h2 className="text-2xl font-bold text-neutral-900">
                 {showVoiceResults && searchQuery ? (
                   <>Search Results for "{searchQuery}"</>
                 ) : (
-                  <>{filteredProducts.length} Products Found</>
+                  <>{sortedProducts.length} Products Found</>
                 )}
               </h2>
               {showVoiceResults && searchQuery && (
                 <p className="text-neutral-600 mt-1">
-                  Found {filteredProducts.length} products matching your {voiceTranscript ? 'voice' : 'text'} search
+                  Found {sortedProducts.length} products matching your {voiceSearch.state.transcript ? 'voice' : 'text'} search
+                </p>
+              )}
+              {totalPages > 1 && (
+                <p className="text-neutral-500 text-sm mt-1">
+                  Showing {startIndex + 1}-{Math.min(endIndex, sortedProducts.length)} of {sortedProducts.length} products
                 </p>
               )}
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3 justify-center">
               {showVoiceResults && searchQuery && (
                 <Button
                   onClick={() => {
                     setSearchQuery('');
-                    setVoiceTranscript('');
+                    voiceSearch.reset();
                     setShowVoiceResults(false);
                     setSelectedCategory('all');
                   }}
@@ -434,6 +494,13 @@ const MarketplacePage: React.FC = () => {
               )}
 
               <Button
+                onClick={() => navigate('/saved-deals')}
+                icon={<BookmarkCheck size={20} />}
+                variant="outline"
+              >
+                Saved Deals
+              </Button>
+              <Button
                 onClick={() => navigate('/voice-shopping')}
                 icon={<TrendingUp size={20} />}
                 variant="outline"
@@ -443,24 +510,43 @@ const MarketplacePage: React.FC = () => {
             </div>
           </div>
 
-          {sortedProducts.length > 0 ? (
-            <div className={`grid gap-6 ${
-              viewMode === 'grid'
-                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                : 'grid-cols-1'
-            }`}>
-              {sortedProducts.map((product, index) => (
-                <ScrollReveal key={product.id} direction="up" delay={index * 0.1}>
-                  <ProductCard product={product} />
-                </ScrollReveal>
-              ))}
-            </div>
+          {state.loading ? (
+            <ProductSkeleton count={productsPerPage} viewMode={viewMode} />
+          ) : currentProducts.length > 0 ? (
+            <>
+              <div className={`grid gap-3 sm:gap-4 md:gap-6 ${
+                viewMode === 'grid'
+                  ? 'grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
+                  : 'grid-cols-1'
+              }`}>
+                {currentProducts.map((product, index) => (
+                  <OptimizedProductCard
+                    key={product.id}
+                    product={product}
+                    index={index}
+                    viewMode={viewMode}
+                  />
+                ))}
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-12 flex justify-center">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                    className="mb-8"
+                  />
+                </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-16">
               <div className="text-6xl mb-4">🔍</div>
               <h3 className="text-2xl font-bold text-neutral-900 mb-2">No products found</h3>
               <p className="text-neutral-600 mb-6">Try adjusting your search or filters</p>
-              <Button onClick={() => setSelectedCategory('all')}>
+              <Button onClick={() => handleCategoryChange('all')}>
                 View All Products
               </Button>
             </div>

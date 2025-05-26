@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer, useEffect, ReactNode } fr
 import { voiceService, VoiceState } from '../services/voiceService';
 import { nlpService, ParsedQuery, ConversationContext } from '../services/nlpService';
 import { conversationEngine, AIResponse, ConversationState } from '../services/conversationEngine';
+import { apiConnection } from '../services/apiConnection';
 
 export interface VoiceSearchState {
   // Voice Recognition State
@@ -323,23 +324,15 @@ export const VoiceSearchProvider: React.FC<{ children: ReactNode }> = ({ childre
       // Build search parameters from parsed query
       const searchParams = buildSearchParams(parsedQuery);
 
-      // Try to fetch from real search endpoint first
+      // Fetch from real search endpoint only
       const searchResults = await fetchFromSearchEndpoint(searchParams);
 
-      if (searchResults) {
-        dispatch({ type: 'SET_SEARCH_RESULTS', payload: searchResults });
-        return searchResults;
+      if (!searchResults) {
+        throw new Error('API search failed - no results returned');
       }
 
-      // Fallback to mock data if endpoint is not available
-      const mockResults = {
-        query: parsedQuery.originalQuery,
-        products: [],
-        recommendations: [],
-      };
-
-      dispatch({ type: 'SET_SEARCH_RESULTS', payload: mockResults });
-      return mockResults;
+      dispatch({ type: 'SET_SEARCH_RESULTS', payload: searchResults });
+      return searchResults;
     } catch (error) {
       console.error('Search execution failed:', error);
       throw error;
@@ -370,16 +363,7 @@ export const VoiceSearchProvider: React.FC<{ children: ReactNode }> = ({ childre
         Object.entries(searchParams).filter(([_, value]) => value !== undefined && value !== null)
       ).toString();
 
-      const response = await fetch(`http://localhost:3001/api/search?${queryString}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Search API error: ${response.status}`);
-      }
+      const response = await apiConnection.makeRequest(`/api/search?${queryString}`);
 
       const data = await response.json();
 
@@ -392,8 +376,8 @@ export const VoiceSearchProvider: React.FC<{ children: ReactNode }> = ({ childre
         timestamp: new Date().toISOString(),
       };
     } catch (error) {
-      console.warn('Search endpoint not available, falling back to mock data:', error);
-      return null;
+      console.error('Search endpoint not available:', error);
+      throw new Error(`Voice search API connection failed: ${error.message}`);
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, ArrowUp, MessageCircle, HelpCircle } from 'lucide-react';
+import { useChatBot } from '../../context/ChatBotContext';
 
 interface FloatingActionButtonProps {
   onVoiceSearch: () => void;
@@ -9,6 +10,7 @@ interface FloatingActionButtonProps {
 const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSearch }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const { openChat } = useChatBot();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,8 +34,11 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSear
     },
     {
       icon: <MessageCircle className="w-5 h-5" />,
-      label: 'Live Chat',
-      onClick: () => console.log('Open chat'),
+      label: 'omniverse.AI Chat',
+      onClick: () => {
+        openChat();
+        setIsExpanded(false);
+      },
       color: 'bg-green-600 hover:bg-green-700',
     },
     {
@@ -77,15 +82,15 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSear
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20, scale: 0.8 }}
-                  animate={{ 
-                    opacity: 1, 
-                    y: 0, 
+                  animate={{
+                    opacity: 1,
+                    y: 0,
                     scale: 1,
                     transition: { delay: index * 0.1 }
                   }}
-                  exit={{ 
-                    opacity: 0, 
-                    y: 20, 
+                  exit={{
+                    opacity: 0,
+                    y: 20,
                     scale: 0.8,
                     transition: { delay: (actions.length - index - 1) * 0.05 }
                   }}
@@ -123,7 +128,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSear
             animate={{ scale: isExpanded ? 2 : 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
           />
-          
+
           <motion.div
             animate={{ rotate: isExpanded ? 45 : 0 }}
             transition={{ duration: 0.2 }}

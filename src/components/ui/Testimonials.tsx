@@ -177,6 +177,7 @@ const Testimonials: React.FC = () => {
       {/* Navigation Controls */}
       <div className="flex items-center justify-between mt-6">
         <button
+          type="button"
           onClick={prevTestimonial}
           className="p-2 rounded-full bg-white shadow-md border border-neutral-200 hover:bg-neutral-50 transition-colors"
           aria-label="Previous testimonial"
@@ -189,6 +190,7 @@ const Testimonials: React.FC = () => {
           {testimonials.map((_, index) => (
             <button
               key={index}
+              type="button"
               onClick={() => goToTestimonial(index)}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 index === currentIndex
@@ -201,6 +203,7 @@ const Testimonials: React.FC = () => {
         </div>
 
         <button
+          type="button"
           onClick={nextTestimonial}
           className="p-2 rounded-full bg-white shadow-md border border-neutral-200 hover:bg-neutral-50 transition-colors"
           aria-label="Next testimonial"

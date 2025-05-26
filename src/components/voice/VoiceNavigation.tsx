@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  Navigation, 
-  Home, 
-  ShoppingCart, 
-  Search, 
-  Settings, 
-  User, 
+import {
+  Navigation,
+  Home,
+  ShoppingCart,
+  Search,
+  Settings,
+  User,
   Heart,
   Clock,
   HelpCircle,
@@ -195,16 +195,16 @@ const VoiceNavigation: React.FC<VoiceNavigationProps> = ({
 
     // Parse the command using NLP
     const parsedQuery = nlpService.parseQuery(command);
-    
+
     // Find matching navigation command
     const matchingCommand = findMatchingCommand(command);
-    
+
     if (matchingCommand) {
       setLastAction(matchingCommand.description);
-      
+
       // Provide voice feedback
       await voiceService.speak(`${matchingCommand.description}`);
-      
+
       // Execute the command
       setTimeout(() => {
         matchingCommand.action();
@@ -222,10 +222,10 @@ const VoiceNavigation: React.FC<VoiceNavigationProps> = ({
 
   const findMatchingCommand = (command: string): NavigationCommand | null => {
     // Direct command match
-    const directMatch = availableCommands.find(cmd => 
+    const directMatch = availableCommands.find(cmd =>
       command.includes(cmd.command) || cmd.command.includes(command)
     );
-    
+
     if (directMatch) return directMatch;
 
     // Fuzzy matching for common variations
@@ -268,13 +268,13 @@ const VoiceNavigation: React.FC<VoiceNavigationProps> = ({
   const handleUnrecognizedCommand = async (command: string, parsedQuery: any) => {
     // Generate helpful response using conversation engine
     const response = conversationEngine.generateResponse(parsedQuery);
-    
+
     if (response.action === 'navigate' && response.navigationTarget) {
       // Handle navigation intent
-      const navCommand = availableCommands.find(cmd => 
+      const navCommand = availableCommands.find(cmd =>
         cmd.command.includes(response.navigationTarget!)
       );
-      
+
       if (navCommand) {
         await voiceService.speak(`Navigating to ${response.navigationTarget}`);
         navCommand.action();
@@ -338,38 +338,42 @@ const VoiceNavigation: React.FC<VoiceNavigationProps> = ({
               />
               <span className="font-semibold text-sm">Voice Navigation</span>
               <button
+                type="button"
                 onClick={() => onToggle(false)}
                 className="text-gray-400 hover:text-gray-600 text-lg leading-none"
+                aria-label="Close voice navigation"
               >
                 ×
               </button>
             </div>
-            
+
             <div className="text-xs text-gray-600 mb-2">
               Current page: {getCurrentPageName()}
             </div>
-            
+
             {currentCommand && (
               <div className="text-xs bg-blue-50 text-blue-700 p-2 rounded mb-2">
                 Heard: "{currentCommand}"
               </div>
             )}
-            
+
             {lastAction && (
               <div className="text-xs bg-green-50 text-green-700 p-2 rounded mb-2">
                 Action: {lastAction}
               </div>
             )}
-            
+
             <div className="flex space-x-2">
               <button
+                type="button"
                 onClick={() => setShowCommands(!showCommands)}
                 className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded transition-colors"
               >
                 {showCommands ? 'Hide' : 'Show'} Commands
               </button>
-              
+
               <button
+                type="button"
                 onClick={() => voiceService.speak('Voice navigation is active. Say help for available commands.')}
                 className="text-xs bg-blue-100 hover:bg-blue-200 px-2 py-1 rounded transition-colors"
               >
@@ -401,8 +405,10 @@ const VoiceNavigation: React.FC<VoiceNavigationProps> = ({
                     <span>Voice Navigation Commands</span>
                   </h2>
                   <button
+                    type="button"
                     onClick={() => setShowCommands(false)}
                     className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+                    aria-label="Close commands modal"
                   >
                     ×
                   </button>

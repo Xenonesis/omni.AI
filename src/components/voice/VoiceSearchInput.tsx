@@ -1,190 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mic, MicOff, AlertCircle, ToggleLeft, ToggleRight } from 'lucide-react';
-import { useSearchContext } from '../../context/SearchContext';
-import Button from '../ui/Button';
+import { useUnifiedVoiceSearch } from '../../hooks/useUnifiedVoiceSearch';
 
 const VoiceSearchInput: React.FC = () => {
-  const { state, dispatch } = useSearchContext();
-  const [isListening, setIsListening] = useState(false);
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
   const [autoMode, setAutoMode] = useState(false);
-  const [interimTranscript, setInterimTranscript] = useState('');
 
-  // Clean transcript function to remove unwanted punctuation
-  const cleanTranscript = (text: string): string => {
-    if (!text) return '';
-
-    return text
-      // Remove trailing periods, commas, and other punctuation
-      .replace(/[.,!?;:]+$/g, '')
-      // Remove multiple spaces
-      .replace(/\s+/g, ' ')
-      // Remove leading/trailing whitespace
-      .trim()
-      // Convert to lowercase for consistency
-      .toLowerCase()
-      // Remove any remaining unwanted characters but keep essential ones
-      .replace(/[^\w\s\-']/g, '')
-      // Clean up any double spaces that might have been created
-      .replace(/\s+/g, ' ')
-      .trim();
-  };
-
-  useEffect(() => {
-    if ('webkitSpeechRecognition' in window) {
-      const recognition = new webkitSpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
-
-      recognition.onstart = () => {
-        setIsListening(true);
-        setInterimTranscript('');
-      };
-
-      recognition.onresult = (event) => {
-        let interim = '';
-        let final = '';
-
-        for (let i = 0; i < event.results.length; i++) {
-          if (event.results[i].isFinal) {
-            final += event.results[i][0].transcript;
-          } else {
-            interim += event.results[i][0].transcript;
-          }
-        }
-
-        setInterimTranscript(cleanTranscript(interim));
-
-        if (final) {
-          const cleanedFinal = cleanTranscript(final);
-          dispatch({ type: 'SET_QUERY', payload: cleanedFinal });
-          if (!autoMode) {
-            recognition.stop();
-            dispatch({ type: 'START_PROCESSING' });
-
-            // Mock product identification
-            const mockProduct = {
-              id: '1234',
-              name: final.split(',')[0],
-              brand: final.split(' ')[0],
-              category: 'Footwear',
-              specifications: [final.split(',')[1] || 'Default Size'],
-            };
-
-            dispatch({ type: 'SET_PRODUCT', payload: mockProduct });
-
-            // Mock offers retrieval
-            setTimeout(() => {
-              const mockOffers = Array.from({ length: 7 }, (_, i) => ({
-                id: `offer-${i}`,
-                sellerId: `seller-${i}`,
-                sellerName: `Reseller ${i + 1}`,
-                sellerLogo: i % 2 === 0 ? 'https://via.placeholder.com/40' : undefined,
-                productId: '1234',
-                price: Math.round(300 + Math.random() * 700),
-                currency: 'USD',
-                stock: Math.floor(Math.random() * 10) + 1,
-                estimatedDeliveryDays: Math.floor(Math.random() * 14) + 1,
-                reputationScore: Math.round((Math.random() * 5) * 10) / 10,
-                returnPolicy: i % 3 === 0 ? 'No Returns' : i % 3 === 1 ? '14-day returns' : '30-day returns',
-              }));
-
-              dispatch({ type: 'SET_OFFERS', payload: mockOffers });
-
-              const recommendations = mockOffers.map(offer => {
-                const priceScore = 40 * (1 - (offer.price - 300) / 700);
-                const deliveryScore = 25 * (1 - (offer.estimatedDeliveryDays - 1) / 14);
-                const reputationScore = 20 * (offer.reputationScore / 5);
-                const returnPolicyScore = offer.returnPolicy === 'No Returns'
-                  ? 0
-                  : offer.returnPolicy === '14-day returns'
-                    ? 7.5
-                    : 15;
-
-                const totalScore = priceScore + deliveryScore + reputationScore + returnPolicyScore;
-
-                return {
-                  offer,
-                  totalScore,
-                  priceScore,
-                  deliveryScore,
-                  reputationScore,
-                  returnPolicyScore
-                };
-              }).sort((a, b) => b.totalScore - a.totalScore);
-
-              dispatch({ type: 'SET_RECOMMENDATIONS', payload: recommendations });
-            }, 1500);
-          }
-        }
-      };
-
-      recognition.onerror = (event) => {
-        dispatch({ type: 'SET_ERROR', payload: event.error });
-        setIsListening(false);
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-        if (autoMode && state.status !== 'processing') {
-          try {
-            recognition.start();
-          } catch (error) {
-            console.error('Recognition restart error:', error);
-          }
-        }
-      };
-
-      setRecognition(recognition);
-
-      if (autoMode) {
-        try {
-          recognition.start();
-        } catch (error) {
-          console.error('Initial recognition error:', error);
-        }
-      }
-
-      return () => {
-        recognition.stop();
-      };
-    } else {
-      dispatch({
-        type: 'SET_ERROR',
-        payload: 'Speech recognition is not supported in your browser. Please use Chrome.'
-      });
+  // Unified voice search hook
+  const voiceSearch = useUnifiedVoiceSearch({
+    onError: (error) => {
+      console.error('Voice search error:', error);
     }
-  }, [dispatch, autoMode]);
+  });
 
   const handleToggleMode = () => {
-    if (recognition) {
-      if (isListening) {
-        recognition.stop();
-      }
-      setAutoMode(!autoMode);
+    setAutoMode(!autoMode);
+    if (voiceSearch.state.isListening) {
+      voiceSearch.stopListening();
     }
   };
 
   const handleStartListening = () => {
-    if (recognition && !isListening) {
-      try {
-        recognition.start();
-      } catch (error) {
-        console.error('Recognition start error:', error);
-      }
-    }
+    voiceSearch.startListening();
   };
 
   const handleStopListening = () => {
-    if (recognition) {
-      recognition.stop();
-    }
-    setIsListening(false);
-    dispatch({ type: 'RESET' });
+    voiceSearch.stopListening();
   };
 
+  // Animation variants
   const pulseVariants = {
     listening: {
       scale: [1, 1.1, 1],
@@ -204,6 +48,7 @@ const VoiceSearchInput: React.FC = () => {
     <div className="flex flex-col items-center w-full max-w-md mx-auto">
       <div className="w-full flex justify-center mb-6">
         <button
+          type="button"
           onClick={handleToggleMode}
           className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-neutral-200 hover:bg-neutral-50 transition-colors"
         >
@@ -223,84 +68,116 @@ const VoiceSearchInput: React.FC = () => {
 
       <motion.div
         variants={pulseVariants}
-        animate={isListening ? 'listening' : 'idle'}
+        animate={voiceSearch.state.isListening ? 'listening' : 'idle'}
         className={`
-          w-24 h-24 rounded-full flex items-center justify-center mb-4
-          ${isListening ? 'bg-error-100' : 'bg-neutral-100'}
-          ${!autoMode && !isListening ? 'cursor-pointer hover:bg-neutral-200' : ''}
+          w-24 h-24 rounded-full flex items-center justify-center mb-4 transition-all duration-300
+          ${voiceSearch.state.isListening
+            ? 'bg-red-500 text-white shadow-lg'
+            : 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 shadow-md hover:shadow-lg'
+          }
+          ${!autoMode && !voiceSearch.state.isListening ? 'cursor-pointer' : ''}
         `}
         onClick={() => !autoMode && handleStartListening()}
+        whileHover={!autoMode && !voiceSearch.state.isListening ? { scale: 1.05 } : {}}
+        whileTap={!autoMode ? { scale: 0.95 } : {}}
+        animate={voiceSearch.state.isListening ? {
+          ...pulseVariants.listening,
+          boxShadow: [
+            "0 0 0 0 rgba(239, 68, 68, 0.4)",
+            "0 0 0 25px rgba(239, 68, 68, 0)",
+            "0 0 0 0 rgba(239, 68, 68, 0)"
+          ]
+        } : pulseVariants.idle}
+        transition={{
+          ...pulseVariants.listening.transition,
+          boxShadow: {
+            duration: 1.5,
+            repeat: voiceSearch.state.isListening ? Infinity : 0,
+            ease: "easeInOut"
+          }
+        }}
       >
-        {isListening ? (
-          <Mic className="w-12 h-12 text-error-500" />
+        {voiceSearch.state.isListening ? (
+          <motion.div
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 1, repeat: Infinity }}
+          >
+            <Mic className="w-12 h-12" />
+          </motion.div>
         ) : (
-          <Mic className="w-12 h-12 text-neutral-400" />
+          <Mic className="w-12 h-12" />
         )}
       </motion.div>
 
       <div className="text-center mb-8">
         <h2 className="text-xl font-medium text-neutral-800 mb-2">
-          {isListening
-            ? "I'm listening..."
+          {voiceSearch.state.isListening
+            ? "Listening..."
             : autoMode
               ? "Auto mode active - I'm always listening"
               : "Click the microphone to start"}
         </h2>
         <p className="text-neutral-500 text-sm">
-          {isListening
+          {voiceSearch.state.isListening
             ? "Speak clearly and include details like brand, model, size, color"
             : autoMode
               ? "Just start speaking whenever you're ready"
               : "Click to start voice recognition"}
         </p>
 
-        {(interimTranscript || state.query) && (
+        {(voiceSearch.state.interimTranscript || voiceSearch.state.transcript) && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-4 p-4 bg-white border border-neutral-200 rounded-lg shadow-sm"
           >
             <h3 className="text-sm font-medium text-neutral-600 mb-2">Transcription</h3>
-            {interimTranscript && (
-              <p className="text-neutral-500 italic mb-2">{interimTranscript}...</p>
+            {voiceSearch.state.interimTranscript && (
+              <p className="text-neutral-500 italic mb-2">{voiceSearch.state.interimTranscript}...</p>
             )}
-            {state.query && (
-              <p className="text-neutral-800 font-medium">{state.query}</p>
+            {voiceSearch.state.transcript && (
+              <p className="text-neutral-800 font-medium">{voiceSearch.state.transcript}</p>
             )}
           </motion.div>
         )}
 
-        {state.error && (
+        {voiceSearch.state.error && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-4 p-3 bg-error-100 rounded-lg flex items-center"
           >
             <AlertCircle className="text-error-500 mr-2" size={16} />
-            <p className="text-error-700 text-sm">{state.error}</p>
+            <p className="text-error-700 text-sm">{voiceSearch.state.error}</p>
           </motion.div>
         )}
       </div>
 
       {!autoMode && (
         <div className="flex gap-4">
-          {isListening ? (
-            <Button
-              variant="danger"
-              icon={<MicOff size={18} />}
+          {voiceSearch.state.isListening ? (
+            <motion.button
+              type="button"
               onClick={handleStopListening}
+              className="flex items-center gap-2 px-6 py-3 rounded-full font-medium bg-red-500 text-white hover:bg-red-600 shadow-md hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-red-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              Stop Listening
-            </Button>
+              <MicOff size={18} />
+              <span>Stop Listening</span>
+            </motion.button>
           ) : (
-            <Button
-              variant="primary"
-              icon={<Mic size={18} />}
+            <motion.button
+              type="button"
               onClick={handleStartListening}
-              disabled={state.status === 'processing'}
+              disabled={voiceSearch.state.isProcessing}
+              className="flex items-center gap-2 px-6 py-3 rounded-full font-medium bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 shadow-md hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-purple-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              whileHover={!voiceSearch.state.isProcessing ? { scale: 1.05 } : {}}
+              whileTap={{ scale: 0.95 }}
             >
-              Start Listening
-            </Button>
+              <Mic size={18} />
+              <span>Start Listening</span>
+            </motion.button>
           )}
         </div>
       )}

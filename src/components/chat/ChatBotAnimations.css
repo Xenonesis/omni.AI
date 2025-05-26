@@ -1,0 +1,211 @@
+/* OmniDimension Chat Bot Custom Animations */
+
+/* Logo pulse animation with custom duration */
+.logo-pulse {
+  animation: logo-pulse 3s ease-in-out infinite;
+}
+
+@keyframes logo-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* AI sparkle animation with custom duration */
+.ai-sparkle {
+  animation: ai-sparkle 2s ease-in-out infinite;
+}
+
+@keyframes ai-sparkle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.8);
+  }
+}
+
+/* Typing indicator animations with staggered delays */
+.typing-dot-1 {
+  animation: typing-bounce 0.6s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+.typing-dot-2 {
+  animation: typing-bounce 0.6s ease-in-out infinite;
+  animation-delay: 0.1s;
+}
+
+.typing-dot-3 {
+  animation: typing-bounce 0.6s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+
+@keyframes typing-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Voice recording pulse animation */
+.voice-pulse {
+  animation: voice-pulse 1s ease-in-out infinite;
+}
+
+@keyframes voice-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* Smooth gradient background animation */
+.gradient-bg {
+  background: linear-gradient(-45deg, #4F46E5, #7C3AED, #A855F7, #4F46E5);
+  background-size: 400% 400%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Message slide-in animation */
+.message-slide-in {
+  animation: message-slide-in 0.3s ease-out;
+}
+
+@keyframes message-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button hover glow effect */
+.button-glow:hover {
+  box-shadow: 0 0 20px rgba(79, 70, 229, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Chat container entrance animation */
+.chat-entrance {
+  animation: chat-entrance 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes chat-entrance {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Minimized state animation */
+.minimize-animation {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Header gradient animation */
+.header-gradient {
+  background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #4F46E5 100%);
+  background-size: 200% 200%;
+  animation: header-gradient 6s ease infinite;
+}
+
+@keyframes header-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Loading spinner with custom timing */
+.loading-spin {
+  animation: loading-spin 1s linear infinite;
+}
+
+@keyframes loading-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Smooth focus ring animation */
+.focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+/* Backdrop blur effect */
+.backdrop-blur-custom {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Responsive animations for mobile */
+@media (max-width: 768px) {
+  .chat-entrance {
+    animation-duration: 0.3s;
+  }
+  
+  .message-slide-in {
+    animation-duration: 0.2s;
+  }
+}
+
+/* Accessibility: Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .logo-pulse,
+  .ai-sparkle,
+  .typing-dot-1,
+  .typing-dot-2,
+  .typing-dot-3,
+  .voice-pulse,
+  .gradient-bg,
+  .header-gradient,
+  .loading-spin {
+    animation: none;
+  }
+  
+  .chat-entrance,
+  .message-slide-in {
+    animation-duration: 0.1s;
+  }
+}

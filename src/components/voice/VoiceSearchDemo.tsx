@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  Volume2, 
-  MessageSquare, 
+import {
+  Play,
+  Pause,
+  RotateCcw,
+  Volume2,
+  MessageSquare,
   Search,
   ShoppingCart,
   Filter,
@@ -181,7 +181,7 @@ const VoiceSearchDemo: React.FC<VoiceSearchDemoProps> = ({
             Experience intelligent voice shopping with natural language processing
           </p>
         </div>
-        
+
         {showControls && (
           <div className="flex items-center space-x-2">
             <Button
@@ -209,6 +209,7 @@ const VoiceSearchDemo: React.FC<VoiceSearchDemoProps> = ({
         {demoSteps.map((step, index) => (
           <button
             key={step.id}
+            type="button"
             onClick={() => handleStepClick(index)}
             className={`flex-1 h-2 rounded-full transition-all duration-300 ${
               index === currentStep
@@ -233,7 +234,7 @@ const VoiceSearchDemo: React.FC<VoiceSearchDemoProps> = ({
             <p className="text-sm text-gray-600 capitalize">{currentStepData.intent} Intent</p>
           </div>
         </div>
-        
+
         <div className="flex flex-wrap gap-2">
           {currentStepData.features.map((feature, index) => (
             <span
@@ -274,10 +275,10 @@ const VoiceSearchDemo: React.FC<VoiceSearchDemoProps> = ({
               <Mic size={24} />
             )}
           </motion.div>
-          
+
           <p className="mt-3 text-sm text-gray-600">
-            {isListening ? 'Listening...' : 
-             isProcessing ? 'Processing...' : 
+            {isListening ? 'Listening...' :
+             isProcessing ? 'Processing...' :
              'Ready for voice input'}
           </p>
         </div>
@@ -323,8 +324,10 @@ const VoiceSearchDemo: React.FC<VoiceSearchDemoProps> = ({
                     <div className="flex items-center justify-between mb-1">
                       <p className="text-sm text-gray-500">AI Assistant:</p>
                       <button
+                        type="button"
                         className="p-1 hover:bg-white/50 rounded transition-colors"
                         title="Read aloud"
+                        aria-label="Read response aloud"
                       >
                         <Volume2 size={14} className="text-gray-400" />
                       </button>
@@ -343,6 +346,7 @@ const VoiceSearchDemo: React.FC<VoiceSearchDemoProps> = ({
         {demoSteps.map((step, index) => (
           <button
             key={step.id}
+            type="button"
             onClick={() => handleStepClick(index)}
             className={`p-3 rounded-lg text-left transition-all duration-200 ${
               index === currentStep

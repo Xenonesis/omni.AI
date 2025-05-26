@@ -10,8 +10,9 @@ import {
   ProductRecommendation,
   SearchFilters
 } from '../types/marketplace';
-import { mockProducts, mockSellers, mockOffers } from '../data/mockMarketplaceData';
-import { FuzzySearchEngine, correctSpelling } from '../utils/fuzzySearch';
+import { correctSpelling } from '../utils/fuzzySearch';
+import { apiConnection } from '../services/apiConnection';
+import { indianProducts, indianSellers, generateIndianOffers } from '../data/indianProducts';
 
 type MarketplaceAction =
   | { type: 'SET_LOADING'; payload: boolean }
@@ -43,7 +44,7 @@ const MarketplaceContext = createContext<{
   state: MarketplaceState;
   dispatch: React.Dispatch<MarketplaceAction>;
   // Helper functions
-  searchProducts: (query: string, filters?: SearchFilters) => Promise<VoiceSearchResult>;
+  searchProducts: (query: string, filters?: SearchFilters, addToHistory?: boolean) => Promise<VoiceSearchResult>;
   getProductById: (id: string) => Product | undefined;
   getSellerById: (id: string) => Seller | undefined;
   getOffersForProduct: (productId: string) => SellerOffer[];
@@ -136,95 +137,140 @@ export const MarketplaceProvider: React.FC<{ children: ReactNode }> = ({ childre
     };
   };
 
-  // Initialize data - try API first, fallback to mock data
+  // Initialize data - ensure API connection
   useEffect(() => {
     initializeData();
   }, []);
 
   const initializeData = async () => {
     try {
-      // Try to fetch all products from API using search endpoint
       console.log('🔄 Initializing marketplace data...');
-      const response = await fetch('http://localhost:3001/api/search?q=');
 
-      if (response.ok) {
-        const apiData = await response.json();
-        console.log('✅ Fetched products from API:', apiData.products.length, 'products');
+      // Check API connection status
+      const apiStatus = apiConnection.getStatus();
 
-        // Transform API products to our format
-        const transformedProducts = apiData.products.map(transformAPIProduct);
-        dispatch({ type: 'SET_PRODUCTS', payload: transformedProducts });
+      if (apiStatus.apiUrl === 'fallback-mode' || !apiStatus.isConnected) {
+        console.log('🔄 API in fallback mode, using Indian product database');
+        initializeFallbackData();
+        return;
+      }
 
-        // Create mock sellers and offers for API products
-        const apiSellers: Record<string, Seller> = {};
-        const apiOffers: Record<string, SellerOffer[]> = {};
+      // Try to wait for API connection (reduced timeout)
+      const isConnected = await apiConnection.waitForConnection(10000); // 10 second timeout
+      if (!isConnected) {
+        console.log('🔄 API connection timeout, using fallback data');
+        initializeFallbackData();
+        return;
+      }
 
-        transformedProducts.forEach((product, index) => {
-          // Create a seller for each product using the actual seller name from API
-          const apiProduct = apiData.products[index];
-          const sellerId = `seller_${product.id}`;
-          apiSellers[sellerId] = {
-            id: sellerId,
-            name: apiProduct.seller || 'Indian Marketplace',
-            logo: 'https://via.placeholder.com/100x100?text=' + (apiProduct.seller ? apiProduct.seller.substring(0, 2) : 'IM'),
-            rating: 4.5 + Math.random() * 0.5,
-            totalSales: Math.floor(Math.random() * 10000) + 1000,
-            location: 'India',
-            verificationStatus: 'verified',
-            responseTime: '< 2 hours',
-            memberSince: '2020-01-01',
-            specialties: [product.category],
-          };
+      try {
+        const response = await apiConnection.makeRequest('/api/search?q=');
 
-          // Create offers for each product
-          apiOffers[product.id] = [{
-            id: `offer_${product.id}`,
-            sellerId,
-            productId: product.id,
-            price: product.basePrice,
-            originalPrice: product.basePrice * 1.2,
-            discount: Math.floor(((product.basePrice * 1.2 - product.basePrice) / (product.basePrice * 1.2)) * 100),
-            condition: 'new',
-            stockQuantity: Math.floor(Math.random() * 50) + 10,
-            shippingOptions: [{
-              id: 'standard',
-              name: 'Standard Shipping',
-              price: 0,
-              estimatedDays: 5,
-              carrier: 'India Post',
-              tracking: true,
-              insurance: false,
-            }],
-            returnPolicy: {
-              returnsAccepted: true,
-              returnWindow: 30,
-              returnShipping: 'buyer-pays',
-              conditions: ['Item must be in original condition'],
-            },
-            authenticity: {
-              guaranteed: true,
-              verificationMethod: 'Seller verification',
-              certificate: 'VERIFIED',
-            },
-            lastUpdated: new Date().toISOString(),
-          }];
-        });
+        if (response.ok) {
+          const apiData = await response.json();
+          console.log('✅ Fetched products from API:', apiData.products?.length || 0, 'products');
 
-        dispatch({ type: 'SET_SELLERS', payload: apiSellers });
-        dispatch({ type: 'SET_OFFERS', payload: apiOffers });
+          if (apiData.products && apiData.products.length > 0) {
+            // Transform API products to our format
+            const transformedProducts = apiData.products.map(transformAPIProduct);
+            dispatch({ type: 'SET_PRODUCTS', payload: transformedProducts });
 
-        console.log('✅ Marketplace initialized with API data');
-      } else {
-        throw new Error(`API responded with status: ${response.status}`);
+            // Create mock sellers and offers for API products
+            const apiSellers: Record<string, Seller> = {};
+            const apiOffers: Record<string, SellerOffer[]> = {};
+
+            transformedProducts.forEach((product, index) => {
+              // Create a seller for each product using the actual seller name from API
+              const apiProduct = apiData.products[index];
+              const sellerId = `seller_${product.id}`;
+              apiSellers[sellerId] = {
+                id: sellerId,
+                name: apiProduct.seller || 'Indian Marketplace',
+                logo: 'https://via.placeholder.com/100x100?text=' + (apiProduct.seller ? apiProduct.seller.substring(0, 2) : 'IM'),
+                rating: 4.5 + Math.random() * 0.5,
+                totalSales: Math.floor(Math.random() * 10000) + 1000,
+                location: 'India',
+                verificationStatus: 'verified',
+                responseTime: '< 2 hours',
+                memberSince: '2020-01-01',
+                specialties: [product.category],
+              };
+
+              // Create offers for each product
+              apiOffers[product.id] = [{
+                id: `offer_${product.id}`,
+                sellerId,
+                productId: product.id,
+                price: product.basePrice,
+                originalPrice: product.basePrice * 1.2,
+                discount: Math.floor(((product.basePrice * 1.2 - product.basePrice) / (product.basePrice * 1.2)) * 100),
+                condition: 'new',
+                stockQuantity: Math.floor(Math.random() * 50) + 10,
+                shippingOptions: [{
+                  id: 'standard',
+                  name: 'Standard Shipping',
+                  price: 0,
+                  estimatedDays: 5,
+                  carrier: 'India Post',
+                  tracking: true,
+                  insurance: false,
+                }],
+                returnPolicy: {
+                  returnsAccepted: true,
+                  returnWindow: 30,
+                  returnShipping: 'buyer-pays',
+                  conditions: ['Item must be in original condition'],
+                },
+                authenticity: {
+                  guaranteed: true,
+                  verificationMethod: 'Seller verification',
+                  certificate: 'VERIFIED',
+                },
+                lastUpdated: new Date().toISOString(),
+              }];
+            });
+
+            dispatch({ type: 'SET_SELLERS', payload: apiSellers });
+            dispatch({ type: 'SET_OFFERS', payload: apiOffers });
+
+            console.log('✅ Marketplace initialized with API data');
+          } else {
+            console.log('🔄 API returned no products, using fallback data');
+            initializeFallbackData();
+          }
+        } else {
+          throw new Error(`API responded with status: ${response.status}`);
+        }
+      } catch (apiError) {
+        console.log('🔄 API request failed, using fallback data:', apiError);
+        initializeFallbackData();
       }
     } catch (error) {
-      console.warn('❌ Failed to fetch from API, using mock data:', error);
-      // Fallback to mock data
-      dispatch({ type: 'SET_PRODUCTS', payload: mockProducts });
-      dispatch({ type: 'SET_SELLERS', payload: mockSellers });
-      dispatch({ type: 'SET_OFFERS', payload: mockOffers });
-      console.log('📦 Marketplace initialized with mock data');
+      console.error('❌ Failed to initialize marketplace data:', error);
+      console.log('🔄 Using fallback data due to initialization error');
+      initializeFallbackData();
     }
+  };
+
+  // Initialize with comprehensive Indian product database
+  const initializeFallbackData = () => {
+    console.log('🇮🇳 Initializing with Indian product database');
+    console.log('📦 Loading', indianProducts.length, 'Indian products');
+
+    // Set products
+    dispatch({ type: 'SET_PRODUCTS', payload: indianProducts });
+
+    // Set sellers
+    dispatch({ type: 'SET_SELLERS', payload: indianSellers });
+
+    // Generate and set offers
+    const offers = generateIndianOffers();
+    dispatch({ type: 'SET_OFFERS', payload: offers });
+
+    console.log('✅ Marketplace initialized with Indian product database');
+    console.log('🏪 Sellers:', Object.keys(indianSellers).length);
+    console.log('🛍️ Products:', indianProducts.length);
+    console.log('💰 Offers:', Object.keys(offers).length);
   };
 
   // Helper functions
@@ -232,93 +278,127 @@ export const MarketplaceProvider: React.FC<{ children: ReactNode }> = ({ childre
     dispatch({ type: 'SET_LOADING', payload: true });
 
     try {
-      // Try to fetch from real API first
       console.log('🔍 Searching with query:', query, 'filters:', filters);
-      const apiResult = await fetchFromSearchAPI(query, filters);
 
-      if (apiResult) {
-        console.log('✅ API Result received:', apiResult);
-        const result: VoiceSearchResult = {
-          query,
-          products: apiResult.products.map(transformAPIProduct),
-          filters,
-          recommendations: apiResult.recommendations.map(transformAPIRecommendation),
-          timestamp: new Date().toISOString(),
-        };
+      // Check if API is available
+      const apiStatus = apiConnection.getStatus();
 
-        console.log('📊 Transformed result:', result);
+      if (apiStatus.apiUrl === 'fallback-mode' || !apiStatus.isConnected) {
+        console.log('🔄 Using local search in fallback mode');
+        const result = searchLocalProducts(query, filters);
         dispatch({ type: 'SET_SEARCH_RESULT', payload: result });
         return result;
       }
 
-      // Fallback to enhanced fuzzy search with mock data
-      console.log('API not available, using enhanced fuzzy search with mock data');
+      try {
+        // Try API search first
+        const apiResult = await fetchFromSearchAPI(query, filters);
 
-      // Apply spell correction to the query
-      const correctedQuery = correctSpelling(query);
-      console.log('🔤 Original query:', query, '→ Corrected:', correctedQuery);
+        if (apiResult && apiResult.products && apiResult.products.length > 0) {
+          console.log('✅ API Result received:', apiResult);
+          const result: VoiceSearchResult = {
+            query,
+            products: apiResult.products.map(transformAPIProduct),
+            filters,
+            recommendations: apiResult.recommendations?.map(transformAPIRecommendation) || [],
+            timestamp: new Date().toISOString(),
+          };
 
-      // Initialize fuzzy search engine
-      const fuzzySearch = new FuzzySearchEngine({
-        threshold: 0.2, // Lower threshold for more inclusive results
-        keys: ['name', 'brand', 'description', 'tags'],
-        shouldSort: true,
-        includeScore: true,
-      });
-
-      // Apply category and price filters first
-      let candidateProducts = state.products.filter(product => {
-        const matchesCategory = !filters.category || product.category === filters.category;
-        const matchesPrice = !filters.priceRange ||
-                           (product.basePrice >= filters.priceRange[0] && product.basePrice <= filters.priceRange[1]);
-        const matchesBrand = !filters.brand || product.brand.toLowerCase() === filters.brand.toLowerCase();
-
-        return matchesCategory && matchesPrice && matchesBrand;
-      });
-
-      // Use fuzzy search for text matching
-      let filteredProducts: Product[] = [];
-      if (correctedQuery.trim()) {
-        const fuzzyResults = fuzzySearch.search(correctedQuery, candidateProducts);
-        filteredProducts = fuzzyResults.map(result => result.item);
-        console.log('🔍 Fuzzy search results:', fuzzyResults.length, 'matches');
-      } else {
-        // If no query, return all filtered products
-        filteredProducts = candidateProducts;
+          console.log('📊 Transformed result:', result);
+          dispatch({ type: 'SET_SEARCH_RESULT', payload: result });
+          return result;
+        } else {
+          throw new Error('API returned no results');
+        }
+      } catch (apiError) {
+        console.log('🔄 API search failed, using local search:', apiError);
+        const result = searchLocalProducts(query, filters);
+        dispatch({ type: 'SET_SEARCH_RESULT', payload: result });
+        return result;
       }
 
-      // Generate recommendations from mock data
-      const recommendations: ProductRecommendation[] = filteredProducts.slice(0, 3).map(product => {
-        const offers = state.offers[product.id] || [];
-        const bestOffer = offers.sort((a, b) => a.price - b.price)[0];
-        const seller = state.sellers[bestOffer?.sellerId];
-
-        return {
-          product,
-          bestOffer,
-          seller,
-          score: Math.random() * 100,
-          reasons: ['Best price', 'Fast shipping', 'High seller rating'],
-          savings: bestOffer ? product.basePrice - bestOffer.price : 0,
-        };
-      });
-
-      const result: VoiceSearchResult = {
-        query,
-        products: filteredProducts,
-        filters,
-        recommendations,
-        timestamp: new Date().toISOString(),
-      };
-
+    } catch (error) {
+      console.error('❌ Search failed:', error);
+      // Fallback to local search
+      const result = searchLocalProducts(query, filters);
       dispatch({ type: 'SET_SEARCH_RESULT', payload: result });
       return result;
-    } catch (error) {
-      dispatch({ type: 'SET_ERROR', payload: 'Search failed' });
-      throw error;
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
+  };
+
+  // Local search function for Indian products
+  const searchLocalProducts = (query: string, filters: SearchFilters = {}): VoiceSearchResult => {
+    console.log('🇮🇳 Searching local Indian products for:', query);
+
+    const correctedQuery = correctSpelling(query.toLowerCase());
+    let filteredProducts = [...indianProducts];
+
+    // Apply text search
+    if (correctedQuery.trim()) {
+      filteredProducts = filteredProducts.filter(product => {
+        const searchText = `${product.name} ${product.brand} ${product.category} ${product.description} ${product.tags?.join(' ')}`.toLowerCase();
+        const queryWords = correctedQuery.split(' ');
+        return queryWords.some(word => searchText.includes(word));
+      });
+    }
+
+    // Apply filters
+    if (filters.category) {
+      filteredProducts = filteredProducts.filter(p => p.category.toLowerCase() === filters.category?.toLowerCase());
+    }
+
+    if (filters.brand) {
+      filteredProducts = filteredProducts.filter(p => p.brand.toLowerCase() === filters.brand?.toLowerCase());
+    }
+
+    if (filters.priceRange) {
+      const [min, max] = filters.priceRange;
+      filteredProducts = filteredProducts.filter(p => {
+        return (!min || p.basePrice >= min) && (!max || p.basePrice <= max);
+      });
+    }
+
+    // Sort by relevance (simple scoring)
+    filteredProducts.sort((a, b) => {
+      const aScore = calculateRelevanceScore(a, correctedQuery);
+      const bScore = calculateRelevanceScore(b, correctedQuery);
+      return bScore - aScore;
+    });
+
+    // Limit results
+    const limitedProducts = filteredProducts.slice(0, 20);
+
+    console.log('🔍 Local search found', limitedProducts.length, 'products');
+
+    return {
+      query,
+      products: limitedProducts,
+      filters,
+      recommendations: [],
+      timestamp: new Date().toISOString(),
+    };
+  };
+
+  // Calculate relevance score for local search
+  const calculateRelevanceScore = (product: Product, query: string): number => {
+    let score = 0;
+    const queryWords = query.toLowerCase().split(' ');
+    const productText = `${product.name} ${product.brand} ${product.category}`.toLowerCase();
+
+    queryWords.forEach(word => {
+      if (product.name.toLowerCase().includes(word)) score += 10;
+      if (product.brand.toLowerCase().includes(word)) score += 8;
+      if (product.category.toLowerCase().includes(word)) score += 6;
+      if (productText.includes(word)) score += 3;
+    });
+
+    // Boost popular products
+    score += product.averageRating * 2;
+    score += Math.log(product.totalReviews + 1);
+
+    return score;
   };
 
   // API helper functions
@@ -340,29 +420,19 @@ export const MarketplaceProvider: React.FC<{ children: ReactNode }> = ({ childre
         ...(filters.shippingSpeed && { shipping_speed: filters.shippingSpeed }),
       });
 
-      const apiUrl = `http://localhost:3001/api/search?${searchParams}`;
-      console.log('🌐 Fetching from API:', apiUrl);
+      const endpoint = `/api/search?${searchParams}`;
+      console.log('🌐 Fetching from API:', endpoint);
 
-      const response = await fetch(apiUrl, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
+      const response = await apiConnection.makeRequest(endpoint);
       console.log('📡 API Response status:', response.status, response.statusText);
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status} ${response.statusText}`);
-      }
 
       const data = await response.json();
       console.log('✅ API Response data:', data);
       return data;
     } catch (error) {
-      console.warn('❌ Search API not available:', error);
-      console.warn('   Error details:', error.message);
-      return null;
+      console.error('❌ Search API not available:', error);
+      console.error('   Error details:', error.message);
+      throw new Error(`API connection failed: ${error.message}`);
     }
   };
 

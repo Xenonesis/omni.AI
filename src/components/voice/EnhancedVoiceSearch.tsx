@@ -10,7 +10,10 @@ import {
   CheckCircle,
   Loader,
   MessageCircle,
-  Sparkles
+  Sparkles,
+  Brain,
+  Zap,
+  Activity
 } from 'lucide-react';
 import { voiceService } from '../../services/voiceService';
 import { nlpService, ParsedQuery } from '../../services/nlpService';
@@ -18,6 +21,8 @@ import { conversationEngine, AIResponse } from '../../services/conversationEngin
 import { useMarketplace } from '../../context/MarketplaceContext';
 import Button from '../ui/Button';
 import MicrophoneTestModal from '../debug/MicrophoneTestModal';
+import { callVoiceAgentAPI } from '../../services/voiceAgentApi';
+import { apiConnection } from '../../services/apiConnection';
 
 interface EnhancedVoiceSearchProps {
   onSearchResults?: (results: any) => void;
@@ -57,8 +62,25 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
     timestamp: number;
   }>>([]);
 
+  // Enhanced agentic capabilities
+  const [isAgentActive, setIsAgentActive] = useState(false);
+  const [agentThinking, setAgentThinking] = useState(false);
+  const [realTimeMode, setRealTimeMode] = useState(true);
+  const [conversationContext, setConversationContext] = useState<any>(null);
+  const [agentPersonality, setAgentPersonality] = useState('helpful');
+  const [voiceResponseEnabled, setVoiceResponseEnabled] = useState(true);
+  const [continuousConversation, setContinuousConversation] = useState(false);
+  const [lastAgentResponse, setLastAgentResponse] = useState<string>('');
+  const [thinkingDots, setThinkingDots] = useState('');
+  const [apiConnectionStatus, setApiConnectionStatus] = useState<'connected' | 'disconnected' | 'checking'>('checking');
+  const [agentState, setAgentState] = useState<'idle' | 'listening' | 'thinking' | 'responding' | 'searching'>('idle');
+  const [realTimeTranscript, setRealTimeTranscript] = useState('');
+  const [agentMemory, setAgentMemory] = useState<Array<{query: string, response: string, context: any}>>([]);
+
   const processingTimeoutRef = useRef<NodeJS.Timeout>();
   const sessionIdRef = useRef<string>('');
+  const thinkingIntervalRef = useRef<NodeJS.Timeout>();
+  const continuousListeningRef = useRef<boolean>(false);
 
   // Clean transcript function to remove unwanted punctuation
   const cleanTranscript = useCallback((text: string): string => {
@@ -89,14 +111,50 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
     // Start conversation session
     sessionIdRef.current = conversationEngine.startSession();
 
+    // Initialize agentic capabilities
+    initializeAgent();
+
+    // Monitor API connection status
+    const checkApiStatus = () => {
+      const status = apiConnection.getStatus();
+      setApiConnectionStatus(status.isConnected ? 'connected' : 'disconnected');
+    };
+
+    checkApiStatus();
+    const statusInterval = setInterval(checkApiStatus, 5000);
+
     return () => {
       voiceService.cleanup();
       conversationEngine.endSession();
       if (processingTimeoutRef.current) {
         clearTimeout(processingTimeoutRef.current);
       }
+      if (thinkingIntervalRef.current) {
+        clearInterval(thinkingIntervalRef.current);
+      }
+      clearInterval(statusInterval);
     };
   }, []);
+
+  // Initialize agent with enhanced capabilities
+  const initializeAgent = useCallback(() => {
+    setIsAgentActive(true);
+    setAgentState('idle');
+
+    // Set up thinking animation
+    const updateThinkingDots = () => {
+      setThinkingDots(prev => {
+        if (prev === '...') return '.';
+        return prev + '.';
+      });
+    };
+
+    thinkingIntervalRef.current = setInterval(updateThinkingDots, 500);
+
+    console.log('🤖 Agentic Voice Assistant initialized');
+    console.log('🔗 API Status:', apiConnectionStatus);
+    console.log('🎯 Real-time mode:', realTimeMode);
+  }, [apiConnectionStatus, realTimeMode]);
 
   const handleVoiceStart = useCallback(() => {
     setIsListening(true);
@@ -109,10 +167,25 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
     // Clean the text to remove unwanted punctuation and characters
     const cleanedText = cleanTranscript(text);
 
+    if (realTimeMode && !isFinal) {
+      // Real-time processing for interim results
+      setRealTimeTranscript(cleanedText);
+      setInterimTranscript(cleanedText);
+
+      // Process interim results for real-time agent feedback
+      if (cleanedText.length > 3) {
+        await processRealTimeInput(cleanedText);
+      }
+      return;
+    }
+
     if (isFinal) {
       setTranscript(cleanedText);
       setInterimTranscript('');
+      setRealTimeTranscript('');
       setIsListening(false);
+      setAgentState('thinking');
+      setAgentThinking(true);
       setIsProcessing(true);
       setConfidence(confidenceScore);
 
@@ -123,62 +196,187 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
         timestamp: Date.now(),
       }]);
 
+      console.log('🎤 Processing voice input:', cleanedText);
+      console.log('🤖 Agent state: thinking');
+
       try {
-        // Parse the query using NLP
-        const parsedQuery: ParsedQuery = nlpService.parseQuery(cleanedText);
-
-        // Handle the query based on intent
-        let searchResults = null;
-        if (parsedQuery.intent === 'search' || parsedQuery.intent === 'filter') {
-          const searchParams = buildSearchParams(parsedQuery);
-          searchResults = await searchProducts(searchParams.query, {
-            category: searchParams.category,
-            priceRange: searchParams.priceRange,
-            brand: searchParams.brand,
-          });
-
-          // Pass the search parameters to the parent component
-          onSearchResults?.({
-            query: searchParams.query,
-            category: searchParams.category,
-            brand: searchParams.brand,
-            priceRange: searchParams.priceRange,
-            products: searchResults?.products || [],
-            results: searchResults
-          });
-        }
-
-        // Generate AI response
-        const response = conversationEngine.generateResponse(parsedQuery, searchResults);
-        setAiResponse(response);
-
-        // Add AI response to conversation history
-        setConversationHistory(prev => [...prev, {
-          type: 'ai',
-          text: response.text,
-          timestamp: Date.now(),
-        }]);
-
-        // Speak the response if enabled
-        if (autoSpeak && response.shouldSpeak) {
-          await handleSpeak(response.text);
-        }
-
-        // Handle navigation if needed
-        if (response.action === 'navigate' && response.navigationTarget) {
-          onNavigate?.(response.navigationTarget);
-        }
-
+        // Enhanced agentic processing
+        await processAgenticInput(cleanedText, confidenceScore);
       } catch (error) {
-        console.error('Voice processing error:', error);
-        setError('Sorry, I had trouble processing your request. Please try again.');
+        setError('Sorry, there was a problem with the voice agent. Please try again.');
+        console.error('Voice agent API error:', error);
       } finally {
         setIsProcessing(false);
+        setAgentThinking(false);
+        setAgentState('idle');
       }
     } else {
       setInterimTranscript(cleanedText);
     }
-  }, [autoSpeak, onSearchResults, onNavigate, searchProducts]);
+  }, [cleanTranscript, onSearchResults, onNavigate, realTimeMode]);
+
+  // Process real-time input for immediate agent feedback
+  const processRealTimeInput = useCallback(async (text: string) => {
+    if (!realTimeMode || !isAgentActive) return;
+
+    try {
+      // Quick NLP analysis for real-time feedback
+      const parsedQuery = nlpService.parseQuery(text);
+
+      // Update conversation context in real-time
+      setConversationContext(prev => ({
+        ...prev,
+        currentInput: text,
+        detectedIntent: parsedQuery.intent,
+        confidence: parsedQuery.confidence
+      }));
+
+      // Provide real-time visual feedback
+      if (parsedQuery.intent !== 'unknown' && parsedQuery.confidence > 0.7) {
+        setAgentState('listening');
+      }
+
+    } catch (error) {
+      console.warn('Real-time processing error:', error);
+    }
+  }, [realTimeMode, isAgentActive]);
+
+  // Enhanced agentic input processing
+  const processAgenticInput = useCallback(async (text: string, confidence: number) => {
+    setAgentState('thinking');
+
+    try {
+      // Build enhanced context for the agent
+      const enhancedContext = {
+        transcript: text,
+        confidence,
+        sessionId: sessionIdRef.current,
+        timestamp: new Date().toISOString(),
+        conversationHistory: conversationHistory.slice(-5), // Last 5 exchanges
+        agentMemory: agentMemory.slice(-3), // Last 3 memory items
+        userPreferences: {
+          personality: agentPersonality,
+          voiceEnabled: voiceResponseEnabled,
+          realTimeMode
+        },
+        apiStatus: apiConnectionStatus,
+        context: conversationContext
+      };
+
+      console.log('🧠 Enhanced context:', enhancedContext);
+
+      // Call the voice agent API with enhanced context
+      const agentResponse = await callVoiceAgentAPI(enhancedContext);
+
+      // Process agent response
+      await handleAgentResponse(agentResponse, text);
+
+    } catch (error) {
+      console.error('Agentic processing error:', error);
+      await handleAgentError(error, text);
+    }
+  }, [conversationHistory, agentMemory, agentPersonality, voiceResponseEnabled, realTimeMode, apiConnectionStatus, conversationContext]);
+
+  // Handle agent response with enhanced capabilities
+  const handleAgentResponse = useCallback(async (response: any, originalQuery: string) => {
+    setAgentState('responding');
+    setAiResponse(response);
+    setLastAgentResponse(response.text || response.message || '');
+
+    // Add to conversation history
+    setConversationHistory(prev => [...prev, {
+      type: 'ai',
+      text: response.text || response.message || '',
+      timestamp: Date.now(),
+    }]);
+
+    // Add to agent memory
+    setAgentMemory(prev => [...prev, {
+      query: originalQuery,
+      response: response.text || response.message || '',
+      context: {
+        intent: response.action,
+        confidence: response.confidence,
+        timestamp: Date.now()
+      }
+    }].slice(-10)); // Keep last 10 memory items
+
+    // Handle voice response
+    if (voiceResponseEnabled && response.shouldSpeak !== false) {
+      setAgentState('responding');
+      await handleSpeak(response.text || response.message || '');
+    }
+
+    // Handle actions
+    if (response.action) {
+      await handleAgentAction(response);
+    }
+
+    // Pass results to parent
+    onSearchResults?.(response);
+
+    // Handle continuous conversation
+    if (continuousConversation && response.followUpQuestions?.length > 0) {
+      setTimeout(() => {
+        if (continuousListeningRef.current) {
+          startListening();
+        }
+      }, 2000);
+    }
+
+    console.log('🤖 Agent response processed:', response);
+  }, [voiceResponseEnabled, continuousConversation, onSearchResults]);
+
+  // Handle agent actions
+  const handleAgentAction = useCallback(async (response: any) => {
+    switch (response.action) {
+      case 'search':
+        setAgentState('searching');
+        if (response.searchParams) {
+          await performSearch(response.searchParams.query || response.searchParams);
+        }
+        break;
+      case 'navigate':
+        if (response.navigationTarget) {
+          onNavigate?.(response.navigationTarget);
+        }
+        break;
+      case 'filter':
+        // Handle filtering logic
+        break;
+      case 'compare':
+        // Handle comparison logic
+        break;
+      default:
+        console.log('Unknown action:', response.action);
+    }
+    setAgentState('idle');
+  }, [onNavigate]);
+
+  // Search products function using marketplace context
+  const performSearch = useCallback(async (query: string) => {
+    try {
+      await searchProducts(query);
+    } catch (error) {
+      console.error('Search error:', error);
+    }
+  }, [searchProducts]);
+
+  // Handle agent errors with fallback
+  const handleAgentError = useCallback(async (error: any, originalQuery: string) => {
+    console.error('Agent error:', error);
+
+    // Fallback to local processing
+    try {
+      const parsedQuery = nlpService.parseQuery(originalQuery);
+      const fallbackResponse = conversationEngine.generateResponse(parsedQuery);
+
+      await handleAgentResponse(fallbackResponse, originalQuery);
+    } catch (fallbackError) {
+      setError('I apologize, but I\'m having trouble processing your request. Please try again.');
+      console.error('Fallback error:', fallbackError);
+    }
+  }, []);
 
   const handleVoiceError = useCallback((errorMessage: string, suggestions?: string[]) => {
     setError(errorMessage);
@@ -248,17 +446,34 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
   };
 
   const getStatusText = () => {
+    if (agentThinking) return `Agent is thinking${thinkingDots}`;
+    if (agentState === 'searching') return 'Searching products...';
+    if (agentState === 'responding') return 'Agent responding...';
     if (isProcessing) return 'Processing your request...';
-    if (isListening) return 'Listening...';
+    if (isListening) return realTimeMode ? 'Listening in real-time...' : 'Listening...';
     if (isSpeaking) return 'Speaking...';
+    if (isAgentActive) return 'AI Agent ready - Click to start conversation';
     return 'Click to start voice search';
   };
 
   const getStatusIcon = () => {
+    if (agentThinking) return <Brain className="animate-pulse" size={24} />;
+    if (agentState === 'searching') return <Loader className="animate-spin" size={24} />;
+    if (agentState === 'responding') return <Activity className="animate-bounce" size={24} />;
     if (isProcessing) return <Loader className="animate-spin" size={24} />;
     if (isListening) return <MicOff size={24} />;
     if (isSpeaking) return <Volume2 size={24} />;
+    if (isAgentActive) return <Zap size={24} />;
     return <Mic size={24} />;
+  };
+
+  const getAgentStatusColor = () => {
+    if (agentThinking) return 'from-purple-600 to-pink-600';
+    if (agentState === 'searching') return 'from-blue-600 to-cyan-600';
+    if (agentState === 'responding') return 'from-green-600 to-emerald-600';
+    if (isListening) return 'from-red-500 to-red-600';
+    if (isAgentActive) return 'from-purple-600 to-blue-600';
+    return 'from-gray-400 to-gray-500';
   };
 
   const microphoneAnimation = {
@@ -291,30 +506,96 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
   return (
     <div className={`voice-search-container ${className}`}>
       {/* Main Voice Interface */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-4 sm:mb-6">
         <motion.button
           onClick={isListening ? stopListening : startListening}
-          disabled={isProcessing}
+          disabled={isProcessing || agentThinking}
           className={`
-            relative w-20 h-20 rounded-full flex items-center justify-center text-white font-semibold
-            transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300
+            relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center text-white font-semibold
+            transition-all duration-300 focus:outline-none focus:ring-4 shadow-lg touch-target
             ${isListening
-              ? 'bg-red-500 hover:bg-red-600'
-              : isProcessing
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600'
+              ? 'bg-red-500 hover:bg-red-600 focus:ring-red-300'
+              : isProcessing || agentThinking
+                ? 'bg-gray-400 cursor-not-allowed focus:ring-gray-300'
+                : `bg-gradient-to-r ${getAgentStatusColor()} hover:shadow-xl focus:ring-purple-300`
             }
           `}
-          animate={microphoneAnimation}
-          transition={microphoneTransition}
+          animate={isListening ? {
+            ...microphoneAnimation,
+            boxShadow: [
+              "0 0 0 0 rgba(239, 68, 68, 0.4)",
+              "0 0 0 25px rgba(239, 68, 68, 0)",
+              "0 0 0 0 rgba(239, 68, 68, 0)"
+            ]
+          } : microphoneAnimation}
+          transition={{
+            ...microphoneTransition,
+            boxShadow: {
+              duration: 1.5,
+              repeat: isListening ? Infinity : 0,
+              ease: "easeInOut"
+            }
+          }}
           whileTap={reducedMotion ? {} : { scale: 0.95 }}
         >
-          {getStatusIcon()}
+          {isListening ? (
+            <motion.div
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            >
+              <Mic size={window.innerWidth < 640 ? 20 : window.innerWidth < 768 ? 22 : 24} />
+            </motion.div>
+          ) : (
+            getStatusIcon()
+          )}
         </motion.button>
 
-        <p className="mt-4 text-gray-600 font-medium">
-          {getStatusText()}
-        </p>
+        {/* Enhanced Status Display */}
+        <motion.div
+          className="mt-3 sm:mt-4 space-y-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          <p className="text-sm sm:text-base md:text-lg font-medium text-gray-700 px-2 text-center">
+            {getStatusText()}
+          </p>
+
+          {/* Agent Status Indicator */}
+          {isAgentActive && (
+            <div className="flex items-center justify-center space-x-2 text-sm">
+              <div className={`w-2 h-2 rounded-full ${
+                apiConnectionStatus === 'connected' ? 'bg-green-500' :
+                apiConnectionStatus === 'checking' ? 'bg-yellow-500 animate-pulse' : 'bg-red-500'
+              }`} />
+              <span className="text-gray-600">
+                AI Agent {apiConnectionStatus === 'connected' ? 'Online' :
+                         apiConnectionStatus === 'checking' ? 'Connecting...' : 'Offline'}
+              </span>
+              {realTimeMode && (
+                <>
+                  <span className="text-gray-400">•</span>
+                  <span className="text-purple-600 font-medium">Real-time Mode</span>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Real-time Transcript Preview */}
+          {realTimeMode && realTimeTranscript && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-purple-50 border border-purple-200 rounded-lg p-3 max-w-md mx-auto"
+            >
+              <div className="flex items-center space-x-2 mb-1">
+                <Activity className="w-4 h-4 text-purple-600 animate-pulse" />
+                <span className="text-xs font-medium text-purple-700">Real-time Processing</span>
+              </div>
+              <p className="text-sm text-gray-700 italic">"{realTimeTranscript}"</p>
+            </motion.div>
+          )}
+        </motion.div>
 
         {/* Confidence Indicator */}
         {showConfidence && confidence > 0 && (
@@ -377,6 +658,7 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
                     {aiResponse.suggestions.map((suggestion, index) => (
                       <button
                         key={index}
+                        type="button"
                         onClick={() => handleVoiceResult(suggestion, true, 1.0)}
                         className="px-3 py-1 bg-white rounded-full text-sm text-blue-600 border border-blue-200 hover:bg-blue-50 transition-colors"
                       >
@@ -404,6 +686,7 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
 
               {/* Speak Button */}
               <button
+                type="button"
                 onClick={() => isSpeaking ? stopSpeaking() : handleSpeak(aiResponse.text)}
                 className="p-2 rounded-full hover:bg-white/50 transition-colors"
                 title={isSpeaking ? "Stop speaking" : "Read aloud"}
@@ -498,37 +781,104 @@ const EnhancedVoiceSearch: React.FC<EnhancedVoiceSearchProps> = ({
             exit={{ opacity: 0, height: 0 }}
             className="mt-4 bg-gray-50 rounded-lg p-4 border"
           >
-            <h4 className="font-semibold mb-3">Voice Settings</h4>
-            <div className="space-y-3">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={autoSpeak}
-                  onChange={(e) => setAutoSpeak(e.target.checked)}
-                  className="rounded"
-                />
-                <span className="text-sm">Auto-speak AI responses</span>
-              </label>
+            <h4 className="font-semibold mb-3">Voice & AI Agent Settings</h4>
+            <div className="space-y-4">
+              {/* Voice Settings */}
+              <div>
+                <h5 className="text-sm font-medium text-gray-700 mb-2">Voice Settings</h5>
+                <div className="space-y-2">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={autoSpeak}
+                      onChange={(e) => setAutoSpeak(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Auto-speak AI responses</span>
+                  </label>
 
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={showTranscript}
-                  onChange={(e) => setShowTranscript(e.target.checked)}
-                  className="rounded"
-                />
-                <span className="text-sm">Show transcript</span>
-              </label>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={showTranscript}
+                      onChange={(e) => setShowTranscript(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Show transcript</span>
+                  </label>
 
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={showConfidence}
-                  onChange={(e) => setShowConfidence(e.target.checked)}
-                  className="rounded"
-                />
-                <span className="text-sm">Show confidence score</span>
-              </label>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={showConfidence}
+                      onChange={(e) => setShowConfidence(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Show confidence score</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* AI Agent Settings */}
+              <div className="border-t pt-3">
+                <h5 className="text-sm font-medium text-gray-700 mb-2">AI Agent Settings</h5>
+                <div className="space-y-2">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={realTimeMode}
+                      onChange={(e) => setRealTimeMode(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Real-time processing</span>
+                  </label>
+
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={voiceResponseEnabled}
+                      onChange={(e) => setVoiceResponseEnabled(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Voice responses</span>
+                  </label>
+
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={continuousConversation}
+                      onChange={(e) => setContinuousConversation(e.target.checked)}
+                      className="rounded"
+                    />
+                    <span className="text-sm">Continuous conversation</span>
+                  </label>
+
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm">Agent personality:</span>
+                    <select
+                      value={agentPersonality}
+                      onChange={(e) => setAgentPersonality(e.target.value)}
+                      className="text-sm border rounded px-2 py-1"
+                      aria-label="Agent personality"
+                    >
+                      <option value="helpful">Helpful</option>
+                      <option value="friendly">Friendly</option>
+                      <option value="professional">Professional</option>
+                      <option value="casual">Casual</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Agent Status */}
+              <div className="border-t pt-3">
+                <h5 className="text-sm font-medium text-gray-700 mb-2">Agent Status</h5>
+                <div className="text-xs text-gray-600 space-y-1">
+                  <div>State: <span className="font-medium">{agentState}</span></div>
+                  <div>Memory: <span className="font-medium">{agentMemory.length} items</span></div>
+                  <div>Session: <span className="font-medium">{sessionIdRef.current.slice(-8)}</span></div>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

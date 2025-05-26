@@ -9,6 +9,7 @@ import Card from '../components/ui/Card';
 import ScrollReveal from '../components/ui/ScrollReveal';
 import EnhancedVoiceSearch from '../components/voice/EnhancedVoiceSearch';
 import VoiceNavigation from '../components/voice/VoiceNavigation';
+import { apiConnection } from '../services/apiConnection';
 
 const VoiceShoppingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -79,35 +80,44 @@ const VoiceShoppingPage: React.FC = () => {
     navigate(`/${destination}`);
   };
 
-  // Check API status
-  const checkAPIStatus = async () => {
-    try {
-      setApiStatus('checking');
-      const response = await fetch('http://localhost:3001/api/health');
-      if (response.ok) {
+  // Monitor API connection status
+  useEffect(() => {
+    const updateApiStatus = () => {
+      const status = apiConnection.getStatus();
+      if (status.isConnected) {
         setApiStatus('connected');
-        console.log('✅ API is connected');
       } else {
         setApiStatus('disconnected');
-        console.log('❌ API health check failed');
       }
-    } catch (error) {
-      setApiStatus('disconnected');
-      console.log('❌ API is not available:', error);
-    }
-  };
+    };
 
-  // Test function to directly call the API
+    // Initial status check
+    updateApiStatus();
+
+    // Listen for connection status changes
+    const handleConnectionChange = () => {
+      updateApiStatus();
+    };
+
+    // Listen for API connection events
+    window.addEventListener('api-connection-failed', handleConnectionChange);
+
+    // Check status periodically
+    const statusInterval = setInterval(updateApiStatus, 5000);
+
+    return () => {
+      window.removeEventListener('api-connection-failed', handleConnectionChange);
+      clearInterval(statusInterval);
+    };
+  }, []);
+
+  // Test function to directly call the API using the new service
   const testAPIDirectly = async () => {
     try {
       console.log('🧪 Testing API directly...');
       setApiStatus('checking');
 
-      const response = await fetch('http://localhost:3001/api/search?q=nike&max_price=500');
-      if (!response.ok) {
-        throw new Error(`API returned ${response.status}: ${response.statusText}`);
-      }
-
+      const response = await apiConnection.makeRequest('/api/search?q=nike&max_price=500');
       const data = await response.json();
       console.log('📊 Direct API Response:', data);
       setApiStatus('connected');
@@ -120,14 +130,10 @@ const VoiceShoppingPage: React.FC = () => {
     } catch (error) {
       console.error('❌ Direct API test failed:', error);
       setApiStatus('disconnected');
-      alert(`API Test Failed!\n\nError: ${error.message}\n\nMake sure the API server is running on http://localhost:3001`);
+      const status = apiConnection.getStatus();
+      alert(`API Test Failed!\n\nError: ${error.message}\n\nEnvironment: ${status.environment}\nAPI URL: ${status.apiUrl}`);
     }
   };
-
-  // Check API status on component mount
-  useEffect(() => {
-    checkAPIStatus();
-  }, []);
 
   const handleVoiceSearch = async () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -341,10 +347,28 @@ const VoiceShoppingPage: React.FC = () => {
                     ? 'bg-red-500'
                     : 'bg-yellow-500 animate-pulse'
                 }`} />
-                {apiStatus === 'connected' && 'Real Data API Connected'}
-                {apiStatus === 'disconnected' && 'Using Mock Data (API Offline)'}
+                {apiStatus === 'connected' && (
+                  <>
+                    Real Data API Connected
+                    <span className="ml-2 text-xs opacity-75">
+                      ({apiConnection.getStatus().environment} • {apiConnection.getStatus().apiUrl.includes('localhost') ? 'Local' : 'Production'})
+                    </span>
+                  </>
+                )}
+                {apiStatus === 'disconnected' && 'API Connection Failed - Retrying...'}
                 {apiStatus === 'checking' && 'Checking API Connection...'}
               </div>
+              {apiStatus === 'connected' && (
+                <div className="text-center mt-2">
+                  <button
+                    type="button"
+                    onClick={testAPIDirectly}
+                    className="text-xs text-primary-100 hover:text-white underline"
+                  >
+                    Test API Connection
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Enhanced Voice Interface */}

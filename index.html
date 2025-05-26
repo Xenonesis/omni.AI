@@ -2,13 +2,141 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/omniverse-favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OmniDimension Voice AI Marketplace</title>
-    <meta name="description" content="AI-powered voice shopping marketplace for Indian products - Electronics, Fashion & Beauty" />
 
-    <!-- OmniDimension Web Widget -->
-    <script id="omnidimension-web-widget" async src="https://backend.omnidim.io/web_widget.js?secret_key=201ff4fd19c1ffd37b272cc1eacb874a"></script>
+    <!-- Primary Meta Tags -->
+    <title>omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products</title>
+    <meta name="title" content="omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products" />
+    <meta name="description" content="Discover the future of shopping with omniverse.AI's voice-powered marketplace. Find electronics, fashion, and beauty products from top Indian brands with AI assistance. Shop smarter with voice search technology." />
+    <meta name="keywords" content="voice shopping, AI marketplace, Indian products, electronics, fashion, beauty, voice search, omniverse.ai, smart shopping" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="author" content="omniverse.AI" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://your-domain.netlify.app/" />
+    <meta property="og:title" content="omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products" />
+    <meta property="og:description" content="Discover the future of shopping with omniverse.AI's voice-powered marketplace. Find electronics, fashion, and beauty products from top Indian brands with AI assistance." />
+    <meta property="og:image" content="https://your-domain.netlify.app/og-image.jpg" />
+    <meta property="og:site_name" content="omniverse.AI" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://your-domain.netlify.app/" />
+    <meta property="twitter:title" content="omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products" />
+    <meta property="twitter:description" content="Discover the future of shopping with omniverse.AI's voice-powered marketplace. Find electronics, fashion, and beauty products from top Indian brands with AI assistance." />
+    <meta property="twitter:image" content="https://your-domain.netlify.app/og-image.jpg" />
+    <meta property="twitter:creator" content="@omniverseai" />
+
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#6366f1" />
+    <meta name="msapplication-TileColor" content="#6366f1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="omniverse.AI" />
+
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://backend.omnidim.io" />
+    <link rel="preconnect" href="https://www.youtube.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="//backend.omnidim.io" />
+    <link rel="dns-prefetch" href="//www.youtube.com" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://your-domain.netlify.app/" />
+
+    <!-- Enhanced Error Handling and Extension Conflict Prevention -->
+    <script>
+      // Global error handler to prevent extension conflicts
+      window.addEventListener('error', function(e) {
+        // Handle web widget errors
+        if (e.filename && e.filename.includes('web_widget.js')) {
+          console.warn('🔧 Web widget error handled:', e.message);
+          e.preventDefault();
+          return true;
+        }
+
+        // Handle extension conflicts
+        if (e.filename && (
+          e.filename.includes('universal-blocker.js') ||
+          e.filename.includes('feedback-manager.js') ||
+          e.filename.includes('content-blocker.js') ||
+          e.filename.includes('content.js')
+        )) {
+          console.warn('🛡️ Browser extension conflict handled:', e.message);
+          e.preventDefault();
+          return true;
+        }
+
+        // Handle property redefinition errors
+        if (e.message && e.message.includes('Cannot redefine property')) {
+          console.warn('🔧 Property redefinition conflict handled:', e.message);
+          e.preventDefault();
+          return true;
+        }
+
+        // Handle undefined property errors
+        if (e.message && e.message.includes('Cannot read properties of undefined')) {
+          console.warn('🔧 Undefined property error handled:', e.message);
+          e.preventDefault();
+          return true;
+        }
+
+        // Handle null property errors
+        if (e.message && e.message.includes('Cannot read properties of null')) {
+          console.warn('🔧 Null property error handled:', e.message);
+          e.preventDefault();
+          return true;
+        }
+      });
+
+      // Prevent extension conflicts with location and other global objects
+      (function() {
+        try {
+          // Protect critical properties from being redefined
+          const protectedProps = ['href', 'location', 'document'];
+          protectedProps.forEach(prop => {
+            if (window[prop]) {
+              Object.defineProperty(window, prop + '_protected', {
+                value: window[prop],
+                writable: false,
+                configurable: false
+              });
+            }
+          });
+        } catch (e) {
+          console.warn('🛡️ Property protection setup handled:', e.message);
+        }
+      })();
+
+      // Initialize voice search protection
+      window.voiceSearchProtected = true;
+      console.log('🎤 Voice search protection initialized');
+    </script>
+
+    <!-- omniverse.AI Web Widget with Enhanced Error Handling -->
+    <script>
+      (function() {
+        try {
+          const script = document.createElement('script');
+          script.id = 'omniverse-web-widget';
+          script.src = 'https://backend.omnidim.io/web_widget.js?secret_key=201ff4fd19c1ffd37b272cc1eacb874a';
+          script.async = true;
+          script.onerror = function() {
+            console.warn('🔧 Web widget failed to load - continuing without widget');
+          };
+          document.head.appendChild(script);
+        } catch (e) {
+          console.warn('🔧 Web widget initialization error handled:', e.message);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

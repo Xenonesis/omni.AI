@@ -1,0 +1,9 @@
+# SPA routing - redirect all routes to index.html
+/*    /index.html   200
+
+# API redirects (if using external API)
+/api/*  https://your-production-api.com/api/:splat  200
+
+# Specific redirects for legacy URLs
+/search  /marketplace  301
+/products/*  /marketplace  301

@@ -100,6 +100,7 @@ const PricingPlans: React.FC = () => {
       <div className="flex justify-center mb-12">
         <div className="bg-neutral-100 p-1 rounded-lg flex items-center">
           <button
+            type="button"
             onClick={() => setIsYearly(false)}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
               !isYearly
@@ -110,6 +111,7 @@ const PricingPlans: React.FC = () => {
             Monthly
           </button>
           <button
+            type="button"
             onClick={() => setIsYearly(true)}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-all relative ${
               isYearly
@@ -167,7 +169,7 @@ const PricingPlans: React.FC = () => {
                 <p className="text-neutral-600 mb-4">
                   {plan.description}
                 </p>
-                
+
                 {/* Price */}
                 <div className="mb-2">
                   <span className="text-4xl font-bold text-neutral-900">
@@ -177,7 +179,7 @@ const PricingPlans: React.FC = () => {
                     <span className="text-neutral-500 ml-1">/month</span>
                   )}
                 </div>
-                
+
                 {/* Savings */}
                 {isYearly && getSavings(plan) && (
                   <div className="text-green-600 text-sm font-medium">
@@ -241,7 +243,7 @@ const PricingPlans: React.FC = () => {
           Need a Custom Solution?
         </h3>
         <p className="text-neutral-600 mb-6 max-w-2xl mx-auto">
-          For large organizations or unique requirements, we offer custom pricing and features. 
+          For large organizations or unique requirements, we offer custom pricing and features.
           Contact our sales team to discuss your specific needs.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

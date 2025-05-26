@@ -65,8 +65,8 @@ const FAQ: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   const toggleItem = (id: number) => {
-    setOpenItems(prev => 
-      prev.includes(id) 
+    setOpenItems(prev =>
+      prev.includes(id)
         ? prev.filter(item => item !== id)
         : [...prev, id]
     );
@@ -80,8 +80,8 @@ const FAQ: React.FC = () => {
     { key: 'privacy', label: 'Privacy' }
   ];
 
-  const filteredFAQs = activeCategory === 'all' 
-    ? faqData 
+  const filteredFAQs = activeCategory === 'all'
+    ? faqData
     : faqData.filter(item => item.category === activeCategory);
 
   const getCategoryColor = (category: string) => {
@@ -101,6 +101,7 @@ const FAQ: React.FC = () => {
         {categories.map((category) => (
           <button
             key={category.key}
+            type="button"
             onClick={() => setActiveCategory(category.key)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
               activeCategory === category.key
@@ -126,8 +127,11 @@ const FAQ: React.FC = () => {
               className="bg-white rounded-xl shadow-md border border-neutral-200 overflow-hidden"
             >
               <button
+                type="button"
                 onClick={() => toggleItem(item.id)}
                 className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-neutral-50 transition-colors"
+                aria-expanded={openItems.includes(item.id) ? 'true' : 'false'}
+                aria-controls={`faq-answer-${item.id}`}
               >
                 <div className="flex items-center flex-1">
                   <HelpCircle size={20} className="text-primary-600 mr-3 flex-shrink-0" />
@@ -195,10 +199,16 @@ const FAQ: React.FC = () => {
           Our support team is here to help you get the most out of our AI agent.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <button className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+          <button
+            type="button"
+            className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+          >
             Contact Support
           </button>
-          <button className="px-6 py-2 border border-primary-600 text-primary-600 rounded-lg hover:bg-primary-50 transition-colors">
+          <button
+            type="button"
+            className="px-6 py-2 border border-primary-600 text-primary-600 rounded-lg hover:bg-primary-50 transition-colors"
+          >
             Schedule Demo
           </button>
         </div>

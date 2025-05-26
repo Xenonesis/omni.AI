@@ -66,7 +66,7 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
   const testSpeechRecognition = async () => {
     setIsTestingSpeech(true);
     setSpeechTestResult(null);
-    
+
     try {
       const result = await microphoneTest.testSpeechRecognition();
       setSpeechTestResult(result);
@@ -116,8 +116,10 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold">🎤 Microphone Test</h2>
               <button
+                type="button"
                 onClick={onClose}
                 className="text-white hover:text-gray-200 text-2xl"
+                aria-label="Close microphone test"
               >
                 <X size={24} />
               </button>
@@ -130,7 +132,7 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
             {testResult && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-4">🔍 Diagnostic Results</h3>
-                
+
                 <div className="space-y-3">
                   {/* Browser Support */}
                   <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -224,9 +226,10 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
             {/* Live Audio Monitoring */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-4">🎵 Live Audio Test</h3>
-              
+
               <div className="flex items-center space-x-4 mb-4">
                 <button
+                  type="button"
                   onClick={isMonitoring ? stopAudioMonitoring : startAudioMonitoring}
                   className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-colors ${
                     isMonitoring
@@ -237,7 +240,7 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
                   {isMonitoring ? <MicOff size={16} /> : <Mic size={16} />}
                   <span>{isMonitoring ? 'Stop Monitoring' : 'Start Monitoring'}</span>
                 </button>
-                
+
                 <span className="text-sm text-gray-600">
                   {isMonitoring ? 'Speak into your microphone' : 'Click to test microphone input'}
                 </span>
@@ -258,8 +261,8 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
                   />
                 </div>
                 <p className="text-xs text-gray-500 mt-1">
-                  {audioLevel > 50 ? '✅ Good audio level' : 
-                   audioLevel > 20 ? '⚠️ Low audio level - speak louder' : 
+                  {audioLevel > 50 ? '✅ Good audio level' :
+                   audioLevel > 20 ? '⚠️ Low audio level - speak louder' :
                    '❌ No audio detected'}
                 </p>
               </div>
@@ -268,8 +271,9 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
             {/* Speech Recognition Test */}
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-4">🗣️ Speech Recognition Test</h3>
-              
+
               <button
+                type="button"
                 onClick={testSpeechRecognition}
                 disabled={isTestingSpeech}
                 className="flex items-center space-x-2 px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
@@ -280,8 +284,8 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
 
               {speechTestResult && (
                 <div className={`mt-4 p-4 rounded-lg border ${
-                  speechTestResult.isWorking 
-                    ? 'bg-green-50 border-green-200' 
+                  speechTestResult.isWorking
+                    ? 'bg-green-50 border-green-200'
                     : 'bg-red-50 border-red-200'
                 }`}>
                   <div className="flex items-center space-x-2 mb-2">
@@ -290,11 +294,11 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
                       {speechTestResult.isWorking ? 'Speech Recognition Working' : 'Speech Recognition Failed'}
                     </span>
                   </div>
-                  
+
                   {speechTestResult.error && (
                     <p className="text-sm text-red-700 mb-2">{speechTestResult.error}</p>
                   )}
-                  
+
                   {speechTestResult.suggestions && speechTestResult.suggestions.length > 0 && (
                     <ul className="text-sm space-y-1">
                       {speechTestResult.suggestions.map((suggestion: string, index: number) => (
@@ -309,6 +313,7 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
             {/* Action Buttons */}
             <div className="flex justify-between items-center pt-4 border-t">
               <button
+                type="button"
                 onClick={runMicrophoneTest}
                 disabled={isTestingMic}
                 className="flex items-center space-x-2 px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
@@ -318,6 +323,7 @@ const MicrophoneTestModal: React.FC<MicrophoneTestModalProps> = ({ isOpen, onClo
               </button>
 
               <button
+                type="button"
                 onClick={onClose}
                 className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
               >

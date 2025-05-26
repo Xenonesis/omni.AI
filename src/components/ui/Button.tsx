@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   icon?: React.ReactNode;
   fullWidth?: boolean;
   loading?: boolean;
   glow?: boolean;
+  mobileOptimized?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -18,6 +19,7 @@ const Button: React.FC<ButtonProps> = ({
   fullWidth = false,
   loading = false,
   glow = false,
+  mobileOptimized = false,
   className = '',
   disabled,
   ...props
@@ -35,14 +37,26 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   const sizeStyles = {
-    sm: 'text-xs px-3 py-1.5 rounded-md',
-    md: 'text-sm px-4 py-2.5 rounded-md',
-    lg: 'text-base px-6 py-3 rounded-lg',
+    xs: 'text-xs px-2 py-1 rounded-md min-h-touch min-w-touch',
+    sm: 'text-xs px-3 py-1.5 rounded-md min-h-touch',
+    md: 'text-sm px-4 py-2.5 rounded-md min-h-touch',
+    lg: 'text-base px-6 py-3 rounded-lg min-h-touch',
+    xl: 'text-lg px-8 py-4 rounded-xl min-h-touch',
+  };
+
+  // Mobile-optimized sizes for better touch interaction
+  const mobileSizeStyles = {
+    xs: 'text-sm px-3 py-2 rounded-md min-h-touch min-w-touch',
+    sm: 'text-sm px-4 py-2.5 rounded-md min-h-touch',
+    md: 'text-base px-5 py-3 rounded-lg min-h-touch',
+    lg: 'text-lg px-6 py-3.5 rounded-lg min-h-touch',
+    xl: 'text-xl px-8 py-4 rounded-xl min-h-touch',
   };
 
   const isDisabled = disabled || loading;
   const disabledStyles = isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
   const widthStyles = fullWidth ? 'w-full' : '';
+  const currentSizeStyles = mobileOptimized ? mobileSizeStyles[size] : sizeStyles[size];
 
   const buttonVariants = {
     initial: { scale: 1 },
@@ -84,9 +98,10 @@ const Button: React.FC<ButtonProps> = ({
       className={`
         ${baseStyles}
         ${variantStyles[variant]}
-        ${sizeStyles[size]}
+        ${currentSizeStyles}
         ${disabledStyles}
         ${widthStyles}
+        ${mobileOptimized ? 'touch-target' : ''}
         ${className}
       `}
       disabled={isDisabled}

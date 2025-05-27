@@ -1,7 +1,7 @@
 {
   "name": "omniverse-ai-voice-marketplace",
   "private": false,
-  "version": "3.2.0",
+  "version": "3.5.0",
   "type": "module",
   "description": "🎯 Advanced AI-Powered Voice Shopping Platform with Comprehensive Indian Product Catalog - Revolutionary e-commerce marketplace combining cutting-edge voice recognition, natural language processing, and AI-powered product recommendations",
   "keywords": [
@@ -69,6 +69,7 @@
     "test:lighthouse": "lighthouse http://localhost:4173 --output json --output-path lighthouse-report.json"
   },
   "dependencies": {
+    "@types/three": "^0.176.0",
     "compromise": "^14.10.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
@@ -79,7 +80,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.22.1",
-    "recharts": "^2.12.0"
+    "recharts": "^2.12.0",
+    "three": "^0.176.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",

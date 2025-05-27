@@ -1,14 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, ArrowUp, MessageCircle, HelpCircle, Bot, Sparkles } from 'lucide-react';
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowUp,
+  Bot,
+  HelpCircle,
+  MessageCircle,
+  Mic,
+  Sparkles,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
 // import { useChatBot } from '../../context/ChatBotContext';
-import { openOmniDimensionWidget, waitForOmniDimensionWidget } from '../../utils/omniDimensionWidget';
+import {
+  openOmniDimensionWidget,
+  waitForOmniDimensionWidget,
+} from "../../utils/omniDimensionWidget";
 
 interface FloatingActionButtonProps {
   onVoiceSearch: () => void;
 }
 
-const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSearch }) => {
+const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
+  onVoiceSearch,
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   // const { openChat, state } = useChatBot();
@@ -16,26 +28,30 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSear
   // Function to trigger OmniDimension widget
   const openOmniDimensionChat = async () => {
     try {
-      console.log('🤖 Chat button clicked! Attempting to open OmniDimension chat widget...');
+      console.log(
+        "🤖 Chat button clicked! Attempting to open OmniDimension chat widget..."
+      );
 
       // Try to open the widget immediately
       if (openOmniDimensionWidget()) {
-        console.log('🤖 OmniDimension widget opened successfully');
+        console.log("🤖 OmniDimension widget opened successfully");
         return;
       }
 
       // If immediate attempt fails, wait for widget to load
-      console.log('🤖 Widget not ready, waiting for it to load...');
+      console.log("🤖 Widget not ready, waiting for it to load...");
       const success = await waitForOmniDimensionWidget(5000);
 
       if (!success) {
-        console.log('🤖 OmniDimension widget not available');
-        alert('OmniDimension widget is not available. Please refresh the page or check your connection.');
+        console.log("🤖 OmniDimension widget not available");
+        alert(
+          "OmniDimension widget is not available. Please refresh the page or check your connection."
+        );
         // openChat();
       }
     } catch (error) {
-      console.error('🤖 Error opening OmniDimension widget:', error);
-      alert('Error opening OmniDimension widget. Please try again.');
+      console.error("🤖 Error opening OmniDimension widget:", error);
+      alert("Error opening OmniDimension widget. Please try again.");
       // Fallback to our custom chat
       // openChat();
     }
@@ -46,35 +62,35 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSear
       setShowScrollTop(window.scrollY > 500);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const actions = [
     {
       icon: <Mic className="w-5 h-5" />,
-      label: 'Voice Search',
+      label: "Voice Search",
       onClick: onVoiceSearch,
-      color: 'bg-primary-600 hover:bg-primary-700',
+      color: "bg-primary-600 hover:bg-primary-700",
     },
     {
       icon: <MessageCircle className="w-5 h-5" />,
-      label: 'OmniDimension Chat Bot',
+      label: "OmniDimension Chat Bot",
       onClick: () => {
         openOmniDimensionChat();
         setIsExpanded(false);
       },
-      color: 'bg-green-600 hover:bg-green-700',
+      color: "bg-green-600 hover:bg-green-700",
     },
     {
       icon: <HelpCircle className="w-5 h-5" />,
-      label: 'Help',
-      onClick: () => console.log('Open help'),
-      color: 'bg-blue-600 hover:bg-blue-700',
+      label: "Help",
+      onClick: () => console.log("Open help"),
+      color: "bg-blue-600 hover:bg-blue-700",
     },
   ];
 
@@ -88,9 +104,18 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSear
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
             onClick={scrollToTop}
-            className="mb-4 w-12 h-12 bg-neutral-800 hover:bg-neutral-900 text-white rounded-full shadow-lg flex items-center justify-center transition-colors"
+            className="mb-4 w-12 h-12 bg-neutral-800 hover:bg-neutral-900 text-white rounded-full shadow-lg flex items-center justify-center transition-colors circular-smooth button-smooth hw-accelerated interactive-smooth"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            style={{
+              willChange: "transform, background-color",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+              transform: "translateZ(0)",
+              WebkitTransform: "translateZ(0)",
+              WebkitFontSmoothing: "antialiased",
+              MozOsxFontSmoothing: "grayscale",
+            }}
           >
             <ArrowUp className="w-5 h-5" />
           </motion.button>
@@ -108,20 +133,39 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSear
         >
           <motion.button
             onClick={openOmniDimensionChat}
-            className="group relative z-10 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-full shadow-xl flex items-center space-x-3 transition-all duration-300 hover:shadow-2xl cursor-pointer"
+            className="group relative z-10 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-full shadow-xl flex items-center space-x-3 transition-all duration-300 hover:shadow-2xl cursor-pointer button-smooth hw-accelerated interactive-smooth"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
-            style={{ pointerEvents: 'auto' }}
+            style={{
+              pointerEvents: "auto",
+              willChange: "transform, box-shadow, background",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+              transform: "translateZ(0)",
+              WebkitTransform: "translateZ(0)",
+              WebkitFontSmoothing: "antialiased",
+              MozOsxFontSmoothing: "grayscale",
+              textRendering: "optimizeLegibility",
+            }}
           >
             <div className="relative">
               <Bot className="w-5 h-5" />
               <motion.div
-                className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full"
+                className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full circular-smooth scale-smooth hw-accelerated"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
+                style={{
+                  willChange: "transform",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  transform: "translateZ(0)",
+                  WebkitTransform: "translateZ(0)",
+                }}
               />
             </div>
-            <span className="font-semibold text-sm">OmniDimension Chat Bot</span>
+            <span className="font-semibold text-sm">
+              OmniDimension Chat Bot
+            </span>
             <Sparkles className="w-4 h-4 text-yellow-300 group-hover:text-yellow-200" />
           </motion.button>
 
@@ -160,13 +204,13 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSear
                     opacity: 1,
                     y: 0,
                     scale: 1,
-                    transition: { delay: index * 0.1 }
+                    transition: { delay: index * 0.1 },
                   }}
                   exit={{
                     opacity: 0,
                     y: 20,
                     scale: 0.8,
-                    transition: { delay: (actions.length - index - 1) * 0.05 }
+                    transition: { delay: (actions.length - index - 1) * 0.05 },
                   }}
                   className="flex items-center"
                 >
@@ -175,9 +219,18 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSear
                   </span>
                   <motion.button
                     onClick={action.onClick}
-                    className={`w-12 h-12 ${action.color} text-white rounded-full shadow-lg flex items-center justify-center transition-colors`}
+                    className={`w-12 h-12 ${action.color} text-white rounded-full shadow-lg flex items-center justify-center transition-colors circular-smooth button-smooth hw-accelerated interactive-smooth`}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
+                    style={{
+                      willChange: "transform, background-color",
+                      backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
+                      transform: "translateZ(0)",
+                      WebkitTransform: "translateZ(0)",
+                      WebkitFontSmoothing: "antialiased",
+                      MozOsxFontSmoothing: "grayscale",
+                    }}
                   >
                     {action.icon}
                   </motion.button>
@@ -190,10 +243,19 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onVoiceSear
         {/* Main FAB */}
         <motion.button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-14 h-14 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-full shadow-xl flex items-center justify-center relative overflow-hidden"
+          className="w-14 h-14 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-full shadow-xl flex items-center justify-center relative overflow-hidden circular-smooth button-smooth hw-accelerated interactive-smooth"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           animate={{ rotate: isExpanded ? 45 : 0 }}
+          style={{
+            willChange: "transform, background",
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "translateZ(0)",
+            WebkitTransform: "translateZ(0)",
+            WebkitFontSmoothing: "antialiased",
+            MozOsxFontSmoothing: "grayscale",
+          }}
         >
           {/* Ripple effect */}
           <motion.div

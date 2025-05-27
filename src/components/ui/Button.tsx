@@ -1,9 +1,9 @@
-import React, { ButtonHTMLAttributes, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from "framer-motion";
+import React, { ButtonHTMLAttributes, useState } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
   icon?: React.ReactNode;
   fullWidth?: boolean;
   loading?: boolean;
@@ -13,69 +13,85 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button: React.FC<ButtonProps> = ({
   children,
-  variant = 'primary',
-  size = 'md',
+  variant = "primary",
+  size = "md",
   icon,
   fullWidth = false,
   loading = false,
   glow = false,
   mobileOptimized = false,
-  className = '',
+  className = "",
   disabled,
   ...props
 }) => {
   const [isPressed, setIsPressed] = useState(false);
 
-  const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-all duration-200 focus-ring relative overflow-hidden';
+  const baseStyles =
+    "inline-flex items-center justify-center rounded-md font-medium transition-all duration-200 focus-ring relative overflow-hidden";
 
   const variantStyles = {
-    primary: `bg-primary-600 text-white hover:bg-primary-700 shadow-md hover:shadow-lg ${glow ? 'shadow-glow hover:shadow-glow' : ''}`,
-    secondary: `bg-accent-600 text-white hover:bg-accent-700 shadow-md hover:shadow-lg ${glow ? 'shadow-glow-accent hover:shadow-glow-accent' : ''}`,
-    outline: 'border border-neutral-300 bg-transparent hover:bg-neutral-50 hover:border-neutral-400 text-neutral-700 shadow-sm hover:shadow-md',
-    ghost: 'bg-transparent hover:bg-neutral-100 text-neutral-700',
-    danger: 'bg-error-500 text-white hover:bg-error-600 shadow-md hover:shadow-lg',
+    primary: `bg-primary-600 text-white hover:bg-primary-700 shadow-md hover:shadow-lg ${
+      glow ? "shadow-glow hover:shadow-glow" : ""
+    }`,
+    secondary: `bg-accent-600 text-white hover:bg-accent-700 shadow-md hover:shadow-lg ${
+      glow ? "shadow-glow-accent hover:shadow-glow-accent" : ""
+    }`,
+    outline:
+      "border border-neutral-300 bg-transparent hover:bg-neutral-50 hover:border-neutral-400 text-neutral-700 shadow-sm hover:shadow-md",
+    ghost: "bg-transparent hover:bg-neutral-100 text-neutral-700",
+    danger:
+      "bg-error-500 text-white hover:bg-error-600 shadow-md hover:shadow-lg",
   };
 
   const sizeStyles = {
-    xs: 'text-xs px-2 py-1 rounded-md min-h-touch min-w-touch',
-    sm: 'text-xs px-3 py-1.5 rounded-md min-h-touch',
-    md: 'text-sm px-4 py-2.5 rounded-md min-h-touch',
-    lg: 'text-base px-6 py-3 rounded-lg min-h-touch',
-    xl: 'text-lg px-8 py-4 rounded-xl min-h-touch',
+    xs: "text-xs px-2 py-1 rounded-md min-h-touch min-w-touch",
+    sm: "text-xs px-3 py-1.5 rounded-md min-h-touch",
+    md: "text-sm px-4 py-2.5 rounded-md min-h-touch",
+    lg: "text-base px-6 py-3 rounded-lg min-h-touch",
+    xl: "text-lg px-8 py-4 rounded-xl min-h-touch",
   };
 
   // Mobile-optimized sizes for better touch interaction
   const mobileSizeStyles = {
-    xs: 'text-sm px-3 py-2 rounded-md min-h-touch min-w-touch',
-    sm: 'text-sm px-4 py-2.5 rounded-md min-h-touch',
-    md: 'text-base px-5 py-3 rounded-lg min-h-touch',
-    lg: 'text-lg px-6 py-3.5 rounded-lg min-h-touch',
-    xl: 'text-xl px-8 py-4 rounded-xl min-h-touch',
+    xs: "text-sm px-3 py-2 rounded-md min-h-touch min-w-touch",
+    sm: "text-sm px-4 py-2.5 rounded-md min-h-touch",
+    md: "text-base px-5 py-3 rounded-lg min-h-touch",
+    lg: "text-lg px-6 py-3.5 rounded-lg min-h-touch",
+    xl: "text-xl px-8 py-4 rounded-xl min-h-touch",
   };
 
   const isDisabled = disabled || loading;
-  const disabledStyles = isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
-  const widthStyles = fullWidth ? 'w-full' : '';
-  const currentSizeStyles = mobileOptimized ? mobileSizeStyles[size] : sizeStyles[size];
+  const disabledStyles = isDisabled
+    ? "opacity-50 cursor-not-allowed"
+    : "cursor-pointer";
+  const widthStyles = fullWidth ? "w-full" : "";
+  const currentSizeStyles = mobileOptimized
+    ? mobileSizeStyles[size]
+    : sizeStyles[size];
 
   const buttonVariants = {
-    initial: { scale: 1 },
+    initial: {
+      scale: 1,
+      transform: "translateZ(0)",
+    },
     hover: {
       scale: isDisabled ? 1 : 1.02,
-      transition: { duration: 0.2, ease: "easeOut" }
+      transform: "translateZ(0) scale(" + (isDisabled ? 1 : 1.02) + ")",
+      transition: { duration: 0.2, ease: "easeOut" },
     },
     tap: {
       scale: isDisabled ? 1 : 0.98,
-      transition: { duration: 0.1, ease: "easeOut" }
-    }
+      transform: "translateZ(0) scale(" + (isDisabled ? 1 : 0.98) + ")",
+      transition: { duration: 0.1, ease: "easeOut" },
+    },
   };
 
   const glowVariants = {
-    initial: { x: '-100%' },
+    initial: { x: "-100%" },
     hover: {
-      x: '100%',
-      transition: { duration: 0.6, ease: "easeInOut" }
-    }
+      x: "100%",
+      transition: { duration: 0.6, ease: "easeInOut" },
+    },
   };
 
   const LoadingSpinner = () => (
@@ -101,9 +117,22 @@ const Button: React.FC<ButtonProps> = ({
         ${currentSizeStyles}
         ${disabledStyles}
         ${widthStyles}
-        ${mobileOptimized ? 'touch-target' : ''}
+        ${mobileOptimized ? "touch-target" : ""}
+        scale-smooth hover-safe button-smooth hw-accelerated interactive-smooth
         ${className}
       `}
+      style={{
+        willChange: "transform, box-shadow, background-color",
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+        perspective: "1000px",
+        transform: "translateZ(0)",
+        WebkitTransform: "translateZ(0)",
+        WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "grayscale",
+        textRendering: "optimizeLegibility",
+        WebkitTextStroke: "0.01em transparent",
+      }}
       disabled={isDisabled}
       aria-busy={loading}
       {...props}

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,10 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Primary Meta Tags -->
-    <title>omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products</title>
-    <meta name="title" content="omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products" />
-    <meta name="description" content="Discover the future of shopping with omniverse.AI's voice-powered marketplace. Find electronics, fashion, and beauty products from top Indian brands with AI assistance. Shop smarter with voice search technology." />
-    <meta name="keywords" content="voice shopping, AI marketplace, Indian products, electronics, fashion, beauty, voice search, omniverse.ai, smart shopping" />
+    <title>
+      omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products
+    </title>
+    <meta
+      name="title"
+      content="omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products"
+    />
+    <meta
+      name="description"
+      content="Discover the future of shopping with omniverse.AI's voice-powered marketplace. Find electronics, fashion, and beauty products from top Indian brands with AI assistance. Shop smarter with voice search technology."
+    />
+    <meta
+      name="keywords"
+      content="voice shopping, AI marketplace, Indian products, electronics, fashion, beauty, voice search, omniverse.ai, smart shopping"
+    />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
     <meta name="author" content="omniverse.AI" />
@@ -17,18 +28,36 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://your-domain.netlify.app/" />
-    <meta property="og:title" content="omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products" />
-    <meta property="og:description" content="Discover the future of shopping with omniverse.AI's voice-powered marketplace. Find electronics, fashion, and beauty products from top Indian brands with AI assistance." />
-    <meta property="og:image" content="https://your-domain.netlify.app/og-image.jpg" />
+    <meta
+      property="og:title"
+      content="omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products"
+    />
+    <meta
+      property="og:description"
+      content="Discover the future of shopping with omniverse.AI's voice-powered marketplace. Find electronics, fashion, and beauty products from top Indian brands with AI assistance."
+    />
+    <meta
+      property="og:image"
+      content="https://your-domain.netlify.app/og-image.jpg"
+    />
     <meta property="og:site_name" content="omniverse.AI" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://your-domain.netlify.app/" />
-    <meta property="twitter:title" content="omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products" />
-    <meta property="twitter:description" content="Discover the future of shopping with omniverse.AI's voice-powered marketplace. Find electronics, fashion, and beauty products from top Indian brands with AI assistance." />
-    <meta property="twitter:image" content="https://your-domain.netlify.app/og-image.jpg" />
+    <meta
+      property="twitter:title"
+      content="omniverse.AI - Voice Shopping Marketplace | AI-Powered Indian Products"
+    />
+    <meta
+      property="twitter:description"
+      content="Discover the future of shopping with omniverse.AI's voice-powered marketplace. Find electronics, fashion, and beauty products from top Indian brands with AI assistance."
+    />
+    <meta
+      property="twitter:image"
+      content="https://your-domain.netlify.app/og-image.jpg"
+    />
     <meta property="twitter:creator" content="@omniverseai" />
 
     <!-- Additional Meta Tags -->
@@ -53,7 +82,12 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
 
     <!-- Preload critical resources -->
-    <link rel="preload" href="/omniverse-favicon.svg" as="image" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="/omniverse-favicon.svg"
+      as="image"
+      type="image/svg+xml"
+    />
 
     <!-- Resource hints for better performance -->
     <link rel="prefetch" href="/robots.txt" />
@@ -70,7 +104,8 @@
       /* Critical CSS for above-the-fold content */
       body {
         margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          sans-serif;
         background-color: #ffffff;
         color: #1f2937;
       }
@@ -90,13 +125,15 @@
       .loading-spinner {
         width: 40px;
         height: 40px;
-        border: 3px solid rgba(255,255,255,0.3);
+        border: 3px solid rgba(255, 255, 255, 0.3);
         border-radius: 50%;
         border-top-color: #ffffff;
         animation: spin 1s ease-in-out infinite;
       }
       @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+          transform: rotate(360deg);
+        }
       }
       /* Prevent layout shift */
       #root {
@@ -109,76 +146,82 @@
     <!-- Enhanced Error Handling and Extension Conflict Prevention -->
     <script>
       // Global error handler to prevent extension conflicts
-      window.addEventListener('error', function(e) {
+      window.addEventListener("error", function (e) {
         // Handle web widget errors
-        if (e.filename && e.filename.includes('web_widget.js')) {
-          console.warn('🔧 Web widget error handled:', e.message);
+        if (e.filename && e.filename.includes("web_widget.js")) {
+          console.warn("🔧 Web widget error handled:", e.message);
           e.preventDefault();
           return true;
         }
 
         // Handle extension conflicts
-        if (e.filename && (
-          e.filename.includes('universal-blocker.js') ||
-          e.filename.includes('feedback-manager.js') ||
-          e.filename.includes('content-blocker.js') ||
-          e.filename.includes('content.js')
-        )) {
-          console.warn('🛡️ Browser extension conflict handled:', e.message);
+        if (
+          e.filename &&
+          (e.filename.includes("universal-blocker.js") ||
+            e.filename.includes("feedback-manager.js") ||
+            e.filename.includes("content-blocker.js") ||
+            e.filename.includes("content.js"))
+        ) {
+          console.warn("🛡️ Browser extension conflict handled:", e.message);
           e.preventDefault();
           return true;
         }
 
         // Handle property redefinition errors
-        if (e.message && e.message.includes('Cannot redefine property')) {
-          console.warn('🔧 Property redefinition conflict handled:', e.message);
+        if (e.message && e.message.includes("Cannot redefine property")) {
+          console.warn("🔧 Property redefinition conflict handled:", e.message);
           e.preventDefault();
           return true;
         }
 
         // Handle undefined property errors
-        if (e.message && e.message.includes('Cannot read properties of undefined')) {
-          console.warn('🔧 Undefined property error handled:', e.message);
+        if (
+          e.message &&
+          e.message.includes("Cannot read properties of undefined")
+        ) {
+          console.warn("🔧 Undefined property error handled:", e.message);
           e.preventDefault();
           return true;
         }
 
         // Handle null property errors
-        if (e.message && e.message.includes('Cannot read properties of null')) {
-          console.warn('🔧 Null property error handled:', e.message);
+        if (e.message && e.message.includes("Cannot read properties of null")) {
+          console.warn("🔧 Null property error handled:", e.message);
           e.preventDefault();
           return true;
         }
       });
 
       // Prevent extension conflicts with location and other global objects
-      (function() {
+      (function () {
         try {
           // Protect critical properties from being redefined
-          const protectedProps = ['href', 'location', 'document'];
-          protectedProps.forEach(prop => {
+          const protectedProps = ["href", "location", "document"];
+          protectedProps.forEach((prop) => {
             if (window[prop]) {
-              Object.defineProperty(window, prop + '_protected', {
+              Object.defineProperty(window, prop + "_protected", {
                 value: window[prop],
                 writable: false,
-                configurable: false
+                configurable: false,
               });
             }
           });
         } catch (e) {
-          console.warn('🛡️ Property protection setup handled:', e.message);
+          console.warn("🛡️ Property protection setup handled:", e.message);
         }
       })();
 
       // Initialize voice search protection
       window.voiceSearchProtected = true;
-      console.log('🎤 Voice search protection initialized');
+      console.log("🎤 Voice search protection initialized");
     </script>
 
     <!-- OmniDimension Web Widget - ONLY THIS BOT UI ACTIVE -->
-    <script id="omnidimension-web-widget" async
-      src="https://backend.omnidim.io/web_widget.js?secret_key=201ff4fd19c1ffd37b272cc1eacb874a">
-    </script>
+    <script
+      id="omnidimension-web-widget"
+      async
+      src="https://backend.omnidim.io/web_widget.js?secret_key=201ff4fd19c1ffd37b272cc1eacb874a"
+    ></script>
   </head>
   <body>
     <!-- Loading screen for better perceived performance -->
@@ -191,20 +234,29 @@
     <!-- Service Worker Registration -->
     <script>
       // Register service worker for offline functionality and caching
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js")
             .then((registration) => {
-              console.log('✅ Service Worker registered successfully:', registration.scope);
+              console.log(
+                "✅ Service Worker registered successfully:",
+                registration.scope
+              );
 
               // Check for updates
-              registration.addEventListener('updatefound', () => {
+              registration.addEventListener("updatefound", () => {
                 const newWorker = registration.installing;
                 if (newWorker) {
-                  newWorker.addEventListener('statechange', () => {
-                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  newWorker.addEventListener("statechange", () => {
+                    if (
+                      newWorker.state === "installed" &&
+                      navigator.serviceWorker.controller
+                    ) {
                       // New content is available, prompt user to refresh
-                      if (confirm('New version available! Refresh to update?')) {
+                      if (
+                        confirm("New version available! Refresh to update?")
+                      ) {
                         window.location.reload();
                       }
                     }
@@ -213,38 +265,47 @@
               });
             })
             .catch((error) => {
-              console.warn('⚠️ Service Worker registration failed:', error);
+              console.warn("⚠️ Service Worker registration failed:", error);
             });
         });
       }
 
       // Performance monitoring
-      window.addEventListener('load', () => {
+      window.addEventListener("load", () => {
         // Hide loading screen
-        const loadingScreen = document.getElementById('loading-screen');
+        const loadingScreen = document.getElementById("loading-screen");
         if (loadingScreen) {
-          loadingScreen.style.opacity = '0';
+          loadingScreen.style.opacity = "0";
           setTimeout(() => {
-            loadingScreen.style.display = 'none';
+            loadingScreen.style.display = "none";
           }, 300);
         }
 
-        // Report Core Web Vitals
-        if ('performance' in window) {
+        // Report Core Web Vitals (only in production)
+        const isDevelopment =
+          window.location.hostname === "localhost" ||
+          window.location.hostname === "127.0.0.1" ||
+          window.location.port === "5173" ||
+          window.location.port === "5174";
+
+        if ("performance" in window && !isDevelopment) {
           // Largest Contentful Paint
           new PerformanceObserver((list) => {
             const entries = list.getEntries();
             const lastEntry = entries[entries.length - 1];
-            console.log('📊 LCP:', lastEntry.startTime.toFixed(2) + 'ms');
-          }).observe({ entryTypes: ['largest-contentful-paint'] });
+            console.log("📊 LCP:", lastEntry.startTime.toFixed(2) + "ms");
+          }).observe({ entryTypes: ["largest-contentful-paint"] });
 
           // First Input Delay
           new PerformanceObserver((list) => {
             const entries = list.getEntries();
             entries.forEach((entry) => {
-              console.log('📊 FID:', (entry.processingStart - entry.startTime).toFixed(2) + 'ms');
+              console.log(
+                "📊 FID:",
+                (entry.processingStart - entry.startTime).toFixed(2) + "ms"
+              );
             });
-          }).observe({ entryTypes: ['first-input'] });
+          }).observe({ entryTypes: ["first-input"] });
 
           // Cumulative Layout Shift
           let clsValue = 0;
@@ -255,21 +316,21 @@
                 clsValue += entry.value;
               }
             });
-            console.log('📊 CLS:', clsValue.toFixed(4));
-          }).observe({ entryTypes: ['layout-shift'] });
+            console.log("📊 CLS:", clsValue.toFixed(4));
+          }).observe({ entryTypes: ["layout-shift"] });
         }
       });
 
       // Preload critical resources
       const preloadCriticalResources = () => {
         const criticalResources = [
-          { href: '/src/main.tsx', as: 'script' },
-          { href: '/src/index.css', as: 'style' }
+          { href: "/src/main.tsx", as: "script" },
+          { href: "/src/index.css", as: "style" },
         ];
 
-        criticalResources.forEach(resource => {
-          const link = document.createElement('link');
-          link.rel = 'modulepreload';
+        criticalResources.forEach((resource) => {
+          const link = document.createElement("link");
+          link.rel = "modulepreload";
           link.href = resource.href;
           if (resource.as) link.as = resource.as;
           document.head.appendChild(link);
@@ -277,7 +338,7 @@
       };
 
       // Preload resources when page is idle
-      if ('requestIdleCallback' in window) {
+      if ("requestIdleCallback" in window) {
         requestIdleCallback(preloadCriticalResources);
       } else {
         setTimeout(preloadCriticalResources, 100);

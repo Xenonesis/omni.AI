@@ -1,43 +1,43 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Loader, Mic, Search, Sparkles } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Loader, Mic, Search, Sparkles } from "lucide-react";
+import React from "react";
 
 interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'default' | 'voice' | 'search' | 'pulse';
+  size?: "sm" | "md" | "lg" | "xl";
+  variant?: "default" | "voice" | "search" | "pulse";
   text?: string;
   className?: string;
   showIcon?: boolean;
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
-  size = 'md',
-  variant = 'default',
+  size = "md",
+  variant = "default",
   text,
-  className = '',
+  className = "",
   showIcon = true,
 }) => {
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8',
-    xl: 'w-12 h-12',
+    sm: "w-4 h-4",
+    md: "w-6 h-6",
+    lg: "w-8 h-8",
+    xl: "w-12 h-12",
   };
 
   const textSizeClasses = {
-    sm: 'text-sm',
-    md: 'text-base',
-    lg: 'text-lg',
-    xl: 'text-xl',
+    sm: "text-sm",
+    md: "text-base",
+    lg: "text-lg",
+    xl: "text-xl",
   };
 
   const getIcon = () => {
     switch (variant) {
-      case 'voice':
+      case "voice":
         return <Mic className={sizeClasses[size]} />;
-      case 'search':
+      case "search":
         return <Search className={sizeClasses[size]} />;
-      case 'pulse':
+      case "pulse":
         return <Sparkles className={sizeClasses[size]} />;
       default:
         return <Loader className={sizeClasses[size]} />;
@@ -46,16 +46,16 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   const getAnimation = () => {
     switch (variant) {
-      case 'voice':
+      case "voice":
         return {
           scale: [1, 1.2, 1],
           rotate: [0, 5, -5, 0],
         };
-      case 'search':
+      case "search":
         return {
           rotate: 360,
         };
-      case 'pulse':
+      case "pulse":
         return {
           scale: [1, 1.3, 1],
           opacity: [0.7, 1, 0.7],
@@ -69,13 +69,13 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   const getTransition = () => {
     switch (variant) {
-      case 'voice':
+      case "voice":
         return {
           duration: 1.5,
           repeat: Infinity,
           ease: "easeInOut",
         };
-      case 'pulse':
+      case "pulse":
         return {
           duration: 2,
           repeat: Infinity,
@@ -96,17 +96,32 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         <motion.div
           animate={getAnimation()}
           transition={getTransition()}
-          className="text-primary-600 mb-2"
+          className="text-primary-600 mb-2 flex items-center justify-center scale-smooth spinner-smooth hw-accelerated interactive-smooth"
+          style={{
+            willChange: "transform",
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            perspective: "1000px",
+            transform: "translateZ(0)",
+            WebkitTransform: "translateZ(0)",
+            transformOrigin: "center center",
+            WebkitTransformOrigin: "center center",
+            imageRendering: "-webkit-optimize-contrast",
+            WebkitFontSmoothing: "antialiased",
+            MozOsxFontSmoothing: "grayscale",
+            textRendering: "optimizeLegibility",
+          }}
         >
           {getIcon()}
         </motion.div>
       )}
-      
+
       {text && (
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className={`text-gray-600 ${textSizeClasses[size]} text-center`}
+          transition={{ duration: 0.3 }}
+          className={`text-gray-600 ${textSizeClasses[size]} text-center max-w-xs`}
         >
           {text}
         </motion.p>

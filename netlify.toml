@@ -48,7 +48,7 @@
   status = 200
   force = false
 
-# Security headers
+# Security headers with enhanced CDN support
 [[headers]]
   for = "/*"
   [headers.values]
@@ -56,7 +56,7 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://backend.omnidim.io https://www.youtube.com https://youtube.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://backend.omnidim.io https://api.omniverse.ai; frame-src 'self' https://www.youtube.com https://youtube.com;"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://backend.omnidim.io https://www.youtube.com https://youtube.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: https://cdn.jsdelivr.net https://iaddy.netlify.app; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://backend.omnidim.io https://api.omniverse.ai https://iaddy.netlify.app; frame-src 'self' https://www.youtube.com https://youtube.com;"
 
 # Cache static assets with versioned filenames
 [[headers]]

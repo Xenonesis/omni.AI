@@ -34,27 +34,72 @@
   }
 
   /* Mobile-optimized text sizes */
-  .text-mobile-xs { font-size: 0.75rem; line-height: 1rem; }
-  .text-mobile-sm { font-size: 0.875rem; line-height: 1.25rem; }
-  .text-mobile-base { font-size: 1rem; line-height: 1.5rem; }
-  .text-mobile-lg { font-size: 1.125rem; line-height: 1.75rem; }
-  .text-mobile-xl { font-size: 1.25rem; line-height: 1.75rem; }
-  .text-mobile-2xl { font-size: 1.5rem; line-height: 2rem; }
-  .text-mobile-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+  .text-mobile-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  .text-mobile-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .text-mobile-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  .text-mobile-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+  .text-mobile-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  .text-mobile-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  .text-mobile-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
 
   /* Mobile-specific spacing */
-  .mobile-px { padding-left: 1rem; padding-right: 1rem; }
-  .mobile-py { padding-top: 1rem; padding-bottom: 1rem; }
-  .mobile-p { padding: 1rem; }
-  .mobile-mx { margin-left: 1rem; margin-right: 1rem; }
-  .mobile-my { margin-top: 1rem; margin-bottom: 1rem; }
-  .mobile-m { margin: 1rem; }
+  .mobile-px {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .mobile-py {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .mobile-p {
+    padding: 1rem;
+  }
+  .mobile-mx {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+  .mobile-my {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  .mobile-m {
+    margin: 1rem;
+  }
 
   /* Safe area handling for mobile devices */
-  .safe-top { padding-top: env(safe-area-inset-top); }
-  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
-  .safe-left { padding-left: env(safe-area-inset-left); }
-  .safe-right { padding-right: env(safe-area-inset-right); }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
 
   /* Mobile-optimized containers */
   .mobile-container {
@@ -100,13 +145,27 @@
 
   /* Mobile-specific utilities */
   @media (max-width: 640px) {
-    .mobile-text-xs { font-size: 0.75rem !important; }
-    .mobile-text-sm { font-size: 0.875rem !important; }
-    .mobile-text-base { font-size: 1rem !important; }
-    .mobile-p-2 { padding: 0.5rem !important; }
-    .mobile-p-3 { padding: 0.75rem !important; }
-    .mobile-gap-2 { gap: 0.5rem !important; }
-    .mobile-gap-3 { gap: 0.75rem !important; }
+    .mobile-text-xs {
+      font-size: 0.75rem !important;
+    }
+    .mobile-text-sm {
+      font-size: 0.875rem !important;
+    }
+    .mobile-text-base {
+      font-size: 1rem !important;
+    }
+    .mobile-p-2 {
+      padding: 0.5rem !important;
+    }
+    .mobile-p-3 {
+      padding: 0.75rem !important;
+    }
+    .mobile-gap-2 {
+      gap: 0.5rem !important;
+    }
+    .mobile-gap-3 {
+      gap: 0.75rem !important;
+    }
   }
 
   /* Enhanced navbar utilities */
@@ -173,14 +232,30 @@
   }
 
   /* Stagger animation delays */
-  .animate-delay-100 { animation-delay: 100ms; }
-  .animate-delay-200 { animation-delay: 200ms; }
-  .animate-delay-300 { animation-delay: 300ms; }
-  .animate-delay-400 { animation-delay: 400ms; }
-  .animate-delay-500 { animation-delay: 500ms; }
-  .animate-delay-600 { animation-delay: 600ms; }
-  .animate-delay-700 { animation-delay: 700ms; }
-  .animate-delay-800 { animation-delay: 800ms; }
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animate-delay-400 {
+    animation-delay: 400ms;
+  }
+  .animate-delay-500 {
+    animation-delay: 500ms;
+  }
+  .animate-delay-600 {
+    animation-delay: 600ms;
+  }
+  .animate-delay-700 {
+    animation-delay: 700ms;
+  }
+  .animate-delay-800 {
+    animation-delay: 800ms;
+  }
 }
 
 /* Keyframe animations */
@@ -255,6 +330,190 @@
   animation: shimmer 1.5s infinite;
 }
 
+/* Smooth circular animations */
+@keyframes smoothSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.smooth-spin {
+  animation: smoothSpin 1s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Optimized circular loading */
+.circular-loader {
+  border-radius: 50%;
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Prevent visual glitches in circular animations */
+.motion-safe {
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Comprehensive Anti-Aliasing System for Pixel-Perfect Rendering */
+
+/* Base hardware acceleration for all interactive elements */
+.hw-accelerated {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+}
+
+/* Anti-aliasing for smooth circular elements */
+.circular-smooth {
+  border-radius: 50%;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+
+  /* Enhanced anti-aliasing */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+
+  /* Font smoothing for text within circular elements */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  /* Prevent subpixel rendering issues */
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Hover-safe transforms with GPU acceleration */
+.hover-safe {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+
+  /* Anti-aliasing during transforms */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+.hover-safe:hover {
+  transform: translateZ(0) scale(1.05);
+  -webkit-transform: translateZ(0) scale(1.05);
+}
+
+/* Prevent pixelation during scaling with comprehensive browser support */
+.scale-smooth {
+  /* Hardware acceleration */
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+
+  /* Enhanced image rendering */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+
+  /* Font smoothing */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  /* Prevent blurry transforms */
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+/* Button-specific anti-aliasing */
+.button-smooth {
+  will-change: transform, box-shadow, background-color;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+
+  /* Text smoothing */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  /* Prevent button text blur */
+  -webkit-text-stroke: 0.01em transparent;
+}
+
+/* Loading spinner optimization */
+.spinner-smooth {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+
+  /* Smooth rotation */
+  -webkit-transform-origin: center center;
+  -moz-transform-origin: center center;
+  transform-origin: center center;
+
+  /* Anti-aliasing for icons */
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Interactive element base class */
+.interactive-smooth {
+  will-change: transform, opacity, box-shadow;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+
+  /* Comprehensive anti-aliasing */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  image-rendering: -webkit-optimize-contrast;
+
+  /* Smooth transitions */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 /* Smooth hover transitions */
 .hover-lift {
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -272,13 +531,18 @@
 }
 
 .btn-glow::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s;
 }
 

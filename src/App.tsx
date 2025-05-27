@@ -76,7 +76,8 @@ function App() {
                   </main>
                   <Footer />
                   <PerformanceMonitor />
-                  {/* Only OmniDimension widget script is active - no custom chat UI */}
+                  {/* OmniDimension Chat Bot - Primary chat interface */}
+                  <UnifiedChatSystem />
                 </div>
               </Router>
             </VoiceSearchProvider>

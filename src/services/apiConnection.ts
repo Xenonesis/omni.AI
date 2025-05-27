@@ -196,6 +196,17 @@ export class APIConnectionService {
     if (this.status.retryCount >= this.maxRetries) {
       console.log(`🔄 Max retries exceeded, enabling fallback mode`);
       this.enableFallbackMode(this.baseUrl, "Max retries exceeded");
+    } else {
+      // Only show critical error if we're not in production or if it's a development environment
+      // In production, we should gracefully fall back to local data
+      if (!this.isProduction) {
+        this.showCriticalError();
+      } else {
+        console.log(
+          `🔄 Production environment: enabling fallback mode after ${this.status.retryCount} retries`
+        );
+        this.enableFallbackMode(this.baseUrl, "Production fallback mode");
+      }
     }
   }
 

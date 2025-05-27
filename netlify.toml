@@ -56,7 +56,7 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://backend.omnidim.io https://www.youtube.com https://youtube.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: https://cdn.jsdelivr.net https://iaddy.netlify.app; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://backend.omnidim.io https://api.omniverse.ai https://iaddy.netlify.app; frame-src 'self' https://www.youtube.com https://youtube.com;"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://backend.omnidim.io https://omnidim.io https://api.omnidim.io https://www.youtube.com https://youtube.com; style-src 'self' 'unsafe-inline' https://backend.omnidim.io https://omnidim.io; img-src 'self' data: https: https://cdn.jsdelivr.net https://iaddy.netlify.app https://backend.omnidim.io https://omnidim.io; font-src 'self' data: https://fonts.gstatic.com https://backend.omnidim.io; connect-src 'self' https://backend.omnidim.io https://omnidim.io https://api.omnidim.io https://api.omniverse.ai https://iaddy.netlify.app; frame-src 'self' https://www.youtube.com https://youtube.com https://backend.omnidim.io https://omnidim.io; child-src 'self' https://backend.omnidim.io https://omnidim.io;"
 
 # Cache static assets with versioned filenames
 [[headers]]

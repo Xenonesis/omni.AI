@@ -221,7 +221,72 @@
       id="omnidimension-web-widget"
       async
       src="https://backend.omnidim.io/web_widget.js?secret_key=201ff4fd19c1ffd37b272cc1eacb874a"
+      onload="console.log('✅ OmniDimension widget script loaded successfully');"
+      onerror="console.error('❌ Failed to load OmniDimension widget script');"
+      crossorigin="anonymous"
     ></script>
+
+    <!-- OmniDimension Widget Initialization and Debug Script -->
+    <script>
+      // Enhanced OmniDimension widget detection and initialization
+      (function () {
+        let widgetCheckAttempts = 0;
+        const maxAttempts = 30; // 30 seconds max wait
+
+        function checkOmniDimensionWidget() {
+          widgetCheckAttempts++;
+
+          // Check for various widget indicators
+          const hasScript = document.getElementById("omnidimension-web-widget");
+          const hasGlobalWidget = window.OmniDimensionWidget || window.omnidim;
+          const hasWidgetElements = document.querySelector(
+            '[data-omnidim-widget], [class*="omnidim"], [id*="omnidim"], iframe[src*="omnidim"]'
+          );
+
+          if (hasGlobalWidget || hasWidgetElements) {
+            console.log("🤖 OmniDimension widget detected and ready!");
+            console.log("Widget details:", {
+              script: !!hasScript,
+              globalWidget: !!hasGlobalWidget,
+              elements: !!hasWidgetElements,
+              attempts: widgetCheckAttempts,
+            });
+            return true;
+          }
+
+          if (widgetCheckAttempts < maxAttempts) {
+            setTimeout(checkOmniDimensionWidget, 1000);
+          } else {
+            console.warn(
+              "⚠️ OmniDimension widget not detected after 30 seconds"
+            );
+            console.log("Debug info:", {
+              script: !!hasScript,
+              scriptSrc: hasScript ? hasScript.src : "not found",
+              globalObjects: Object.keys(window).filter((key) =>
+                key.toLowerCase().includes("omnidim")
+              ),
+              widgetElements: document.querySelectorAll(
+                '[data-omnidim-widget], [class*="omnidim"], [id*="omnidim"]'
+              ).length,
+            });
+          }
+        }
+
+        // Start checking after DOM is ready
+        if (document.readyState === "loading") {
+          document.addEventListener(
+            "DOMContentLoaded",
+            checkOmniDimensionWidget
+          );
+        } else {
+          checkOmniDimensionWidget();
+        }
+
+        // Also check when window loads
+        window.addEventListener("load", checkOmniDimensionWidget);
+      })();
+    </script>
   </head>
   <body>
     <!-- Loading screen for better perceived performance -->

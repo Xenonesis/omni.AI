@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniDimension Chat Bot Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f0f0f0;
+        }
+        .test-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.warning { background: #fff3cd; color: #856404; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🤖 OmniDimension Chat Bot Integration Test</h1>
+    
+    <div id="status" class="status warning">
+        ⏳ Checking OmniDimension widget status...
+    </div>
+    
+    <button class="test-button" onclick="testWidgetAvailability()">
+        🔍 Check Widget Availability
+    </button>
+    
+    <button class="test-button" onclick="testWidgetOpen()">
+        🚀 Try to Open Widget
+    </button>
+    
+    <button class="test-button" onclick="clearLog()">
+        🗑️ Clear Log
+    </button>
+    
+    <div id="log" class="log"></div>
+
+    <!-- OmniDimension Web Widget Script -->
+    <script
+        id="omnidimension-web-widget"
+        async
+        src="https://backend.omnidim.io/web_widget.js?secret_key=201ff4fd19c1ffd37b272cc1eacb874a"
+        onload="logMessage('✅ OmniDimension widget script loaded successfully');"
+        onerror="logMessage('❌ Failed to load OmniDimension widget script');"
+    ></script>
+
+    <script>
+        let logContainer = document.getElementById('log');
+        let statusContainer = document.getElementById('status');
+        
+        function logMessage(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${message}`;
+            console.log(logEntry);
+            
+            const div = document.createElement('div');
+            div.textContent = logEntry;
+            logContainer.appendChild(div);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        function updateStatus(message, type = 'warning') {
+            statusContainer.textContent = message;
+            statusContainer.className = `status ${type}`;
+        }
+        
+        function clearLog() {
+            logContainer.innerHTML = '';
+        }
+        
+        function testWidgetAvailability() {
+            logMessage('🔍 Testing widget availability...');
+            
+            // Check for script element
+            const scriptElement = document.getElementById('omnidimension-web-widget');
+            logMessage(`Script element: ${scriptElement ? '✅ Found' : '❌ Not found'}`);
+            if (scriptElement) {
+                logMessage(`Script src: ${scriptElement.src}`);
+            }
+            
+            // Check for global objects
+            logMessage(`window.OmniDimensionWidget: ${window.OmniDimensionWidget ? '✅ Available' : '❌ Not available'}`);
+            logMessage(`window.omnidim: ${window.omnidim ? '✅ Available' : '❌ Not available'}`);
+            
+            // Check for widget elements
+            const widgetElements = document.querySelectorAll('[data-omnidim-widget], [class*="omnidim"], [id*="omnidim"], iframe[src*="omnidim"]');
+            logMessage(`Widget elements found: ${widgetElements.length}`);
+            
+            if (widgetElements.length > 0) {
+                widgetElements.forEach((el, index) => {
+                    logMessage(`  Element ${index + 1}: ${el.tagName} - ${el.className || el.id || 'no class/id'}`);
+                });
+            }
+            
+            // Overall status
+            const isAvailable = !!(scriptElement || window.OmniDimensionWidget || window.omnidim || widgetElements.length > 0);
+            if (isAvailable) {
+                updateStatus('✅ OmniDimension widget is available!', 'success');
+                logMessage('✅ Widget availability check: PASSED');
+            } else {
+                updateStatus('❌ OmniDimension widget is not available', 'error');
+                logMessage('❌ Widget availability check: FAILED');
+            }
+        }
+        
+        function testWidgetOpen() {
+            logMessage('🚀 Attempting to open OmniDimension widget...');
+            
+            let opened = false;
+            
+            // Method 1: Try OmniDimensionWidget.open()
+            if (window.OmniDimensionWidget && typeof window.OmniDimensionWidget.open === 'function') {
+                try {
+                    window.OmniDimensionWidget.open();
+                    logMessage('✅ Opened via OmniDimensionWidget.open()');
+                    opened = true;
+                } catch (error) {
+                    logMessage(`❌ Error with OmniDimensionWidget.open(): ${error.message}`);
+                }
+            }
+            
+            // Method 2: Try omnidim.open()
+            if (!opened && window.omnidim && typeof window.omnidim.open === 'function') {
+                try {
+                    window.omnidim.open();
+                    logMessage('✅ Opened via omnidim.open()');
+                    opened = true;
+                } catch (error) {
+                    logMessage(`❌ Error with omnidim.open(): ${error.message}`);
+                }
+            }
+            
+            // Method 3: Try clicking widget elements
+            if (!opened) {
+                const widgetButton = document.querySelector('[data-omnidim-widget], .omnidim-widget-button, #omnidim-widget-button');
+                if (widgetButton) {
+                    try {
+                        widgetButton.click();
+                        logMessage('✅ Clicked widget button');
+                        opened = true;
+                    } catch (error) {
+                        logMessage(`❌ Error clicking widget button: ${error.message}`);
+                    }
+                }
+            }
+            
+            if (!opened) {
+                logMessage('❌ Could not open widget - no available methods');
+                updateStatus('❌ Failed to open widget', 'error');
+            } else {
+                updateStatus('✅ Widget open attempt completed', 'success');
+            }
+        }
+        
+        // Auto-check on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                logMessage('🔄 Auto-checking widget on page load...');
+                testWidgetAvailability();
+            }, 2000);
+        });
+        
+        // Check periodically
+        setInterval(() => {
+            const hasWidget = !!(
+                window.OmniDimensionWidget || 
+                window.omnidim || 
+                document.querySelector('[data-omnidim-widget], [class*="omnidim"], [id*="omnidim"], iframe[src*="omnidim"]')
+            );
+            
+            if (hasWidget && !document.querySelector('.status.success')) {
+                logMessage('🎉 Widget became available!');
+                testWidgetAvailability();
+            }
+        }, 3000);
+        
+        logMessage('🚀 Test page initialized');
+    </script>
+</body>
+</html>

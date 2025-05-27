@@ -25,6 +25,7 @@ import SellerDashboardPage from "./pages/SellerDashboardPage";
 import SettingsPage from "./pages/SettingsPage";
 import VoiceShoppingPage from "./pages/VoiceShoppingPage";
 
+import UnifiedChatSystem from "./components/chat/UnifiedChatSystem";
 import VoiceSearchDebug from "./components/debug/VoiceSearchDebug";
 
 function App() {

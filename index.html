@@ -285,6 +285,28 @@
 
         // Also check when window loads
         window.addEventListener("load", checkOmniDimensionWidget);
+
+        // Add debug info to console for production debugging
+        console.log('🔧 OmniDimension Debug Info:');
+        console.log('  Script URL:', 'https://backend.omnidim.io/web_widget.js?secret_key=201ff4fd19c1ffd37b272cc1eacb874a');
+        console.log('  Script ID:', 'omnidimension-web-widget');
+        console.log('  Environment:', import.meta.env.MODE || 'unknown');
+        console.log('  User Agent:', navigator.userAgent);
+
+        // Add a global debug function
+        window.debugOmniDimension = function() {
+          console.log('🔍 OmniDimension Debug Check:');
+          console.log('  Script element:', !!document.getElementById('omnidimension-web-widget'));
+          console.log('  Global OmniDimensionWidget:', !!window.OmniDimensionWidget);
+          console.log('  Global omnidim:', !!window.omnidim);
+          console.log('  Widget elements:', document.querySelectorAll('[data-omnidim-widget], [class*="omnidim"], [id*="omnidim"], iframe[src*="omnidim"]').length);
+          console.log('  UnifiedChatSystem rendered:', !!document.querySelector('.chat-button'));
+        };
+
+        // Auto-run debug after 5 seconds
+        setTimeout(() => {
+          window.debugOmniDimension();
+        }, 5000);
       })();
     </script>
   </head>
